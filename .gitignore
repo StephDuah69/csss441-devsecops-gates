@@ -1,0 +1,48 @@
+# Python Virtual Environments & Cache
+.venv/
+venv/
+ENV/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# Linters & Tooling
+.ruff_cache/
+.mypy_cache/
+
+# Security Scanners Output & Reports
+reports/*.json
+reports/*.sarif
+reports/*.xml
+reports/*.html
+reports/*.txt
+!reports/.gitkeep
+
+# Environment & Secrets (NEVER COMMIT)
+.env
+.env.*
+*.pem
+*.key
+*.crt
+cosign.key
+id_rsa
+secrets/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Docker
+*.tar

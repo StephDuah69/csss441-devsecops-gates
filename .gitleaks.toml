@@ -1,0 +1,32 @@
+# Gitleaks Security Scanning Configuration
+# CSSS 441 Software Security I - DevSecOps Pipeline
+title = "CSSS 441 Gitleaks Secret Detection Policy"
+
+[extend]
+# Inherit upstream standard secret detection rules (AWS, GitHub, GitLab, private keys, etc.)
+useDefault = true
+
+# Define explicit synthetic test secret rule for controlled demonstrations (Demonstration 1)
+[[rules]]
+id = "csss441-synthetic-test-token"
+description = "Detected synthetic CSSS441 test secret credential"
+regex = '''(?i)(?:csss441_secret_key|csss441_test_token)\s*[:=]\s*['\"][a-zA-Z0-9_\-]{20,}['\"]'''
+keywords = [
+    "csss441_secret_key",
+    "csss441_test_token",
+]
+severity = "high"
+
+# Baseline allowlist configuration
+# Rules are strict: only known non-secret sample identifiers or rule test fixtures are excluded.
+[allowlist]
+description = "Global allowlist for non-secret test references"
+paths = [
+    '''\.git/''',
+    '''\.venv/''',
+    '''reports/''',
+]
+regexes = [
+    '''example_key_placeholder''',
+    '''DUMMY_NON_SECRET_IDENTIFIER''',
+]

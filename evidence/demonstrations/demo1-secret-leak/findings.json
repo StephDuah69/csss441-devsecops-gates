@@ -1,0 +1,22 @@
+[
+  {
+    "Description": "Detected synthetic CSSS441 test secret credential",
+    "StartLine": 14,
+    "EndLine": 14,
+    "StartColumn": 1,
+    "EndColumn": 75,
+    "Match": "csss441_test_token = \"csss441-demo-synthetic-credential-value-99\"",
+    "Secret": "csss441-demo-synthetic-credential-value-99",
+    "File": "app/config.py",
+    "SymlinkFile": "",
+    "Commit": "8f9b2a1c0d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a",
+    "Entropy": 4.12,
+    "Author": "Developer",
+    "Email": "dev@university.edu",
+    "Date": "2026-10-27T17:10:00Z",
+    "Message": "feat: add temporary service credential for local test",
+    "Tags": [],
+    "RuleID": "csss441-synthetic-test-token",
+    "Fingerprint": "8f9b2a1c0d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a:app/config.py:csss441-synthetic-test-token:14"
+  }
+]

@@ -1,0 +1,2 @@
+# Preserve reports directory in version control.
+# Individual scan output artifacts (*.json, *.sarif, *.xml) are ignored.

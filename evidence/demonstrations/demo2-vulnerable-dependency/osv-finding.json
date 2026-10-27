@@ -1,0 +1,33 @@
+{
+  "results": [
+    {
+      "source": {
+        "path": "requirements.txt",
+        "type": "lockfile"
+      },
+      "packages": [
+        {
+          "package": {
+            "name": "urllib3",
+            "version": "1.26.18",
+            "ecosystem": "PyPI"
+          },
+          "vulnerabilities": [
+            {
+              "id": "GHSA-34jh-p97f-mpxf",
+              "aliases": [
+                "CVE-2024-37891"
+              ],
+              "summary": "urllib3's Proxy-Authorization header is not stripped during cross-origin redirects",
+              "details": "When using urllib3 with a proxy, the Proxy-Authorization header contains credentials. In affected versions, this header is retained when following redirects to different origins.",
+              "database_specific": {
+                "severity": "CRITICAL",
+                "cvss_v3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:N"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

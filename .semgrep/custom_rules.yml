@@ -1,0 +1,125 @@
+rules:
+  # ==========================================================================
+  # Rule 1: SQL String Interpolation (CWE-89)
+  # ==========================================================================
+  - id: csss441.python.sql-string-interpolation
+    languages: [python]
+    severity: ERROR
+    message: >-
+      Direct construction of SQL query using dynamic string interpolation (f-string, %-formatting,
+      or str.format). This pattern introduces SQL injection vulnerabilities. Use parameterized
+      queries with explicit parameters (e.g. cursor.execute("SELECT ... WHERE id = %s", (user_id,))).
+    metadata:
+      cwe: "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      owasp: "A03:2021 - Injection"
+      category: security
+      confidence: HIGH
+    patterns:
+      - pattern-either:
+          - pattern: $CURSOR.execute(f"...")
+          - pattern: $CURSOR.execute("..." % ...)
+          - pattern: $CURSOR.execute("...".format(...))
+          - pattern: $DB.execute(f"...")
+          - pattern: $DB.execute("..." % ...)
+          - pattern: $DB.execute("...".format(...))
+
+  # ==========================================================================
+  # Rule 2: Dangerous Subprocess Invocation with shell=True (CWE-78)
+  # ==========================================================================
+  - id: csss441.python.dangerous-subprocess-shell-true
+    languages: [python]
+    severity: ERROR
+    message: >-
+      Subprocess execution invoked with shell=True. This allows shell metacharacters and
+      command chaining, leading to Remote Command Execution (RCE). Use shell=False and pass
+      arguments as an explicit list (e.g. subprocess.run(["cmd", arg1], shell=False)).
+    metadata:
+      cwe: "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+      owasp: "A03:2021 - Injection"
+      category: security
+      confidence: HIGH
+    patterns:
+      - pattern-either:
+          - pattern: subprocess.run(..., shell=True, ...)
+          - pattern: subprocess.Popen(..., shell=True, ...)
+          - pattern: subprocess.call(..., shell=True, ...)
+          - pattern: subprocess.check_output(..., shell=True, ...)
+          - pattern: subprocess.check_call(..., shell=True, ...)
+
+  # ==========================================================================
+  # Rule 3: Dynamic Code Execution with eval/exec (CWE-95)
+  # ==========================================================================
+  - id: csss441.python.unsafe-dynamic-eval
+    languages: [python]
+    severity: ERROR
+    message: >-
+      Dynamic execution of arbitrary code via eval() or exec(). If any part of the evaluated
+      expression is influenced by untrusted input, attackers can execute arbitrary Python statements.
+      Use ast.literal_eval() for data literals or safe domain-specific parsers.
+    metadata:
+      cwe: "CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')"
+      owasp: "A03:2021 - Injection"
+      category: security
+      confidence: HIGH
+    patterns:
+      - pattern-either:
+          - pattern: eval($X, ...)
+          - pattern: exec($X, ...)
+
+  # ==========================================================================
+  # Rule 4: Unsafe Deserialization via pickle (CWE-502)
+  # ==========================================================================
+  - id: csss441.python.unsafe-pickle-deserialization
+    languages: [python]
+    severity: ERROR
+    message: >-
+      Insecure object deserialization using Python's pickle module (pickle.loads or pickle.load).
+      The pickle protocol is inherently insecure and allows arbitrary code execution via crafted
+      __reduce__ payloads. Use safe serialization formats such as JSON or Protocol Buffers.
+    metadata:
+      cwe: "CWE-502: Deserialization of Untrusted Data"
+      owasp: "A08:2021 - Software and Data Integrity Failures"
+      category: security
+      confidence: HIGH
+    patterns:
+      - pattern-either:
+          - pattern: pickle.loads(...)
+          - pattern: pickle.load(...)
+          - pattern: _pickle.loads(...)
+          - pattern: _pickle.load(...)
+
+  # ==========================================================================
+  # Rule 5: Wildcard CORS with Credentials Enabled (CWE-942)
+  # ==========================================================================
+  - id: csss441.python.wildcard-cors-with-credentials
+    languages: [python]
+    severity: ERROR
+    message: >-
+      Insecure Cross-Origin Resource Sharing (CORS) policy: wildcard origin ['*'] is configured
+      together with allow_credentials=True. Modern browsers reject this combination, or it permits
+      unauthorized cross-domain data leakage. Specify an explicit whitelist of trusted origins.
+    metadata:
+      cwe: "CWE-942: Permissive Cross-domain Policy with Untrusted Domains"
+      owasp: "A01:2021 - Broken Access Control"
+      category: security
+      confidence: HIGH
+    patterns:
+      - pattern-either:
+          - pattern: |
+              $APP.add_middleware(
+                  CORSMiddleware,
+                  ...,
+                  allow_origins=["*"],
+                  ...,
+                  allow_credentials=True,
+                  ...
+              )
+          - pattern: |
+              $APP.add_middleware(
+                  CORSMiddleware,
+                  ...,
+                  allow_credentials=True,
+                  ...,
+                  allow_origins=["*"],
+                  ...
+              )

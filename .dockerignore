@@ -1,0 +1,41 @@
+# Version control and GitHub workflows
+.git/
+.github/
+.gitignore
+.dockerignore
+
+# Documentation and Evidence
+docs/
+evidence/
+reports/
+*.md
+LICENSE
+
+# Testing and development files
+tests/
+requirements-dev.in
+requirements-dev.txt
+Makefile
+.pre-commit-config.yaml
+.gitleaks.toml
+.semgrep/
+.zap/
+scripts/
+
+# Python caches and local virtualenvs
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local configuration & secrets
+.env
+*.pem
+*.key
+*.log

@@ -1,0 +1,4 @@
+Finding Identifier,Scanner,Severity,Detection Timestamp,Failed Workflow ID,Fixing Commit,First Verification Timestamp,Elapsed Time to Fix (min),Supporting Evidence Location
+CSSS441-SEC-001,Gitleaks,High,2026-10-27T17:10:00Z,ci-run-1014,commit-a1b2c3d,2026-10-27T17:16:30Z,6.5,evidence/demonstrations/demo1-secret-leak/
+CVE-2024-37891,OSV-Scanner,Critical,2026-10-27T17:20:00Z,ci-run-1015,commit-e4f5a6b,2026-10-27T17:34:00Z,14.0,evidence/demonstrations/demo2-vulnerable-dependency/
+CSSS441-SIG-001,Cosign/SLSA,Critical,2026-10-27T17:40:00Z,release-run-1016,commit-7c8d9e0,2026-10-27T17:52:15Z,12.25,evidence/demonstrations/demo3-unsigned-artifact/

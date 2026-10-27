@@ -1,0 +1,11 @@
+========================================================================
+CSSS 441 - PROTECTED RELEASE ARTIFACT VERIFICATION
+========================================================================
+--> Target Artifact: ghcr.io/csss441/csss441-book-catalog@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+[PASS] Image digest format validated.
+--> Verifying Sigstore Cosign keyless digital signature...
+Error: no matching signatures:
+expected certificate identity: https://github.com/csss441/csss441-devsecops-gates/.github/workflows/release.yml@refs/heads/main
+certificate OIDC issuer: https://token.actions.githubusercontent.com
+SECURITY GATE FAILED: Cosign signature verification failed! Artifact is untrusted or unsigned.
+Build rejected at pre-release security gate. Release halted. Exit code 1.

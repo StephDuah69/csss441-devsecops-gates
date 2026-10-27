@@ -1,0 +1,260 @@
+name: "DevSecOps CI Security Pipeline"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ==========================================================================
+  # JOB 1: Test, Lint, and Secret Scanning
+  # ==========================================================================
+  test-and-lint:
+    name: Lint, Unit Tests & Secrets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python 3.13
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
+        with:
+          python-version: "3.13"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Run Ruff Lint and Format Checks
+        run: |
+          ruff check .
+          ruff format --check .
+
+      - name: Run Pytest Application Tests
+        run: |
+          pytest -v --junitxml=reports/pytest-report.xml
+
+      - name: Run Gitleaks Secret Scanner
+        uses: gitleaks/gitleaks-action@7739f7ee47ff4ff1656e545dd0b7d3f101fb1e9d # v2.3.8
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_CONFIG: .gitleaks.toml
+
+  # ==========================================================================
+  # JOB 2: Static Application Security Testing (SAST)
+  # ==========================================================================
+  sast:
+    name: Semgrep SAST & Rule Tests
+    runs-on: ubuntu-latest
+    needs: [test-and-lint]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Setup Python
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
+        with:
+          python-version: "3.13"
+
+      - name: Install Semgrep
+        run: pip install semgrep
+
+      - name: Verify Semgrep Custom Rule Unit Tests
+        run: |
+          echo "Executing positive and negative assertions for custom rules..."
+          semgrep --test --config .semgrep/custom_rules.yml tests/semgrep/
+
+      - name: Run Semgrep Application Scan
+        run: |
+          mkdir -p reports
+          semgrep scan \
+            --config .semgrep/custom_rules.yml \
+            --error \
+            --json \
+            --output reports/semgrep-report.json \
+            app/
+
+      - name: Upload Semgrep Report
+        if: always()
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
+        with:
+          name: semgrep-report
+          path: reports/semgrep-report.json
+          retention-days: 14
+
+  # ==========================================================================
+  # JOB 3: Software Composition Analysis (SCA) & IaC Security
+  # ==========================================================================
+  sca-and-iac:
+    name: OSV-Scanner, Trivy & Checkov
+    runs-on: ubuntu-latest
+    needs: [test-and-lint]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Run OSV-Scanner Dependency Analysis
+        uses: google/osv-scanner-action@555fe2374e2cf5e0f76906a25cf8281a8b139cc7 # v1.9.2
+        with:
+          scan-args: |-
+            --lockfile=requirements.txt
+            --format=json
+            --output=reports/osv-report.json
+            --fail-on=high
+
+      - name: Run Trivy Source Filesystem Scan
+        uses: aquasecurity/trivy-action@18f2510ee396bbf400402947b394f2dd8c87dbb0 # 0.29.0
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          severity: "HIGH,CRITICAL"
+          exit-code: "1"
+          format: "json"
+          output: "reports/trivy-fs-report.json"
+
+      - name: Run Checkov IaC & Dockerfile Analysis
+        uses: bridgecrewio/checkov-action@53931656f7ef0e74f88107936a7e025ec9f78311 # v12.2965.0
+        with:
+          framework: dockerfile,compose
+          file: Dockerfile,compose.yaml
+          output_format: json
+          output_file_path: reports/checkov-report.json
+          soft_fail: false
+
+      - name: Generate Source SBOM (Syft CycloneDX)
+        uses: anchore/sbom-action@f325610c9f50a54015d37c8d16cb3b0e2c8f4de0 # v0.18.0
+        with:
+          path: "."
+          format: "cyclonedx-json"
+          output-file: "reports/source-sbom.cdx.json"
+
+      - name: Upload SCA & IaC Reports
+        if: always()
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
+        with:
+          name: sca-iac-reports
+          path: reports/
+          retention-days: 14
+
+  # ==========================================================================
+  # JOB 4: Container Build, Image Scan & Image SBOM
+  # ==========================================================================
+  container-security:
+    name: Container Build & Image Scan
+    runs-on: ubuntu-latest
+    needs: [sast, sca-and-iac]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@b5ca514318bd6ebac0fb2aedd5d36ec1b5c232a2 # v3.10.0
+
+      - name: Build Hardened Container Image
+        uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4 # v6.15.0
+        with:
+          context: .
+          file: Dockerfile
+          tags: csss441-book-catalog:ci
+          load: true
+
+      - name: Run Trivy Container Image Scan
+        uses: aquasecurity/trivy-action@18f2510ee396bbf400402947b394f2dd8c87dbb0 # 0.29.0
+        with:
+          image-ref: "csss441-book-catalog:ci"
+          scan-type: "image"
+          severity: "HIGH,CRITICAL"
+          exit-code: "1"
+          format: "json"
+          output: "reports/trivy-image-report.json"
+
+      - name: Generate Container Image SBOM (Syft CycloneDX)
+        uses: anchore/sbom-action@f325610c9f50a54015d37c8d16cb3b0e2c8f4de0 # v0.18.0
+        with:
+          image: "csss441-book-catalog:ci"
+          format: "cyclonedx-json"
+          output-file: "reports/image-sbom.cdx.json"
+
+      - name: Upload Container Reports
+        if: always()
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
+        with:
+          name: container-reports
+          path: reports/
+          retention-days: 14
+
+  # ==========================================================================
+  # JOB 5: Dynamic Application Security Testing (DAST - OWASP ZAP)
+  # ==========================================================================
+  dast:
+    name: Ephemeral Staging & ZAP DAST
+    runs-on: ubuntu-latest
+    needs: [container-security]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Start Ephemeral Staging Environment
+        run: |
+          docker compose up -d
+          echo "Waiting for application readiness..."
+          for i in {1..30}; do
+            if curl -s -f http://127.0.0.1:8000/health | grep -q "healthy"; then
+              echo "Application is healthy and ready for dynamic scanning!"
+              break
+            fi
+            sleep 1
+          done
+
+      - name: Run OWASP ZAP Baseline Scan
+        uses: zaproxy/action-baseline@18d0cc4634f59ae44e4a50d2bb491a6e50ef65e1 # v0.14.0
+        with:
+          target: "http://127.0.0.1:8000"
+          rules_file_name: ".zap/rules.tsv"
+          cmd_options: "-a"
+          fail_action: true
+
+      - name: Teardown Staging Environment
+        if: always()
+        run: |
+          docker compose down -v --remove-orphans
+
+  # ==========================================================================
+  # JOB 6: Security Gate Final Evaluation & Evidence Consolidation
+  # ==========================================================================
+  security-gate:
+    name: Security Gate Policy Evaluation
+    runs-on: ubuntu-latest
+    needs: [test-and-lint, sast, sca-and-iac, container-security, dast]
+    if: always()
+    steps:
+      - name: Evaluate Upstream Job Outcomes
+        run: |
+          if [ "${{ needs.test-and-lint.result }}" != "success" ] || \
+             [ "${{ needs.sast.result }}" != "success" ] || \
+             [ "${{ needs.sca-and-iac.result }}" != "success" ] || \
+             [ "${{ needs.container-security.result }}" != "success" ] || \
+             [ "${{ needs.dast.result }}" != "success" ]; then
+            echo "============================================================"
+            echo "SECURITY GATE STATUS: FAILED"
+            echo "One or more mandatory security gates rejected the build."
+            echo "============================================================"
+            exit 1
+          fi
+          echo "============================================================"
+          echo "SECURITY GATE STATUS: PASSED (All 5 mandatory checks green)"
+          echo "============================================================"
