@@ -46,7 +46,12 @@ jobs:
 
       - name: Run Pytest Application Tests
         run: |
+          mkdir -p reports
           pytest -v --junitxml=reports/pytest-report.xml
+
+      - name: Run pip-audit Dependency Vulnerability Scan
+        run: |
+          pip-audit -r requirements.txt --format json -o reports/pip-audit-report.json
 
       - name: Run Gitleaks Secret Scanner
         uses: gitleaks/gitleaks-action@7739f7ee47ff4ff1656e545dd0b7d3f101fb1e9d # v2.3.8
