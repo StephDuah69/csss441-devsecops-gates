@@ -71,11 +71,14 @@
     </div>
   </form>
 
-  <!-- Books Grid (Figma Surface Cards) -->
+  <!-- Books Grid (Figma Surface Cards with Category-Coded Neon Glows) -->
   {% if books and books|length > 0 %}
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     {% for book in books %}
-    <article class="group relative overflow-hidden rounded-xl border border-white/[.07] bg-[#0c1118] p-5 transition duration-150 hover:-translate-y-0.5 hover:border-white/[.15] flex flex-col justify-between shadow-lg shadow-black/20">
+    <article class="group relative overflow-hidden rounded-xl border bg-[#0c1118] p-5 transition duration-200 hover:-translate-y-0.5 flex flex-col justify-between shadow-lg shadow-black/20 {% if 'Security' in book.category %}border-white/[.07] hover:border-emerald-500/50 hover:shadow-[0_0_24px_rgba(52,211,153,0.14)]{% elif 'DevOps' in book.category %}border-white/[.07] hover:border-violet-500/50 hover:shadow-[0_0_24px_rgba(167,139,250,0.14)]{% elif 'Architecture' in book.category %}border-white/[.07] hover:border-blue-500/50 hover:shadow-[0_0_24px_rgba(96,165,250,0.14)]{% else %}border-white/[.07] hover:border-amber-500/50 hover:shadow-[0_0_24px_rgba(251,191,36,0.14)]{% endif %}">
+      <!-- Neon Top Accent Glow Line -->
+      <div class="absolute top-0 inset-x-0 h-[2px] opacity-0 group-hover:opacity-100 transition duration-300 {% if 'Security' in book.category %}bg-gradient-to-r from-transparent via-emerald-400 to-transparent{% elif 'DevOps' in book.category %}bg-gradient-to-r from-transparent via-violet-400 to-transparent{% elif 'Architecture' in book.category %}bg-gradient-to-r from-transparent via-blue-400 to-transparent{% else %}bg-gradient-to-r from-transparent via-amber-400 to-transparent{% endif %}"></div>
+
       <div>
         <!-- Badges Bar -->
         <div class="flex justify-between items-start gap-2 mb-3">
@@ -93,7 +96,7 @@
           </span>
           {% endif %}
 
-          <span class="rounded bg-white/[.04] px-2 py-0.5 text-[10px] font-mono text-slate-400 border border-white/[.06]">
+          <span class="rounded px-2 py-0.5 text-[10px] font-mono border {% if 'Security' in book.category %}bg-emerald-400/10 text-emerald-300 border-emerald-400/20{% elif 'DevOps' in book.category %}bg-violet-400/10 text-violet-300 border-violet-400/20{% elif 'Architecture' in book.category %}bg-blue-400/10 text-blue-300 border-blue-400/20{% else %}bg-amber-400/10 text-amber-300 border-amber-400/20{% endif %}">
             {{ book.category }}
           </span>
         </div>

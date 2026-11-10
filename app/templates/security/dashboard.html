@@ -4,8 +4,8 @@
 
 {% block content %}
 <div class="space-y-8">
-  <!-- Page Header & Simulation Toggle (from Figma) -->
-  <section class="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
+  <!-- Page Header & Posture Gauge (from Figma Design System) -->
+  <section class="flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
     <div>
       <div class="mb-3 flex items-center gap-3 text-xs font-medium text-emerald-400">
         <span class="flex items-center gap-2">
@@ -27,21 +27,43 @@
       </p>
     </div>
 
-    <!-- Simulator Control & Action Tools -->
-    <div class="flex items-center gap-3">
-      <!-- Fail-Closed Gate Simulation Toggle (Figma feature) -->
-      <div class="flex items-center gap-2.5 rounded-lg border border-white/[.08] bg-[#0c1118] px-3.5 py-2">
-        <label for="simulation-toggle" class="text-xs font-medium text-slate-300 cursor-pointer select-none">
-          Simulate Gate Failure
-        </label>
-        <input type="checkbox" id="simulation-toggle" onchange="toggleGateSimulation(this.checked)" class="h-4 w-4 rounded border-slate-700 bg-slate-900 text-rose-500 focus:ring-rose-500 focus:ring-offset-0 cursor-pointer">
+    <!-- Security Posture Circular Gauge (Suggestion #3) & Actions -->
+    <div class="flex items-center gap-6 self-start lg:self-center">
+      <!-- Circular Progress Meter -->
+      <div class="flex items-center gap-4 bg-[#0c1118] border border-white/[.08] p-3 rounded-2xl shadow-xl">
+        <div class="relative w-16 h-16 flex items-center justify-center">
+          <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+            <!-- Background track -->
+            <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.06)" stroke-width="8" fill="none" />
+            <!-- Animated progress ring -->
+            <circle id="score-ring" cx="50" cy="50" r="40" stroke="#34d399" stroke-width="8" stroke-linecap="round" fill="none"
+              stroke-dasharray="251.2" stroke-dashoffset="5.0" class="transition-all duration-700 ease-out" />
+          </svg>
+          <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+            <span id="score-val" class="text-sm font-bold font-mono text-white">98%</span>
+          </div>
+        </div>
+        <div>
+          <div class="text-[10px] font-semibold uppercase tracking-wider text-slate-500">Posture Score</div>
+          <div id="score-status" class="text-xs font-bold text-emerald-400">Grade A (Strict)</div>
+          <div class="text-[10px] text-slate-600 font-mono mt-0.5">8 Gates &bull; 0 Crit</div>
+        </div>
       </div>
 
-      <!-- Raw Scorecard JSON Button -->
-      <a href="/api/security/scorecard" target="_blank" class="flex h-9 items-center gap-2 rounded-lg border border-white/[.08] bg-white/[.025] px-3 text-xs text-slate-300 transition hover:border-white/[.15] hover:text-white">
-        <i class="fa-solid fa-code text-xs text-slate-500"></i>
-        <span>JSON Scorecard</span>
-      </a>
+      <!-- Simulator Control & JSON Link -->
+      <div class="flex flex-col sm:flex-row items-center gap-2">
+        <div class="flex items-center gap-2.5 rounded-xl border border-white/[.08] bg-[#0c1118] px-3.5 py-2.5">
+          <label for="simulation-toggle" class="text-xs font-medium text-slate-300 cursor-pointer select-none">
+            Simulate Gate Failure
+          </label>
+          <input type="checkbox" id="simulation-toggle" onchange="toggleGateSimulation(this.checked)" class="h-4 w-4 rounded border-slate-700 bg-slate-900 text-rose-500 focus:ring-rose-500 focus:ring-offset-0 cursor-pointer">
+        </div>
+
+        <a href="/api/security/scorecard" target="_blank" class="flex h-10 items-center gap-2 rounded-xl border border-white/[.08] bg-white/[.025] px-3 text-xs text-slate-300 transition hover:border-white/[.15] hover:text-white">
+          <i class="fa-solid fa-code text-xs text-slate-500"></i>
+          <span>JSON</span>
+        </a>
+      </div>
     </div>
   </section>
 
@@ -153,8 +175,11 @@
     </div>
   </section>
 
-  <!-- Interactive Release Path Workflow Graph (from Figma) -->
-  <section id="pipeline" class="rounded-xl border border-white/[.07] bg-[#0c1118] p-6 transition-colors">
+  <!-- Interactive Release Path Workflow Graph (with Laser Scanner Ray - Suggestion #2) -->
+  <section id="pipeline" class="relative overflow-hidden rounded-xl border border-white/[.07] bg-[#0c1118] p-6 transition-colors">
+    <!-- Laser Scanner Ray Animation element -->
+    <div id="pipeline-scanner-ray" class="laser-ray hidden"></div>
+
     <div class="flex flex-col gap-4 border-b border-white/[.06] pb-5 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <div class="flex items-center gap-2">
@@ -164,7 +189,7 @@
           </span>
         </div>
         <p class="mt-1 text-xs text-slate-500 font-mono">
-          Commit <strong class="text-slate-300 font-mono">{{ scorecard.commit_sha or 'e901372' }}</strong> &bull; Run #148 &bull; Initiator: GitHub Actions CI
+          Commit <strong class="text-slate-300 font-mono">{{ scorecard.commit_sha or '97d613f' }}</strong> &bull; Run #148 &bull; Initiator: GitHub Actions CI
         </p>
       </div>
       <div class="flex items-center gap-2">
@@ -184,7 +209,7 @@
           <i class="fa-solid fa-code-commit text-emerald-400"></i>
         </div>
         <div class="mt-3">
-          <div class="text-sm font-semibold text-white">Git Check & Secret Scan</div>
+          <div class="text-sm font-semibold text-white">Git Check & Secrets</div>
           <div class="text-[11px] text-slate-500 mt-0.5 font-mono">Gitleaks pre-commit</div>
         </div>
         <div class="mt-3 pt-2 border-t border-white/[.05] flex items-center justify-between text-[11px]">
@@ -259,7 +284,7 @@
     </div>
   </section>
 
-  <!-- Security Gates Grid (Click to Inspect Drawer) -->
+  <!-- Security Gates Grid with STRIDE Annotations (Suggestion #6) -->
   <section>
     <div class="flex items-center justify-between mb-4">
       <div>
@@ -287,7 +312,44 @@
           </span>
         </div>
 
-        <div class="mt-4 pt-3 border-t border-white/[.05] flex items-center justify-between text-xs text-slate-400">
+        <!-- STRIDE Threat Mitigation Tag (Suggestion #6) -->
+        <div class="mt-3">
+          {% if 'Gitleaks' in gate.name %}
+          <span class="inline-flex items-center gap-1 text-[9px] font-mono text-emerald-400 bg-emerald-400/5 px-2 py-0.5 rounded border border-emerald-400/10">
+            <i class="fa-solid fa-lock text-[8px]"></i> STRIDE: Info Disclosure
+          </span>
+          {% elif 'Semgrep' in gate.name %}
+          <span class="inline-flex items-center gap-1 text-[9px] font-mono text-violet-400 bg-violet-400/5 px-2 py-0.5 rounded border border-violet-400/10">
+            <i class="fa-solid fa-bug text-[8px]"></i> STRIDE: Tampering & Injection
+          </span>
+          {% elif 'CodeQL' in gate.name %}
+          <span class="inline-flex items-center gap-1 text-[9px] font-mono text-blue-400 bg-blue-400/5 px-2 py-0.5 rounded border border-blue-400/10">
+            <i class="fa-solid fa-code text-[8px]"></i> STRIDE: Tampering & Flow
+          </span>
+          {% elif 'Trivy' in gate.name or 'OSV' in gate.name or 'pip' in gate.name %}
+          <span class="inline-flex items-center gap-1 text-[9px] font-mono text-amber-400 bg-amber-400/5 px-2 py-0.5 rounded border border-amber-400/10">
+            <i class="fa-solid fa-cube text-[8px]"></i> STRIDE: Known Exploits & DoS
+          </span>
+          {% elif 'Checkov' in gate.name %}
+          <span class="inline-flex items-center gap-1 text-[9px] font-mono text-teal-400 bg-teal-400/5 px-2 py-0.5 rounded border border-teal-400/10">
+            <i class="fa-solid fa-layer-group text-[8px]"></i> STRIDE: Elevation of Privilege
+          </span>
+          {% elif 'ZAP' in gate.name %}
+          <span class="inline-flex items-center gap-1 text-[9px] font-mono text-rose-400 bg-rose-400/5 px-2 py-0.5 rounded border border-rose-400/10">
+            <i class="fa-solid fa-bolt text-[8px]"></i> STRIDE: Denial of Service / XSS
+          </span>
+          {% elif 'Cosign' in gate.name %}
+          <span class="inline-flex items-center gap-1 text-[9px] font-mono text-emerald-400 bg-emerald-400/5 px-2 py-0.5 rounded border border-emerald-400/10">
+            <i class="fa-solid fa-signature text-[8px]"></i> STRIDE: Spoofing & Provenance
+          </span>
+          {% else %}
+          <span class="inline-flex items-center gap-1 text-[9px] font-mono text-slate-400 bg-white/[.03] px-2 py-0.5 rounded border border-white/[.05]">
+            <i class="fa-solid fa-shield text-[8px]"></i> STRIDE: Repudiation & Quality
+          </span>
+          {% endif %}
+        </div>
+
+        <div class="mt-3 pt-2.5 border-t border-white/[.05] flex items-center justify-between text-xs text-slate-400">
           <span class="flex items-center gap-1.5 text-[11px] text-slate-500">
             <i class="fa-regular fa-clock text-[10px]"></i>
             {% if 'Gitleaks' in gate.name %}8s{% elif 'Semgrep' in gate.name %}36s{% elif 'CodeQL' in gate.name %}1m 42s{% elif 'ZAP' in gate.name %}2m 14s{% else %}19s{% endif %}
@@ -448,17 +510,62 @@
       </div>
     </div>
   </section>
+
+  <!-- Live CI Telemetry Console (Suggestion #5) -->
+  <section class="rounded-xl border border-white/[.07] bg-[#0c1118] overflow-hidden shadow-2xl">
+    <!-- Console Title Bar -->
+    <div class="flex items-center justify-between px-4 py-3 border-b border-white/[.06] bg-[#090d14]">
+      <div class="flex items-center gap-3">
+        <!-- macOS-style window dots -->
+        <div class="flex items-center gap-1.5">
+          <span class="h-2.5 w-2.5 rounded-full bg-rose-500/80"></span>
+          <span class="h-2.5 w-2.5 rounded-full bg-amber-500/80"></span>
+          <span class="h-2.5 w-2.5 rounded-full bg-emerald-500/80"></span>
+        </div>
+        <span class="text-xs font-mono text-slate-400 flex items-center gap-1.5">
+          <i class="fa-solid fa-terminal text-[11px] text-emerald-400"></i>
+          <span>ci-verification-runner.log &bull; bash (80x24)</span>
+        </span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button onclick="copyTelemetryLog()" class="px-2.5 py-1 rounded bg-white/[.05] hover:bg-white/[.1] text-[11px] font-mono text-slate-400 hover:text-white transition flex items-center gap-1 border border-white/[.08]">
+          <i class="fa-regular fa-copy text-[10px]"></i> Copy Log
+        </button>
+        <button onclick="toggleTelemetryConsole()" id="telemetry-collapse-btn" class="p-1 text-slate-500 hover:text-white transition" title="Toggle Console">
+          <i class="fa-solid fa-chevron-up text-xs" id="telemetry-chevron"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Terminal Stream Output -->
+    <div id="telemetry-console-body" class="p-4 bg-[#080b10] font-mono text-[11px] leading-relaxed max-h-56 overflow-y-auto space-y-1 text-slate-300">
+      <div class="text-slate-500">[08:14:00] [CI/INIT]    → Workflow 'security-pipeline.yml' triggered on refs/heads/main</div>
+      <div class="text-slate-300">[08:14:02] <span class="text-emerald-400">[GITLEAKS]</span>   → 4,218 commits scanned against 158 rules. 0 verified secrets. <span class="text-emerald-400 font-semibold">PASS</span></div>
+      <div class="text-slate-300">[08:14:10] <span class="text-violet-400">[SEMGREP]</span>    → 5 custom AST rules evaluated. 2 suppressed, 0 blocking. <span class="text-emerald-400 font-semibold">PASS</span></div>
+      <div class="text-slate-300">[08:14:28] <span class="text-blue-400">[CODEQL]</span>     → Python security-extended suite. 18 queries completed. <span class="text-emerald-400 font-semibold">PASS</span></div>
+      <div class="text-slate-300">[08:14:42] <span class="text-amber-400">[TRIVY+OSV]</span>  → 247 packages scanned. 3 non-blocking CVEs, 0 criticals. <span class="text-emerald-400 font-semibold">PASS</span></div>
+      <div class="text-slate-300">[08:15:01] <span class="text-teal-400">[CHECKOV]</span>    → Container hardening verified (user:10001, drop ALL). <span class="text-emerald-400 font-semibold">PASS</span></div>
+      <div class="text-slate-300">[08:15:24] <span class="text-rose-400">[OWASP-ZAP]</span>  → Ephemeral preview crawled. 38 routes tested, 0 high alerts. <span class="text-emerald-400 font-semibold">PASS</span></div>
+      <div class="text-slate-300">[08:15:35] <span class="text-emerald-400">[COSIGN]</span>     → Container digest sha256:42q8... signed with Rekor transparency log. <span class="text-emerald-400 font-semibold">PASS</span></div>
+      <div class="text-emerald-400">[08:15:38] [RELEASE]    → verify_release.sh: Build provenance and signatures verified. RELEASE SUCCESS.</div>
+    </div>
+  </section>
 </div>
 {% endblock %}
 
 {% block extra_scripts %}
 <script>
-  // Interactive Gate Failure Simulation (from Figma prototype state 'f')
+  // Circular Gauge & Simulation State
   function toggleGateSimulation(isFailed) {
     const statusDot = document.getElementById('header-status-dot');
     const statusText = document.getElementById('header-status-text');
     const overallBadge = document.getElementById('overall-badge');
     const simulationBadge = document.getElementById('simulation-badge');
+
+    const scoreRing = document.getElementById('score-ring');
+    const scoreVal = document.getElementById('score-val');
+    const scoreStatus = document.getElementById('score-status');
 
     const metricValStatus = document.getElementById('metric-val-status');
     const metricNoteStatus = document.getElementById('metric-note-status');
@@ -484,6 +591,14 @@
       overallBadge.textContent = 'FAIL (BLOCKED)';
       simulationBadge.classList.remove('hidden');
 
+      // Drop score gauge to 42%
+      scoreRing.setAttribute('stroke', '#fb7185');
+      scoreRing.setAttribute('stroke-dashoffset', '145.7');
+      scoreVal.textContent = '42%';
+      scoreVal.className = 'text-sm font-bold font-mono text-rose-400';
+      scoreStatus.textContent = 'FAIL (Policy Blocked)';
+      scoreStatus.className = 'text-xs font-bold text-rose-400';
+
       metricValStatus.textContent = 'Blocked';
       metricValStatus.className = 'text-2xl font-semibold tracking-tight text-rose-400';
       metricNoteStatus.textContent = 'Gate enforced';
@@ -506,6 +621,10 @@
       releaseStatus.textContent = 'Deployment Aborted';
       releaseStatus.className = 'text-slate-500 font-mono';
 
+      appendTelemetryLog('[GATE-CHECK] [ERROR] Trivy detected unmitigated CRITICAL CVE-2024-37891 in dependency tree.');
+      appendTelemetryLog('[GATE-CHECK] [FAIL-CLOSED] Strict policy engine invoked: Pre-release verification failed.');
+      appendTelemetryLog('[GATE-CHECK] [HALT] Cosign signing halted. Deployment aborted with exit code 1.');
+
       showToast('Fail-closed gate triggered: Deployment aborted due to simulated CRITICAL vulnerability', 'rose');
     } else {
       statusDot.className = 'inline-flex h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_0_4px_rgba(52,211,153,.15)] animate-pulse';
@@ -514,6 +633,14 @@
       overallBadge.className = 'px-2.5 py-0.5 text-xs font-bold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-mono';
       overallBadge.textContent = 'PASS';
       simulationBadge.classList.add('hidden');
+
+      // Restore score gauge to 98%
+      scoreRing.setAttribute('stroke', '#34d399');
+      scoreRing.setAttribute('stroke-dashoffset', '5.0');
+      scoreVal.textContent = '98%';
+      scoreVal.className = 'text-sm font-bold font-mono text-white';
+      scoreStatus.textContent = 'Grade A (Strict)';
+      scoreStatus.className = 'text-xs font-bold text-emerald-400';
 
       metricValStatus.textContent = 'Passed';
       metricValStatus.className = 'text-2xl font-semibold tracking-tight text-white';
@@ -537,8 +664,42 @@
       releaseStatus.textContent = 'Attested & Verified';
       releaseStatus.className = 'text-emerald-300 font-semibold';
 
+      appendTelemetryLog('[GATE-CHECK] [RECOVERY] Baseline re-evaluated: All 8 security gates passed.');
+
       showToast('Simulation cleared: Pipeline restored to PASS status', 'emerald');
     }
+  }
+
+  // Live Telemetry Console Helper
+  function appendTelemetryLog(text) {
+    const consoleBody = document.getElementById('telemetry-console-body');
+    if (!consoleBody) return;
+    const now = new Date();
+    const timeStr = `[${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}]`;
+    const line = document.createElement('div');
+    if (text.includes('FAIL') || text.includes('ERROR') || text.includes('HALT')) {
+      line.className = 'text-rose-400 font-semibold';
+    } else {
+      line.className = 'text-emerald-400';
+    }
+    line.textContent = `${timeStr} ${text}`;
+    consoleBody.appendChild(line);
+    consoleBody.scrollTop = consoleBody.scrollHeight;
+  }
+
+  function toggleTelemetryConsole() {
+    const body = document.getElementById('telemetry-console-body');
+    const chevron = document.getElementById('telemetry-chevron');
+    body.classList.toggle('hidden');
+    chevron.classList.toggle('fa-chevron-down');
+    chevron.classList.toggle('fa-chevron-up');
+  }
+
+  function copyTelemetryLog() {
+    const body = document.getElementById('telemetry-console-body');
+    navigator.clipboard.writeText(body.innerText).then(() => {
+      showToast('CI telemetry logs copied to clipboard', 'emerald');
+    });
   }
 </script>
 {% endblock %}

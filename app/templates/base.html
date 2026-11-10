@@ -49,6 +49,31 @@
     .figma-bg-glow {
       background: radial-gradient(circle at 68% -12%, rgba(61, 89, 129, 0.18), transparent 38%);
     }
+    /* Cyber Dot-Grid Background with Radial Mask */
+    .cyber-grid {
+      background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+      background-size: 24px 24px;
+      mask-image: radial-gradient(ellipse 70% 60% at 50% 10%, #000 60%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 10%, #000 60%, transparent 100%);
+    }
+
+    /* Laser Scanner Ray Animation */
+    @keyframes laser-sweep {
+      0% { transform: translateX(-100%); opacity: 0; }
+      20% { opacity: 0.85; }
+      80% { opacity: 0.85; }
+      100% { transform: translateX(250%); opacity: 0; }
+    }
+    .laser-ray {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 35%;
+      background: linear-gradient(90deg, transparent, rgba(52, 211, 153, 0.35), transparent);
+      animation: laser-sweep 2.8s infinite ease-in-out;
+      pointer-events: none;
+    }
+
     /* Figma Design System Custom Color Accents */
     .icon-emerald { color: #34d399; background: rgba(52, 211, 153, 0.08); }
     .icon-blue { color: #60a5fa; background: rgba(96, 165, 250, 0.08); }
@@ -81,10 +106,6 @@
       0%, 100% { border-color: rgba(52, 211, 153, 0.25); box-shadow: 0 0 20px rgba(52, 211, 153, 0.06); }
       50% { border-color: rgba(52, 211, 153, 0.65); box-shadow: 0 0 26px rgba(52, 211, 153, 0.18); }
     }
-    @keyframes pipeline-scan {
-      0% { transform: translateX(-120%); }
-      100% { transform: translateX(340%); }
-    }
 
     .command-in { animation: 0.18s ease-out both command-in; }
     .drawer-in { animation: 0.24s ease-out both drawer-in; }
@@ -107,7 +128,10 @@
 </head>
 <body class="min-h-screen bg-[#080b10] text-slate-200 antialiased selection:bg-emerald-500/20 selection:text-emerald-300">
   <!-- Figma Background Radial Ambient Gradient -->
-  <div class="pointer-events-none fixed inset-0 figma-bg-glow"></div>
+  <div class="pointer-events-none fixed inset-0 figma-bg-glow z-0"></div>
+
+  <!-- Cyber Dot-Grid Background Overlay -->
+  <div class="pointer-events-none fixed inset-0 cyber-grid z-0 opacity-80"></div>
 
   <!-- Mobile Navigation Overlay -->
   <div id="mobile-sidebar-backdrop" onclick="toggleMobileMenu()" class="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm hidden lg:hidden"></div>
@@ -219,7 +243,7 @@
   </aside>
 
   <!-- Main Application Wrapper -->
-  <div class="lg:pl-64 flex flex-col min-h-screen">
+  <div class="lg:pl-64 flex flex-col min-h-screen relative z-10">
     <!-- Top Navigation Bar -->
     <header class="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/[.07] bg-[#0b0f15]/85 px-4 backdrop-blur-xl sm:px-6 lg:px-8">
       <!-- Left side: Mobile Hamburger & Live Status -->
@@ -275,6 +299,62 @@
         </div>
       </div>
     </footer>
+  </div>
+
+  <!-- Floating Shortcut Helper Button -->
+  <button onclick="openShortcutsModal()" class="fixed bottom-6 left-6 z-30 hidden sm:flex items-center gap-2 rounded-full border border-white/[.1] bg-[#0c1118]/90 px-3 py-1.5 text-[11px] text-slate-400 backdrop-blur-md hover:border-white/[.2] hover:text-white transition shadow-xl" title="View Keyboard Shortcuts">
+    <kbd class="font-mono text-[10px] text-emerald-400 font-bold">?</kbd>
+    <span>Shortcuts</span>
+  </button>
+
+  <!-- Keyboard Shortcuts Cheat-Sheet Modal (Suggestion #7) -->
+  <div id="shortcuts-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 px-4 backdrop-blur-sm hidden" onclick="handleShortcutsBackdropClick(event)">
+    <div class="command-in w-full max-w-md overflow-hidden rounded-2xl border border-white/[.12] bg-[#10151d] shadow-[0_30px_100px_rgba(0,0,0,.85)] p-6">
+      <div class="flex items-center justify-between pb-4 border-b border-white/[.08]">
+        <div class="flex items-center gap-2.5">
+          <div class="grid h-8 w-8 place-items-center rounded-lg icon-emerald text-sm">
+            <i class="fa-solid fa-keyboard"></i>
+          </div>
+          <h3 class="text-base font-semibold text-white">Keyboard Shortcuts</h3>
+        </div>
+        <button onclick="closeShortcutsModal()" class="text-slate-500 hover:text-white p-1" aria-label="Close shortcuts">
+          <i class="fa-solid fa-xmark text-base"></i>
+        </button>
+      </div>
+
+      <div class="mt-4 space-y-3 text-xs">
+        <div class="flex items-center justify-between py-1.5 border-b border-white/[.04]">
+          <span class="text-slate-300">Open Command Palette</span>
+          <kbd class="rounded border border-white/[.1] bg-white/[.04] px-2 py-0.5 text-[10px] font-mono text-emerald-400">⌘K / Ctrl+K</kbd>
+        </div>
+        <div class="flex items-center justify-between py-1.5 border-b border-white/[.04]">
+          <span class="text-slate-300">Run Security Pipeline</span>
+          <kbd class="rounded border border-white/[.1] bg-white/[.04] px-2 py-0.5 text-[10px] font-mono text-emerald-400">R</kbd>
+        </div>
+        <div class="flex items-center justify-between py-1.5 border-b border-white/[.04]">
+          <span class="text-slate-300">Toggle Fail-Closed Simulation</span>
+          <kbd class="rounded border border-white/[.1] bg-white/[.04] px-2 py-0.5 text-[10px] font-mono text-emerald-400">S</kbd>
+        </div>
+        <div class="flex items-center justify-between py-1.5 border-b border-white/[.04]">
+          <span class="text-slate-300">Jump to Book Catalog</span>
+          <kbd class="rounded border border-white/[.1] bg-white/[.04] px-2 py-0.5 text-[10px] font-mono text-emerald-400">C</kbd>
+        </div>
+        <div class="flex items-center justify-between py-1.5 border-b border-white/[.04]">
+          <span class="text-slate-300">Jump to Security Dashboard</span>
+          <kbd class="rounded border border-white/[.1] bg-white/[.04] px-2 py-0.5 text-[10px] font-mono text-emerald-400">P</kbd>
+        </div>
+        <div class="flex items-center justify-between py-1.5">
+          <span class="text-slate-300">Dismiss Modals & Drawers</span>
+          <kbd class="rounded border border-white/[.1] bg-white/[.04] px-2 py-0.5 text-[10px] font-mono text-emerald-400">ESC</kbd>
+        </div>
+      </div>
+
+      <div class="mt-6 pt-3 border-t border-white/[.08] text-right">
+        <button onclick="closeShortcutsModal()" class="px-4 py-1.5 bg-white/[.08] hover:bg-white/[.15] text-slate-300 text-xs font-medium rounded-lg transition">
+          Got it
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- Command Palette Modal (from Figma) -->
@@ -382,7 +462,7 @@
           </div>
 
           <div>
-            <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Framework Compliance</h3>
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Framework Compliance & STRIDE</h3>
             <div id="drawer-frameworks" class="flex flex-wrap gap-2"></div>
           </div>
 
@@ -411,15 +491,46 @@
 
   <!-- Global Frontend JavaScript -->
   <script>
-    // Keyboard Shortcuts (⌘K / Ctrl+K and ESC)
+    // Global Keyboard Shortcuts
     document.addEventListener('keydown', (e) => {
+      const activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
+      const isInput = activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select';
+
+      // ⌘K / Ctrl+K
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         toggleCommandPalette();
+        return;
       }
+
+      // ESC dismiss
       if (e.key === 'Escape') {
         closeCommandPalette();
         closeGateDrawer();
+        closeShortcutsModal();
+        return;
+      }
+
+      // Shortcuts when not in an input
+      if (!isInput && !e.metaKey && !e.ctrlKey) {
+        if (e.key === '?' || (e.shiftKey && e.key === '/')) {
+          e.preventDefault();
+          toggleShortcutsModal();
+        } else if (e.key === 'r' || e.key === 'R') {
+          e.preventDefault();
+          triggerSimulatedPipelineRun();
+        } else if (e.key === 's' || e.key === 'S') {
+          const simToggle = document.getElementById('simulation-toggle');
+          if (simToggle) {
+            e.preventDefault();
+            simToggle.checked = !simToggle.checked;
+            toggleGateSimulation(simToggle.checked);
+          }
+        } else if (e.key === 'c' || e.key === 'C') {
+          window.location.href = '/';
+        } else if (e.key === 'p' || e.key === 'P') {
+          window.location.href = '/security';
+        }
       }
     });
 
@@ -445,6 +556,29 @@
         openCommandPalette();
       } else {
         closeCommandPalette();
+      }
+    }
+
+    function openShortcutsModal() {
+      document.getElementById('shortcuts-modal').classList.remove('hidden');
+    }
+
+    function closeShortcutsModal() {
+      document.getElementById('shortcuts-modal').classList.add('hidden');
+    }
+
+    function toggleShortcutsModal() {
+      const modal = document.getElementById('shortcuts-modal');
+      if (modal.classList.contains('hidden')) {
+        openShortcutsModal();
+      } else {
+        closeShortcutsModal();
+      }
+    }
+
+    function handleShortcutsBackdropClick(e) {
+      if (e.target.id === 'shortcuts-modal') {
+        closeShortcutsModal();
       }
     }
 
@@ -496,63 +630,80 @@
 
       showToast('Pipeline execution triggered on branch main', 'emerald');
 
+      // Trigger laser scanner animation on release path if present
+      const scanRay = document.getElementById('pipeline-scanner-ray');
+      if (scanRay) {
+        scanRay.classList.remove('hidden');
+      }
+
+      // Append live log to telemetry console if present
+      if (typeof appendTelemetryLog === 'function') {
+        appendTelemetryLog('[PIPELINE]  Manual trigger accepted. Initiating 8 automated security gates…');
+      }
+
       setTimeout(() => {
         icon.className = 'fa-solid fa-play text-xs';
         text.textContent = 'Run pipeline';
         btn.disabled = false;
         btn.classList.remove('opacity-75');
+        if (scanRay) {
+          scanRay.classList.add('hidden');
+        }
         showToast('All 8 security gates passed successfully!', 'emerald');
+        if (typeof appendTelemetryLog === 'function') {
+          appendTelemetryLog('[PIPELINE]  All security gates verified. Release attested via Cosign and Rekor.');
+        }
       }, 2800);
     }
 
-    // Gate Details Registry (from Figma Design)
+    // Gate Details Registry (from Figma Design + STRIDE annotations)
     const FIGMA_GATE_DATA = {
       "Gitleaks": {
         summary: "Scanned the complete Git history and working tree against 158 secret patterns.",
         checks: ["4,218 commits inspected", "0 verified secrets", "12 allowlist entries applied"],
-        frameworks: ["NIST SSDF PW.4", "OWASP ASVS 1.14"],
+        frameworks: ["NIST SSDF PW.4", "OWASP ASVS 1.14", "STRIDE: Information Disclosure"],
         command: "gitleaks detect --source . --log-opts=--all --redact",
         tone: "emerald"
       },
       "Semgrep": {
         summary: "Custom ruleset evaluated first-party code for injection, auth, and data-flow risks.",
         checks: ["5 custom AST rules evaluated", "2 findings suppressed", "0 blocking findings"],
-        frameworks: ["NIST SSDF PW.7", "OWASP ASVS 1.1"],
+        frameworks: ["NIST SSDF PW.7", "OWASP ASVS 1.1", "STRIDE: Tampering & Injection"],
         command: "semgrep ci --config .semgrep/security.yml",
         tone: "violet"
       },
       "CodeQL": {
         summary: "Deep semantic analysis completed across Python execution paths with GitHub Security.",
         checks: ["1 language analyzed (Python)", "18 queries executed", "0 critical paths"],
-        frameworks: ["NIST SSDF PW.7", "CWE Top 25"],
+        frameworks: ["NIST SSDF PW.7", "CWE Top 25", "STRIDE: Tampering"],
         command: "codeql database analyze db python-security-extended.qls",
         tone: "blue"
       },
       "Trivy + OSV": {
         summary: "Dependencies and container layers checked against OSV and NVD vulnerability databases.",
         checks: ["247 packages inspected", "3 non-blocking CVEs", "0 exploitable criticals"],
-        frameworks: ["NIST SSDF PS.3", "SLSA Build L3"],
+        frameworks: ["NIST SSDF PS.3", "SLSA Build L3", "STRIDE: Known Exploits & DoS"],
         command: "trivy image --severity HIGH,CRITICAL csss441-book-catalog:latest",
         tone: "amber"
       },
       "Checkov": {
         summary: "Infrastructure definitions evaluated before deployment against CIS benchmarks.",
         checks: ["42 checks passed", "0 policy violations", "3 files inspected"],
-        frameworks: ["NIST SSDF PW.9", "CIS Benchmarks"],
+        frameworks: ["NIST SSDF PW.9", "CIS Benchmarks", "STRIDE: Elevation of Privilege"],
         command: "checkov --directory . --framework dockerfile,compose",
         tone: "teal"
       },
       "OWASP ZAP": {
         summary: "The ephemeral preview environment was crawled and dynamically tested for web risks.",
         checks: ["38 routes crawled", "126 requests tested", "0 high-risk alerts"],
-        frameworks: ["OWASP ASVS 14.4", "NIST SSDF RV.1"],
+        frameworks: ["OWASP ASVS 14.4", "NIST SSDF RV.1", "STRIDE: Denial of Service & XSS"],
         command: "zap-baseline.py -t http://127.0.0.1:8000 -c .zap/rules.tsv",
         tone: "rose"
       },
       "Cosign": {
         summary: "Keyless container signature verification using Sigstore Fulcio OIDC and Rekor transparency log.",
         checks: ["OIDC identity verified (GitHub Actions)", "Rekor transparency entry confirmed", "SHA-256 digest attested"],
-        frameworks: ["SLSA Provenance L3", "Supply Chain Security"],
+        frameworks: ["SLSA Provenance L3", "Supply Chain Security", "STRIDE: Spoofing & Tampering"],
         command: "cosign verify --certificate-identity-regexp=https://github.com/StephDuah69 ghcr.io/csss441-app@sha256:...",
         tone: "emerald"
       }
@@ -562,7 +713,7 @@
       const data = FIGMA_GATE_DATA[name] || {
         summary: `Automated security verification performed for ${name}.`,
         checks: ["Policy verification passed", "0 blocking issues", "Evidence generated"],
-        frameworks: ["NIST SSDF", "CSSS 441 Gate Specification"],
+        frameworks: ["NIST SSDF", "CSSS 441 Gate Specification", "STRIDE Compliant"],
         command: `make gates`,
         tone: "emerald"
       };
