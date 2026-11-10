@@ -207,15 +207,16 @@ python scripts/import_reports.py --reports-dir reports/
 
 ## 9. Academic Contribution & Team Ownership
 
-This project was developed by a five-member engineering team for **CSSS 441: Software Security I**:
+This project was developed by the engineering team for **CSSS 441: Software Security I**:
 
 ### 👥 Project Contributors
 
 | Contributor | GitHub Profile | Index No. | Assigned Role | Primary Technical Domain |
 | :--- | :--- | :--- | :--- | :--- |
 | <a href="https://github.com/hannahamoaba"><img src="https://github.com/hannahamoaba.png" width="44" height="44" style="border-radius:50%;" alt="hannahamoaba"/><br/>**Hannah Amoaba Larbi**</a> | [@hannahamoaba](https://github.com/hannahamoaba) | `1700237691` | **Team Lead** | CI/CD Pipeline Orchestration, Cosign, SLSA |
-| <a href="https://github.com/thetravelerkweku-ops"><img src="https://github.com/thetravelerkweku-ops.png" width="44" height="44" style="border-radius:50%;" alt="thetravelerkweku-ops"/><br/>**Stephen Kwadwo Duah**</a> | [@thetravelerkweku-ops](https://github.com/thetravelerkweku-ops) | `1696334280` | **Source Security** | Gitleaks Hooks, Secret Detection, Setup |
-| <a href="https://github.com/jesu-henry"><img src="https://github.com/jesu-henry.png" width="44" height="44" style="border-radius:50%;" alt="jesu-henry"/><br/>**Othniel Kpakpo Saka**</a> | [@jesu-henry](https://github.com/jesu-henry) | `1705408739` | **AppSec Engineer** | 5 Custom Semgrep Rules, CodeQL, AST Tests |
+| <a href="https://github.com/StephDuah69"><img src="https://github.com/StephDuah69.png" width="44" height="44" style="border-radius:50%;" alt="StephDuah69"/><br/>**Stephen Kwadwo Duah**</a> | [@StephDuah69](https://github.com/StephDuah69) | `1696334280` | **Source Security** | Gitleaks Hooks, Secret Detection, Repository Admin |
+| <a href="https://github.com/thetravelerkweku-ops"><img src="https://github.com/thetravelerkweku-ops.png" width="44" height="44" style="border-radius:50%;" alt="thetravelerkweku-ops"/><br/>**Othniel Kpakpo Saka**</a> | [@thetravelerkweku-ops](https://github.com/thetravelerkweku-ops) | `1705408739` | **AppSec Engineer** | 5 Custom Semgrep Rules, AST Rule Tests |
+| <a href="https://github.com/jesu-henry"><img src="https://github.com/jesu-henry.png" width="44" height="44" style="border-radius:50%;" alt="jesu-henry"/><br/>**Jesu Henry Quaijah**</a> | [@jesu-henry](https://github.com/jesu-henry) | Group Contributor | **Code Analysis** | CodeQL Integration, Security Analysis |
 | <a href="https://github.com/Afrifar055-sketch"><img src="https://github.com/Afrifar055-sketch.png" width="44" height="44" style="border-radius:50%;" alt="Afrifar055-sketch"/><br/>**Fred Nkrumah**</a> | [@Afrifar055-sketch](https://github.com/Afrifar055-sketch) | `1703603625` | **Container & SCA** | Hardened Docker, Checkov, Trivy, Syft SBOMs |
 | <a href="https://github.com/ben244294"><img src="https://github.com/ben244294.png" width="44" height="44" style="border-radius:50%;" alt="ben244294"/><br/>**Benjamin Essibo Ofori**</a> | [@ben244294](https://github.com/ben244294) | `1693417365` | **DAST & SecOps** | OWASP ZAP DAST, Ephemeral Staging, DefectDojo |
 
@@ -225,10 +226,12 @@ This project was developed by a five-member engineering team for **CSSS 441: Sof
 
 - **Hannah Amoaba Larbi** ([@hannahamoaba](https://github.com/hannahamoaba)) — Index: `1700237691`
   - *Responsibilities*: CI/CD Pipeline Orchestration, Sigstore Cosign keyless signing, SLSA build provenance attestations, release verification gates, and architectural documentation.
-- **Stephen Kwadwo Duah** ([@thetravelerkweku-ops](https://github.com/thetravelerkweku-ops)) — Index: `1696334280`
+- **Stephen Kwadwo Duah** ([@StephDuah69](https://github.com/StephDuah69)) — Index: `1696334280`
   - *Responsibilities*: Gitleaks pre-commit hooks, repository secret detection, CI secret scanning policies, secret rotation protocols, and developer onboarding automation.
-- **Othniel Kpakpo Saka** ([@jesu-henry](https://github.com/jesu-henry)) — Index: `1705408739`
-  - *Responsibilities*: Custom Semgrep rules (SQLi, RCE, eval, pickle, CORS), automated positive/negative rule test suites (`rule_tests.py`), and GitHub CodeQL integration.
+- **Othniel Kpakpo Saka** ([@thetravelerkweku-ops](https://github.com/thetravelerkweku-ops)) — Index: `1705408739`
+  - *Responsibilities*: Custom Semgrep rules (SQLi, RCE, eval, pickle, CORS), automated positive/negative rule test suites (`rule_tests.py`), and SAST gate policies.
+- **Jesu Henry Quaijah** ([@jesu-henry](https://github.com/jesu-henry))
+  - *Responsibilities*: GitHub CodeQL static analysis workflows, Python AST rule verification, and static security policy enforcement.
 - **Fred Nkrumah** ([@Afrifar055-sketch](https://github.com/Afrifar055-sketch)) — Index: `1703603625`
   - *Responsibilities*: Multi-stage Dockerfile hardening (non-root `appuser:10001`, read-only rootfs), Compose constraints, Checkov IaC scanning, OSV-Scanner, Trivy, and Anchore Syft CycloneDX SBOM generation.
 - **Benjamin Essibo Ofori** ([@ben244294](https://github.com/ben244294)) — Index: `1693417365`

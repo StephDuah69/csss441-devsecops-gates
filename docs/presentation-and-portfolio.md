@@ -43,10 +43,11 @@ This script is structured to demonstrate all required course elements in exactly
 - Title: CSSS 441 Project 2 — DevSecOps Pipeline with Security Gates
 - Presenters:
   1. **Hannah Amoaba Larbi** ([@hannahamoaba](https://github.com/hannahamoaba)) — Index: `1700237691` (Team Lead & Release Verification Engineer)
-  2. **Stephen Kwadwo Duah** ([@thetravelerkweku-ops](https://github.com/thetravelerkweku-ops)) — Index: `1696334280` (Source Security & Secrets Engineer)
-  3. **Othniel Kpakpo Saka** ([@jesu-henry](https://github.com/jesu-henry)) — Index: `1705408739` (AppSec & Static Analysis Engineer)
-  4. **Fred Nkrumah** ([@Afrifar055-sketch](https://github.com/Afrifar055-sketch)) — Index: `1703603625` (Container & SCA Security Engineer)
-  5. **Benjamin Essibo Ofori** ([@ben244294](https://github.com/ben244294)) — Index: `1693417365` (DAST & Vulnerability Operations Engineer)
+  2. **Stephen Kwadwo Duah** ([@StephDuah69](https://github.com/StephDuah69)) — Index: `1696334280` (Source Security & Secrets Engineer)
+  3. **Othniel Kpakpo Saka** ([@thetravelerkweku-ops](https://github.com/thetravelerkweku-ops)) — Index: `1705408739` (AppSec & Static Analysis Engineer)
+  4. **Jesu Henry Quaijah** ([@jesu-henry](https://github.com/jesu-henry)) — Group Contributor (Static Code Analysis Engineer)
+  5. **Fred Nkrumah** ([@Afrifar055-sketch](https://github.com/Afrifar055-sketch)) — Index: `1703603625` (Container & SCA Security Engineer)
+  6. **Benjamin Essibo Ofori** ([@ben244294](https://github.com/ben244294)) — Index: `1693417365` (DAST & Vulnerability Operations Engineer)
 
 ### Slide 2: Problem Statement & DevSecOps Philosophy
 - The challenge: Software supply chain attacks, credential leaks, and insecure container deployments.
@@ -117,23 +118,31 @@ This script is structured to demonstrate all required course elements in exactly
   - *Architected a multi-stage GitHub Actions DevSecOps pipeline with automated fail-closed security gates, enforcing keyless Sigstore Cosign signing and SLSA build provenance attestations on production container images.*
   - *Engineered an automated cryptographic release gate (`verify_release.sh`) validating SHA-256 digests and Fulcio OIDC certificates against Rekor transparency logs prior to deployment.*
 
-### Member 2: Stephen Kwadwo Duah (Index No: 1696334280 | [@thetravelerkweku-ops](https://github.com/thetravelerkweku-ops))
+### Member 2: Stephen Kwadwo Duah (Index No: 1696334280 | [@StephDuah69](https://github.com/StephDuah69))
 - **Role**: Source Security & Secrets Engineer
-- **Role Summary**: Implemented workstation pre-commit hooks and CI secret scanning with Gitleaks, established developer environment automation scripts (`scripts/setup.sh`), and authored secret rotation and incident response protocols.
+- **Role Summary**: Implemented workstation pre-commit hooks and CI secret scanning with Gitleaks, established developer environment automation scripts (`scripts/setup.sh`), managed repository infrastructure, and authored secret rotation protocols.
 - **Tools Used**: Gitleaks, Pre-commit, Git Hooks, Bash, PowerShell, Python.
 - **Resume Bullets**:
   - *Implemented Shift-Left secret detection utilizing Gitleaks pre-commit hooks and mirrored GitHub Actions workflows, eliminating credential exposure risk across Git commit history.*
   - *Developed reproducible environment setup scripts (`setup.sh`) and secret rotation runbooks, automating linter configuration and developer security guardrails.*
 
-### Member 3: Othniel Kpakpo Saka (Index No: 1705408739 | [@jesu-henry](https://github.com/jesu-henry))
+### Member 3: Othniel Kpakpo Saka (Index No: 1705408739 | [@thetravelerkweku-ops](https://github.com/thetravelerkweku-ops))
 - **Role**: AppSec & Static Analysis Engineer
-- **Role Summary**: Authored 5 custom Semgrep rules with comprehensive unit test suites covering SQL injection, command execution, unsafe eval/exec, insecure deserialization, and wildcard CORS; tuned GitHub CodeQL workflows.
-- **Tools Used**: Semgrep, CodeQL, AST, Python AST, YAML.
+- **Role Summary**: Authored 5 custom Semgrep rules with comprehensive unit test suites covering SQL injection, command execution, unsafe eval/exec, insecure deserialization, and wildcard CORS; tuned SAST gate policies.
+- **Tools Used**: Semgrep, Python AST, YAML, Pytest.
 - **Resume Bullets**:
   - *Engineered 5 custom Semgrep static analysis rules targeting SQL injection, RCE, unsafe deserialization, and CORS flaws, validated by automated positive and negative test suites.*
-  - *Configured and tuned GitHub CodeQL static analysis workflows to achieve zero false-positive alerts on weekly automated repository security scans.*
+  - *Configured and validated SAST gate policies to ensure zero high-severity code vulnerabilities reach main branches.*
 
-### Member 4: Fred Nkrumah (Index No: 1703603625 | [@Afrifar055-sketch](https://github.com/Afrifar055-sketch))
+### Member 4: Jesu Henry Quaijah ([@jesu-henry](https://github.com/jesu-henry))
+- **Role**: Static Code Analysis Engineer
+- **Role Summary**: Integrated GitHub CodeQL static analysis workflows, tuned CodeQL query suites for Python, and conducted code reviews for AST rule enforcement.
+- **Tools Used**: CodeQL, GitHub Security, Python AST, YAML.
+- **Resume Bullets**:
+  - *Configured and tuned GitHub CodeQL static analysis workflows to achieve zero false-positive alerts on weekly automated repository security scans.*
+  - *Audited application endpoints against OWASP Top 10 standards, implementing AST rule verifications and automated quality controls.*
+
+### Member 5: Fred Nkrumah (Index No: 1703603625 | [@Afrifar055-sketch](https://github.com/Afrifar055-sketch))
 - **Role**: Container & SCA Security Engineer
 - **Role Summary**: Built hardened multi-stage Docker container images with unprivileged user execution (`appuser:10001`), read-only rootfs, and dropped Linux capabilities; integrated Checkov, OSV-Scanner, Trivy, and Anchore Syft SBOM generation.
 - **Tools Used**: Docker, Checkov, Trivy, OSV-Scanner, Anchore Syft, pip-compile, pip-audit.
