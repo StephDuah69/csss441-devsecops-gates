@@ -209,15 +209,29 @@ python scripts/import_reports.py --reports-dir reports/
 
 This project was developed by a five-member engineering team for **CSSS 441: Software Security I**:
 
-- **Hannah Amoaba Larbi** (Index: `1700237691`): **Team Lead & Release Verification Engineer**
+### 👥 Project Contributors
+
+| Contributor | GitHub Profile | Index No. | Assigned Role | Primary Technical Domain |
+| :--- | :--- | :--- | :--- | :--- |
+| <a href="https://github.com/hannahamoaba"><img src="https://github.com/hannahamoaba.png" width="44" height="44" style="border-radius:50%;" alt="hannahamoaba"/><br/>**Hannah Amoaba Larbi**</a> | [@hannahamoaba](https://github.com/hannahamoaba) | `1700237691` | **Team Lead** | CI/CD Pipeline Orchestration, Cosign, SLSA |
+| <a href="https://github.com/thetravelerkweku-ops"><img src="https://github.com/thetravelerkweku-ops.png" width="44" height="44" style="border-radius:50%;" alt="thetravelerkweku-ops"/><br/>**Stephen Kwadwo Duah**</a> | [@thetravelerkweku-ops](https://github.com/thetravelerkweku-ops) | `1696334280` | **Source Security** | Gitleaks Hooks, Secret Detection, Setup |
+| <a href="https://github.com/jesu-henry"><img src="https://github.com/jesu-henry.png" width="44" height="44" style="border-radius:50%;" alt="jesu-henry"/><br/>**Othniel Kpakpo Saka**</a> | [@jesu-henry](https://github.com/jesu-henry) | `1705408739` | **AppSec Engineer** | 5 Custom Semgrep Rules, CodeQL, AST Tests |
+| <a href="https://github.com/Afrifar055-sketch"><img src="https://github.com/Afrifar055-sketch.png" width="44" height="44" style="border-radius:50%;" alt="Afrifar055-sketch"/><br/>**Fred Nkrumah**</a> | [@Afrifar055-sketch](https://github.com/Afrifar055-sketch) | `1703603625` | **Container & SCA** | Hardened Docker, Checkov, Trivy, Syft SBOMs |
+| <a href="https://github.com/ben244294"><img src="https://github.com/ben244294.png" width="44" height="44" style="border-radius:50%;" alt="ben244294"/><br/>**Benjamin Essibo Ofori**</a> | [@ben244294](https://github.com/ben244294) | `1693417365` | **DAST & SecOps** | OWASP ZAP DAST, Ephemeral Staging, DefectDojo |
+
+---
+
+### Detailed Responsibilities:
+
+- **Hannah Amoaba Larbi** ([@hannahamoaba](https://github.com/hannahamoaba)) — Index: `1700237691`
   - *Responsibilities*: CI/CD Pipeline Orchestration, Sigstore Cosign keyless signing, SLSA build provenance attestations, release verification gates, and architectural documentation.
-- **Stephen Kwadwo Duah** (Index: `1696334280`): **Source Security & Secrets Engineer**
+- **Stephen Kwadwo Duah** ([@thetravelerkweku-ops](https://github.com/thetravelerkweku-ops)) — Index: `1696334280`
   - *Responsibilities*: Gitleaks pre-commit hooks, repository secret detection, CI secret scanning policies, secret rotation protocols, and developer onboarding automation.
-- **Othniel Kpakpo Saka** (Index: `1705408739`): **AppSec & Static Analysis Engineer**
+- **Othniel Kpakpo Saka** ([@jesu-henry](https://github.com/jesu-henry)) — Index: `1705408739`
   - *Responsibilities*: Custom Semgrep rules (SQLi, RCE, eval, pickle, CORS), automated positive/negative rule test suites (`rule_tests.py`), and GitHub CodeQL integration.
-- **Fred Nkrumah** (Index: `1703603625`): **Container & SCA Security Engineer**
+- **Fred Nkrumah** ([@Afrifar055-sketch](https://github.com/Afrifar055-sketch)) — Index: `1703603625`
   - *Responsibilities*: Multi-stage Dockerfile hardening (non-root `appuser:10001`, read-only rootfs), Compose constraints, Checkov IaC scanning, OSV-Scanner, Trivy, and Anchore Syft CycloneDX SBOM generation.
-- **Benjamin Essibo Ofori** (Index: `1693417365`): **DAST & Vulnerability Operations Engineer**
+- **Benjamin Essibo Ofori** ([@ben244294](https://github.com/ben244294)) — Index: `1693417365`
   - *Responsibilities*: Ephemeral staging container orchestration, OWASP ZAP dynamic baseline scanning, alert policy tuning (`.zap/rules.tsv`), DefectDojo ingestion client, and remediation/MTTF tracking.
 
 See [`docs/contribution-records.md`](docs/contribution-records.md) for full responsibility matrices, review pairings, and task deliverables.

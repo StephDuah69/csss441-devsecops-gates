@@ -5,13 +5,13 @@
 
 ## 1. Team Organization & Roles
 
-| Member Name | Student Index No. | Assigned Role | Primary Focus Area | Secondary Responsibilities |
-| :--- | :--- | :--- | :--- | :--- |
-| **Hannah Amoaba Larbi** (Lead) | `1700237691` | Team Lead & Release Verification Engineer | CI/CD Pipeline Orchestration, Sigstore Cosign, SLSA Provenance, Release Verification Gates | Overall architectural cohesion, PR reviews, Final Technical Report |
-| **Stephen Kwadwo Duah** | `1696334280` | Source Security & Secrets Engineer | Gitleaks Pre-Commit Hooks, Secret Scanning, CI Workflow Hardening | Secret rotation protocols, developer setup automation (`setup.sh`) |
-| **Othniel Kpakpo Saka** | `1705408739` | AppSec & Static Analysis Engineer | 5 Custom Semgrep SAST Rules, Positive/Negative Rule Tests, CodeQL Tuning | Rule false-positive tuning, CWE/OWASP mapping, SAST gate policies |
-| **Fred Nkrumah** | `1703603625` | Container & SCA Security Engineer | Multi-Stage Hardened Dockerfile, Checkov IaC Policies, OSV-Scanner, Trivy, Syft SBOMs | Compose resource constraints, read-only rootfs compliance, image tagging |
-| **Benjamin Essibo Ofori** | `1693417365` | DAST & Vulnerability Operations Engineer | Ephemeral Staging Deployment, OWASP ZAP Baseline DAST, DefectDojo API Client | ZAP alert tuning (`.zap/rules.tsv`), Remediation Log & MTTF metrics |
+| Member Name | Student Index No. | GitHub Profile | Assigned Role | Primary Focus Area | Secondary Responsibilities |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Hannah Amoaba Larbi** (Lead) | `1700237691` | [@hannahamoaba](https://github.com/hannahamoaba) | Team Lead & Release Verification Engineer | CI/CD Pipeline Orchestration, Sigstore Cosign, SLSA Provenance, Release Verification Gates | Overall architectural cohesion, PR reviews, Final Technical Report |
+| **Stephen Kwadwo Duah** | `1696334280` | [@thetravelerkweku-ops](https://github.com/thetravelerkweku-ops) | Source Security & Secrets Engineer | Gitleaks Pre-Commit Hooks, Secret Scanning, CI Workflow Hardening | Secret rotation protocols, developer setup automation (`setup.sh`) |
+| **Othniel Kpakpo Saka** | `1705408739` | [@jesu-henry](https://github.com/jesu-henry) | AppSec & Static Analysis Engineer | 5 Custom Semgrep SAST Rules, Positive/Negative Rule Tests, CodeQL Tuning | Rule false-positive tuning, CWE/OWASP mapping, SAST gate policies |
+| **Fred Nkrumah** | `1703603625` | [@Afrifar055-sketch](https://github.com/Afrifar055-sketch) | Container & SCA Security Engineer | Multi-Stage Hardened Dockerfile, Checkov IaC Policies, OSV-Scanner, Trivy, Syft SBOMs | Compose resource constraints, read-only rootfs compliance, image tagging |
+| **Benjamin Essibo Ofori** | `1693417365` | [@ben244294](https://github.com/ben244294) | DAST & Vulnerability Operations Engineer | Ephemeral Staging Deployment, OWASP ZAP Baseline DAST, DefectDojo API Client | ZAP alert tuning (`.zap/rules.tsv`), Remediation Log & MTTF metrics |
 
 ---
 

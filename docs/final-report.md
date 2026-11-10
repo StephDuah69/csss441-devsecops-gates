@@ -179,13 +179,13 @@ Automated Pytest suite results: **25 passed, 0 failures in 1.58s** across both b
 
 ## 6. Team Contributions & Responsibilities
 
-| Student Name | Student Index | Primary Role | Key Contributions | Tools Mastered |
-| :--- | :--- | :--- | :--- | :--- |
-| **Hannah Amoaba Larbi** | `1700237691` | Team Lead & Release Verification Engineer | CI/CD pipeline orchestration, Sigstore Cosign keyless signing, SLSA build provenance attestations, `verify_release.sh`, FastAPI application architecture. | GitHub Actions, Cosign, SLSA, Docker, FastAPI, SQLAlchemy |
-| **Stephen Kwadwo Duah** | `1696334280` | Source Security & Secrets Engineer | Gitleaks pre-commit hooks, CI secret scanning configuration, developer environment setup automation (`setup.sh`), secret rotation protocols. | Gitleaks, Pre-commit, Git hooks, Bash, PowerShell |
-| **Othniel Kpakpo Saka** | `1705408739` | AppSec & Static Analysis Engineer | 5 custom Semgrep SAST rules, Semgrep positive/negative rule test harness (`rule_tests.py`), GitHub CodeQL static analysis tuning. | Semgrep, CodeQL, AST, Python typing, YAML |
-| **Fred Nkrumah** | `1703603625` | Container & SCA Security Engineer | Multi-stage hardened Dockerfile, Compose resource constraints, OSV-Scanner, Trivy (FS/Image) scanning, Checkov IaC policies, Anchore Syft SBOMs. | Dockerfile, Checkov, Trivy, OSV-Scanner, Syft, pip-compile |
-| **Benjamin Essibo Ofori** | `1693417365` | DAST & Vulnerability Operations Engineer | Ephemeral staging environment orchestration in CI, OWASP ZAP baseline scan alert policies (`rules.tsv`), DefectDojo API ingestion client (`import_reports.py`), MTTF tracking. | OWASP ZAP, DefectDojo, HTTPX, Docker Compose, Python |
+| Student Name | Student Index | GitHub Profile | Primary Role | Key Contributions | Tools Mastered |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Hannah Amoaba Larbi** | `1700237691` | [@hannahamoaba](https://github.com/hannahamoaba) | Team Lead & Release Verification Engineer | CI/CD pipeline orchestration, Sigstore Cosign keyless signing, SLSA build provenance attestations, `verify_release.sh`, FastAPI application architecture. | GitHub Actions, Cosign, SLSA, Docker, FastAPI, SQLAlchemy |
+| **Stephen Kwadwo Duah** | `1696334280` | [@thetravelerkweku-ops](https://github.com/thetravelerkweku-ops) | Source Security & Secrets Engineer | Gitleaks pre-commit hooks, CI secret scanning configuration, developer environment setup automation (`setup.sh`), secret rotation protocols. | Gitleaks, Pre-commit, Git hooks, Bash, PowerShell |
+| **Othniel Kpakpo Saka** | `1705408739` | [@jesu-henry](https://github.com/jesu-henry) | AppSec & Static Analysis Engineer | 5 custom Semgrep SAST rules, Semgrep positive/negative rule test harness (`rule_tests.py`), GitHub CodeQL static analysis tuning. | Semgrep, CodeQL, AST, Python typing, YAML |
+| **Fred Nkrumah** | `1703603625` | [@Afrifar055-sketch](https://github.com/Afrifar055-sketch) | Container & SCA Security Engineer | Multi-stage hardened Dockerfile, Compose resource constraints, OSV-Scanner, Trivy (FS/Image) scanning, Checkov IaC policies, Anchore Syft SBOMs. | Dockerfile, Checkov, Trivy, OSV-Scanner, Syft, pip-compile |
+| **Benjamin Essibo Ofori** | `1693417365` | [@ben244294](https://github.com/ben244294) | DAST & Vulnerability Operations Engineer | Ephemeral staging environment orchestration in CI, OWASP ZAP baseline scan alert policies (`rules.tsv`), DefectDojo API ingestion client (`import_reports.py`), MTTF tracking. | OWASP ZAP, DefectDojo, HTTPX, Docker Compose, Python |
 
 ---
 

@@ -42,11 +42,11 @@ This script is structured to demonstrate all required course elements in exactly
 ### Slide 1: Title & Team Roles
 - Title: CSSS 441 Project 2 — DevSecOps Pipeline with Security Gates
 - Presenters:
-  1. **Hannah Amoaba Larbi** (`1700237691`) — Team Lead & Release Verification Engineer
-  2. **Stephen Kwadwo Duah** (`1696334280`) — Source Security & Secrets Engineer
-  3. **Othniel Kpakpo Saka** (`1705408739`) — AppSec & Static Analysis Engineer
-  4. **Fred Nkrumah** (`1703603625`) — Container & SCA Security Engineer
-  5. **Benjamin Essibo Ofori** (`1693417365`) — DAST & Vulnerability Operations Engineer
+  1. **Hannah Amoaba Larbi** ([@hannahamoaba](https://github.com/hannahamoaba)) — Index: `1700237691` (Team Lead & Release Verification Engineer)
+  2. **Stephen Kwadwo Duah** ([@thetravelerkweku-ops](https://github.com/thetravelerkweku-ops)) — Index: `1696334280` (Source Security & Secrets Engineer)
+  3. **Othniel Kpakpo Saka** ([@jesu-henry](https://github.com/jesu-henry)) — Index: `1705408739` (AppSec & Static Analysis Engineer)
+  4. **Fred Nkrumah** ([@Afrifar055-sketch](https://github.com/Afrifar055-sketch)) — Index: `1703603625` (Container & SCA Security Engineer)
+  5. **Benjamin Essibo Ofori** ([@ben244294](https://github.com/ben244294)) — Index: `1693417365` (DAST & Vulnerability Operations Engineer)
 
 ### Slide 2: Problem Statement & DevSecOps Philosophy
 - The challenge: Software supply chain attacks, credential leaks, and insecure container deployments.
@@ -109,7 +109,7 @@ This script is structured to demonstrate all required course elements in exactly
 
 ## 3. Individual Portfolio Summaries (Resume Bullets & Student Records)
 
-### Member 1: Hannah Amoaba Larbi (Index No: 1700237691)
+### Member 1: Hannah Amoaba Larbi (Index No: 1700237691 | [@hannahamoaba](https://github.com/hannahamoaba))
 - **Role**: Team Lead & Release Verification Engineer
 - **Role Summary**: Architected the multi-stage GitHub Actions CI/CD pipeline, configured Sigstore Cosign keyless container signing and SLSA build provenance attestations, authored the pre-deployment release verification gate (`scripts/verify_release.sh`), and directed overall system architecture.
 - **Tools Used**: GitHub Actions, Sigstore Cosign, SLSA, Docker, FastAPI, SQLAlchemy, Alembic, Bash.
@@ -117,7 +117,7 @@ This script is structured to demonstrate all required course elements in exactly
   - *Architected a multi-stage GitHub Actions DevSecOps pipeline with automated fail-closed security gates, enforcing keyless Sigstore Cosign signing and SLSA build provenance attestations on production container images.*
   - *Engineered an automated cryptographic release gate (`verify_release.sh`) validating SHA-256 digests and Fulcio OIDC certificates against Rekor transparency logs prior to deployment.*
 
-### Member 2: Stephen Kwadwo Duah (Index No: 1696334280)
+### Member 2: Stephen Kwadwo Duah (Index No: 1696334280 | [@thetravelerkweku-ops](https://github.com/thetravelerkweku-ops))
 - **Role**: Source Security & Secrets Engineer
 - **Role Summary**: Implemented workstation pre-commit hooks and CI secret scanning with Gitleaks, established developer environment automation scripts (`scripts/setup.sh`), and authored secret rotation and incident response protocols.
 - **Tools Used**: Gitleaks, Pre-commit, Git Hooks, Bash, PowerShell, Python.
@@ -125,7 +125,7 @@ This script is structured to demonstrate all required course elements in exactly
   - *Implemented Shift-Left secret detection utilizing Gitleaks pre-commit hooks and mirrored GitHub Actions workflows, eliminating credential exposure risk across Git commit history.*
   - *Developed reproducible environment setup scripts (`setup.sh`) and secret rotation runbooks, automating linter configuration and developer security guardrails.*
 
-### Member 3: Othniel Kpakpo Saka (Index No: 1705408739)
+### Member 3: Othniel Kpakpo Saka (Index No: 1705408739 | [@jesu-henry](https://github.com/jesu-henry))
 - **Role**: AppSec & Static Analysis Engineer
 - **Role Summary**: Authored 5 custom Semgrep rules with comprehensive unit test suites covering SQL injection, command execution, unsafe eval/exec, insecure deserialization, and wildcard CORS; tuned GitHub CodeQL workflows.
 - **Tools Used**: Semgrep, CodeQL, AST, Python AST, YAML.
@@ -133,7 +133,7 @@ This script is structured to demonstrate all required course elements in exactly
   - *Engineered 5 custom Semgrep static analysis rules targeting SQL injection, RCE, unsafe deserialization, and CORS flaws, validated by automated positive and negative test suites.*
   - *Configured and tuned GitHub CodeQL static analysis workflows to achieve zero false-positive alerts on weekly automated repository security scans.*
 
-### Member 4: Fred Nkrumah (Index No: 1703603625)
+### Member 4: Fred Nkrumah (Index No: 1703603625 | [@Afrifar055-sketch](https://github.com/Afrifar055-sketch))
 - **Role**: Container & SCA Security Engineer
 - **Role Summary**: Built hardened multi-stage Docker container images with unprivileged user execution (`appuser:10001`), read-only rootfs, and dropped Linux capabilities; integrated Checkov, OSV-Scanner, Trivy, and Anchore Syft SBOM generation.
 - **Tools Used**: Docker, Checkov, Trivy, OSV-Scanner, Anchore Syft, pip-compile, pip-audit.
@@ -141,7 +141,7 @@ This script is structured to demonstrate all required course elements in exactly
   - *Hardened production container images through multi-stage builds, non-root user isolation (`appuser:10001`), read-only root filesystems, and Checkov Infrastructure-as-Code compliance.*
   - *Integrated dual-layer Software Composition Analysis (OSV-Scanner, Trivy, pip-audit) and automated CycloneDX SBOM generation into CI builds.*
 
-### Member 5: Benjamin Essibo Ofori (Index No: 1693417365)
+### Member 5: Benjamin Essibo Ofori (Index No: 1693417365 | [@ben244294](https://github.com/ben244294))
 - **Role**: DAST & Vulnerability Operations Engineer
 - **Role Summary**: Orchestrated ephemeral staging test environments in CI, integrated automated OWASP ZAP baseline DAST scans, tuned alert threshold policies (`.zap/rules.tsv`), and built the DefectDojo vulnerability ingestion client (`scripts/import_reports.py`).
 - **Tools Used**: OWASP ZAP, DefectDojo, Docker Compose, HTTPX, Python.
