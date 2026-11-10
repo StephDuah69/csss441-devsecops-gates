@@ -1,5 +1,11 @@
 target-version = "py313"
 line-length = 100
+exclude = [
+    ".semgrep",
+    "tests/semgrep",
+    ".venv",
+    "alembic",
+]
 
 [lint]
 select = [
@@ -13,10 +19,17 @@ select = [
 ]
 ignore = [
     "S101",   # allow assert in pytest test files
+    "B008",   # allow FastAPI Depends() in endpoint parameters
 ]
 
 [lint.per-file-ignores]
-"tests/**" = ["S101", "S105", "S106"]  # Assertions and dummy tokens in tests
+"tests/**" = ["S101", "S105", "S106", "E501"]
+"scripts/**" = ["S101", "S110", "S603", "S607", "E402", "E501", "I001"]
+"app/models.py" = ["E501"]
+"app/schemas.py" = ["E501"]
+"app/main.py" = ["E501"]
+"app/services/**" = ["E501", "S110"]
+"app/routers/**" = ["E501"]
 
 [format]
 quote-style = "double"

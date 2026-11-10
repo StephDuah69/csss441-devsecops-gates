@@ -24,6 +24,7 @@ SCAN_TYPE_MAP: Final[dict[str, str]] = {
     "gitleaks": "Gitleaks Scan",
     "semgrep": "Semgrep JSON Report",
     "osv": "OSV Scan",
+    "pip-audit": "Pip Audit",
     "trivy-fs": "Trivy Scan",
     "trivy-image": "Trivy Scan",
     "checkov": "Checkov Scan",
@@ -33,9 +34,7 @@ SCAN_TYPE_MAP: Final[dict[str, str]] = {
 
 def parse_arguments() -> argparse.Namespace:
     """Parse command-line arguments for report ingestion."""
-    parser = argparse.ArgumentParser(
-        description="Ingest security scan reports into DefectDojo."
-    )
+    parser = argparse.ArgumentParser(description="Ingest security scan reports into DefectDojo.")
     parser.add_argument(
         "--reports-dir",
         type=Path,
@@ -102,7 +101,8 @@ def main() -> int:
         return 1
 
     report_files = [
-        p for p in args.reports_dir.iterdir()
+        p
+        for p in args.reports_dir.iterdir()
         if p.is_file() and p.suffix.lower() in (".json", ".xml", ".sarif")
     ]
 
@@ -138,7 +138,10 @@ def main() -> int:
     try:
         engagement_id = int(engagement_id_str)
     except ValueError:
-        print(f"ERROR: DEFECTDOJO_ENGAGEMENT_ID '{engagement_id_str}' must be an integer.", file=sys.stderr)
+        print(
+            f"ERROR: DEFECTDOJO_ENGAGEMENT_ID '{engagement_id_str}' must be an integer.",
+            file=sys.stderr,
+        )
         return 1
 
     headers = {"Authorization": f"Token {dojo_token}"}

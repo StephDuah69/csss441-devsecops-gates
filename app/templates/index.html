@@ -1,0 +1,374 @@
+{% extends "base.html" %}
+
+{% block title %}Book Catalog — CSSS 441 DevSecOps{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+  <!-- Page Header & Action Bar -->
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-800 pb-6">
+    <div>
+      <h1 class="text-3xl font-extrabold text-white tracking-tight">Book Catalog</h1>
+      <p class="text-sm text-slate-400 mt-1">Browse, search, and manage software engineering and security literature.</p>
+    </div>
+    <div>
+      <button onclick="openAddModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-4 py-2 rounded-lg text-sm flex items-center gap-2 shadow-lg shadow-indigo-600/20 transition focus:ring-2 focus:ring-indigo-400">
+        <i class="fa-solid fa-plus" aria-hidden="true"></i> Add New Book
+      </button>
+    </div>
+  </div>
+
+  <!-- Search, Filter & Sort Controls -->
+  <form method="GET" action="/" class="bg-slate-800/40 border border-slate-700/60 p-4 rounded-xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3" aria-label="Catalog Filters">
+    <!-- Keyword Search -->
+    <div class="lg:col-span-2">
+      <label for="search-input" class="block text-xs font-medium text-slate-400 mb-1">Search Catalog</label>
+      <div class="relative">
+        <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
+          <i class="fa-solid fa-magnifying-glass text-xs" aria-hidden="true"></i>
+        </span>
+        <input type="text" id="search-input" name="q" value="{{ query or '' }}" placeholder="Search title, author, or category..." class="w-full pl-9 pr-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+      </div>
+    </div>
+
+    <!-- Category Filter -->
+    <div>
+      <label for="category-select" class="block text-xs font-medium text-slate-400 mb-1">Category</label>
+      <select id="category-select" name="category" class="w-full py-2 px-3 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-indigo-500">
+        <option value="all" {% if not current_category or current_category == 'all' %}selected{% endif %}>All Categories</option>
+        <option value="Security" {% if current_category == 'Security' %}selected{% endif %}>Security</option>
+        <option value="DevOps" {% if current_category == 'DevOps' %}selected{% endif %}>DevOps</option>
+        <option value="Architecture" {% if current_category == 'Architecture' %}selected{% endif %}>Architecture</option>
+        <option value="Site Reliability & Security" {% if current_category == 'Site Reliability & Security' %}selected{% endif %}>SRE & Security</option>
+      </select>
+    </div>
+
+    <!-- Availability Filter -->
+    <div>
+      <label for="availability-select" class="block text-xs font-medium text-slate-400 mb-1">Availability</label>
+      <select id="availability-select" name="availability" class="w-full py-2 px-3 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-indigo-500">
+        <option value="all" {% if not current_availability or current_availability == 'all' %}selected{% endif %}>All Statuses</option>
+        <option value="IN_STOCK" {% if current_availability == 'IN_STOCK' %}selected{% endif %}>In Stock</option>
+        <option value="CHECKED_OUT" {% if current_availability == 'CHECKED_OUT' %}selected{% endif %}>Checked Out</option>
+        <option value="UNAVAILABLE" {% if current_availability == 'UNAVAILABLE' %}selected{% endif %}>Unavailable</option>
+      </select>
+    </div>
+
+    <!-- Submit Filter Button -->
+    <div class="flex items-end gap-2">
+      <button type="submit" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white font-medium py-2 px-3 rounded-lg text-sm transition">
+        Apply Filter
+      </button>
+      <a href="/" class="p-2 bg-slate-900 border border-slate-700 hover:bg-slate-800 text-slate-400 hover:text-white rounded-lg text-sm text-center" title="Reset Filters" aria-label="Reset Filters">
+        <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+      </a>
+    </div>
+  </form>
+
+  <!-- Books Grid -->
+  {% if books and books|length > 0 %}
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for book in books %}
+    <article class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-5 hover:border-indigo-500/50 transition flex flex-col justify-between shadow-sm">
+      <div>
+        <div class="flex justify-between items-start gap-2 mb-3">
+          <!-- Availability Badge -->
+          {% if book.availability == 'IN_STOCK' %}
+          <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">In Stock</span>
+          {% elif book.availability == 'CHECKED_OUT' %}
+          <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">Checked Out</span>
+          {% else %}
+          <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20">Unavailable</span>
+          {% endif %}
+
+          <span class="text-xs text-slate-400 bg-slate-900/60 px-2 py-0.5 rounded border border-slate-800">{{ book.category }}</span>
+        </div>
+
+        <h2 class="text-base font-bold text-white leading-snug hover:text-indigo-400 transition">
+          <a href="/books/{{ book.id }}">{{ book.title }}</a>
+        </h2>
+        <p class="text-sm text-slate-400 mt-1 mb-3"><i class="fa-solid fa-user-pen text-xs text-slate-500 mr-1" aria-hidden="true"></i> {{ book.author }}</p>
+      </div>
+
+      <div class="pt-4 border-t border-slate-700/50 flex flex-col gap-3">
+        <div class="flex justify-between items-center text-xs text-slate-400">
+          <span>ISBN: <strong class="text-slate-300 font-mono">{{ book.isbn }}</strong></span>
+          <span>Published: <strong class="text-slate-300">{{ book.year }}</strong></span>
+        </div>
+        <div class="flex justify-between items-center pt-1">
+          <div class="text-base font-bold text-indigo-400">
+            ${{ "%.2f"|format(book.price) }}
+            {% if book.rating %}
+            <span class="text-xs font-normal text-amber-400 ml-2">
+              <i class="fa-solid fa-star text-xs" aria-hidden="true"></i> {{ book.rating }}
+            </span>
+            {% endif %}
+          </div>
+          <!-- Action Buttons -->
+          <div class="flex items-center gap-1">
+            <button onclick='openEditModal({{ book|tojson }})' class="p-1.5 text-slate-400 hover:text-indigo-400 hover:bg-slate-700/50 rounded transition" title="Edit book" aria-label="Edit {{ book.title }}">
+              <i class="fa-solid fa-pen-to-square text-sm" aria-hidden="true"></i>
+            </button>
+            <button onclick="openDeleteModal({{ book.id }}, '{{ book.title|replace('\'', '\\\'') }}')" class="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-slate-700/50 rounded transition" title="Delete book" aria-label="Delete {{ book.title }}">
+              <i class="fa-solid fa-trash text-sm" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+
+  <!-- Server-side Pagination -->
+  {% if total_pages > 1 %}
+  <nav class="flex justify-center items-center gap-2 pt-6" aria-label="Pagination Navigation">
+    {% if page > 1 %}
+    <a href="?q={{ query or '' }}&category={{ current_category or 'all' }}&availability={{ current_availability or 'all' }}&page={{ page - 1 }}" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-sm text-slate-300 rounded-lg border border-slate-700">
+      &larr; Previous
+    </a>
+    {% endif %}
+
+    <span class="text-xs text-slate-400 px-3">
+      Page <strong class="text-white">{{ page }}</strong> of <strong class="text-white">{{ total_pages }}</strong> (Total: {{ total }})
+    </span>
+
+    {% if page < total_pages %}
+    <a href="?q={{ query or '' }}&category={{ current_category or 'all' }}&availability={{ current_availability or 'all' }}&page={{ page + 1 }}" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-sm text-slate-300 rounded-lg border border-slate-700">
+      Next &rarr;
+    </a>
+    {% endif %}
+  </nav>
+  {% endif %}
+
+  {% else %}
+  <!-- Empty State -->
+  <div class="text-center py-16 bg-slate-800/20 border border-dashed border-slate-700 rounded-2xl">
+    <div class="text-4xl mb-3" aria-hidden="true">🔍</div>
+    <h3 class="text-lg font-semibold text-white">No books match your criteria</h3>
+    <p class="text-sm text-slate-400 mt-1 max-w-sm mx-auto">Try clearing search filters or add a new book to the catalog collection.</p>
+    <a href="/" class="mt-4 inline-block px-4 py-2 bg-slate-800 hover:bg-slate-700 text-sm text-white rounded-lg border border-slate-700">
+      Reset All Filters
+    </a>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Modal: Add / Edit Book -->
+<dialog id="book-modal" class="bg-slate-900 border border-slate-700 text-white rounded-xl shadow-2xl p-6 max-w-lg w-full backdrop:bg-black/60 backdrop:backdrop-blur-sm" aria-labelledby="modal-title">
+  <div class="flex justify-between items-center pb-4 border-b border-slate-800">
+    <h3 id="modal-title" class="text-lg font-bold text-white">Add New Book</h3>
+    <button onclick="closeBookModal()" class="text-slate-400 hover:text-white" aria-label="Close modal">&times;</button>
+  </div>
+
+  <form id="book-form" onsubmit="handleFormSubmit(event)" class="space-y-4 pt-4">
+    <input type="hidden" id="form-id" name="id">
+    <input type="hidden" id="form-csrf" name="csrf_token" value="{{ csrf_token }}">
+
+    <div>
+      <label for="form-title" class="block text-xs font-medium text-slate-400 mb-1">Title *</label>
+      <input type="text" id="form-title" name="title" required maxlength="120" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+    </div>
+
+    <div>
+      <label for="form-author" class="block text-xs font-medium text-slate-400 mb-1">Author *</label>
+      <input type="text" id="form-author" name="author" required maxlength="100" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div>
+        <label for="form-isbn" class="block text-xs font-medium text-slate-400 mb-1">ISBN (10 or 13 digits) *</label>
+        <input type="text" id="form-isbn" name="isbn" required placeholder="e.g. 9781491929124" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 font-mono">
+      </div>
+      <div>
+        <label for="form-category" class="block text-xs font-medium text-slate-400 mb-1">Category *</label>
+        <input type="text" id="form-category" name="category" required value="Security" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div>
+        <label for="form-year" class="block text-xs font-medium text-slate-400 mb-1">Year (1450-2030) *</label>
+        <input type="number" id="form-year" name="year" required min="1450" max="2030" value="2024" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+      </div>
+      <div>
+        <label for="form-price" class="block text-xs font-medium text-slate-400 mb-1">Price ($) *</label>
+        <input type="number" step="0.01" min="0.00" id="form-price" name="price" required value="29.99" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+      </div>
+      <div>
+        <label for="form-availability" class="block text-xs font-medium text-slate-400 mb-1">Availability *</label>
+        <select id="form-availability" name="availability" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+          <option value="IN_STOCK">In Stock</option>
+          <option value="CHECKED_OUT">Checked Out</option>
+          <option value="UNAVAILABLE">Unavailable</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Admin Authentication Header Input -->
+    <div>
+      <label for="form-admin-key" class="block text-xs font-medium text-amber-400 mb-1">
+        <i class="fa-solid fa-key text-xs mr-1" aria-hidden="true"></i> Admin Security Key *
+      </label>
+      <input type="password" id="form-admin-key" placeholder="Enter admin key (default: devsecops-admin-secret-2026)" value="devsecops-admin-secret-2026" required class="w-full bg-slate-950 border border-amber-500/40 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-400 font-mono">
+      <span class="text-xs text-slate-500 mt-1 block">Mutations are protected by administrative authorization.</span>
+    </div>
+
+    <div id="form-error" class="hidden text-xs text-rose-400 p-2 bg-rose-500/10 border border-rose-500/20 rounded-lg"></div>
+
+    <div class="flex justify-end gap-3 pt-3 border-t border-slate-800">
+      <button type="button" onclick="closeBookModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium rounded-lg">Cancel</button>
+      <button type="submit" id="form-submit-btn" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold rounded-lg shadow-lg">Save Book</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Modal: Delete Confirmation -->
+<dialog id="delete-modal" class="bg-slate-900 border border-slate-700 text-white rounded-xl shadow-2xl p-6 max-w-sm w-full backdrop:bg-black/60 backdrop:backdrop-blur-sm" aria-labelledby="delete-title">
+  <div class="text-center space-y-3">
+    <div class="w-12 h-12 bg-rose-500/10 border border-rose-500/20 rounded-full flex items-center justify-center mx-auto text-rose-400 text-xl" aria-hidden="true">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+    </div>
+    <h3 id="delete-title" class="text-lg font-bold text-white">Delete Book</h3>
+    <p class="text-sm text-slate-400" id="delete-prompt">Are you sure you want to delete this book?</p>
+    
+    <div class="text-left pt-2">
+      <label for="delete-admin-key" class="block text-xs font-medium text-amber-400 mb-1">Admin Key Required</label>
+      <input type="password" id="delete-admin-key" value="devsecops-admin-secret-2026" class="w-full bg-slate-950 border border-amber-500/40 rounded-lg px-3 py-2 text-sm text-white font-mono">
+    </div>
+
+    <div id="delete-error" class="hidden text-xs text-rose-400 p-2 bg-rose-500/10 border border-rose-500/20 rounded-lg"></div>
+
+    <div class="flex gap-2 pt-3">
+      <button onclick="closeDeleteModal()" class="flex-1 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium rounded-lg">Cancel</button>
+      <button onclick="confirmDelete()" class="flex-1 px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white text-sm font-semibold rounded-lg">Delete</button>
+    </div>
+  </div>
+</dialog>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  let targetDeleteId = null;
+
+  function openAddModal() {
+    document.getElementById('modal-title').textContent = "Add New Book";
+    document.getElementById('form-id').value = "";
+    document.getElementById('form-title').value = "";
+    document.getElementById('form-author').value = "";
+    document.getElementById('form-isbn').value = "";
+    document.getElementById('form-isbn').readOnly = false;
+    document.getElementById('form-category').value = "Security";
+    document.getElementById('form-year').value = new Date().getFullYear();
+    document.getElementById('form-price').value = "29.99";
+    document.getElementById('form-availability').value = "IN_STOCK";
+    document.getElementById('form-error').classList.add('hidden');
+    document.getElementById('book-modal').showModal();
+  }
+
+  function openEditModal(book) {
+    document.getElementById('modal-title').textContent = "Edit Book";
+    document.getElementById('form-id').value = book.id;
+    document.getElementById('form-title').value = book.title;
+    document.getElementById('form-author').value = book.author;
+    document.getElementById('form-isbn').value = book.isbn;
+    document.getElementById('form-isbn').readOnly = true;
+    document.getElementById('form-category').value = book.category;
+    document.getElementById('form-year').value = book.year;
+    document.getElementById('form-price').value = Number(book.price).toFixed(2);
+    document.getElementById('form-availability').value = book.availability;
+    document.getElementById('form-error').classList.add('hidden');
+    document.getElementById('book-modal').showModal();
+  }
+
+  function closeBookModal() {
+    document.getElementById('book-modal').close();
+  }
+
+  function openDeleteModal(bookId, bookTitle) {
+    targetDeleteId = bookId;
+    document.getElementById('delete-prompt').textContent = `Are you sure you want to delete "${bookTitle}"?`;
+    document.getElementById('delete-error').classList.add('hidden');
+    document.getElementById('delete-modal').showModal();
+  }
+
+  function closeDeleteModal() {
+    document.getElementById('delete-modal').close();
+  }
+
+  async function handleFormSubmit(e) {
+    e.preventDefault();
+    const errorEl = document.getElementById('form-error');
+    errorEl.classList.add('hidden');
+
+    const id = document.getElementById('form-id').value;
+    const adminKey = document.getElementById('form-admin-key').value;
+    const csrfToken = document.getElementById('form-csrf').value;
+
+    const payload = {
+      title: document.getElementById('form-title').value.trim(),
+      author: document.getElementById('form-author').value.trim(),
+      isbn: document.getElementById('form-isbn').value.trim(),
+      category: document.getElementById('form-category').value.trim(),
+      year: parseInt(document.getElementById('form-year').value, 10),
+      price: parseFloat(document.getElementById('form-price').value),
+      availability: document.getElementById('form-availability').value,
+    };
+
+    const isEdit = Boolean(id);
+    const url = isEdit ? `/api/books/${id}` : '/api/books';
+    const method = isEdit ? 'PUT' : 'POST';
+
+    try {
+      const response = await fetch(url, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Key': adminKey,
+          'X-CSRF-Token': csrfToken,
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.detail || "Server rejected request.");
+      }
+
+      closeBookModal();
+      window.location.reload();
+    } catch (err) {
+      errorEl.textContent = err.message;
+      errorEl.classList.remove('hidden');
+    }
+  }
+
+  async function confirmDelete() {
+    if (!targetDeleteId) return;
+    const adminKey = document.getElementById('delete-admin-key').value;
+    const csrfToken = document.getElementById('form-csrf').value;
+    const errorEl = document.getElementById('delete-error');
+    errorEl.classList.add('hidden');
+
+    try {
+      const response = await fetch(`/api/books/${targetDeleteId}`, {
+        method: 'DELETE',
+        headers: {
+          'X-Admin-Key': adminKey,
+          'X-CSRF-Token': csrfToken,
+        }
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.detail || "Failed to delete.");
+      }
+
+      closeDeleteModal();
+      window.location.reload();
+    } catch (err) {
+      errorEl.textContent = err.message;
+      errorEl.classList.remove('hidden');
+    }
+  }
+</script>
+{% endblock %}
+

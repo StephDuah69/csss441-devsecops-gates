@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-900 text-slate-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Book Catalog & DevSecOps Gates{% endblock %}</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Focus indicators for accessibility */
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 2px solid #6366f1;
+      outline-offset: 2px;
+    }
+  </style>
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="flex flex-col min-h-full">
+  <!-- Navigation Header -->
+  <header class="border-b border-slate-800 bg-slate-950/90 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <a href="/" class="flex items-center space-x-2 text-white font-bold text-lg hover:text-indigo-400 transition">
+          <span class="text-2xl" aria-hidden="true">📚</span>
+          <span>BookCatalog</span>
+          <span class="text-indigo-400 text-xs px-2 py-0.5 rounded-full border border-indigo-500/30 font-medium">DevSecOps</span>
+        </a>
+      </div>
+      <nav class="flex items-center space-x-2 sm:space-x-4" aria-label="Main Navigation">
+        <a href="/" class="px-3 py-1.5 rounded-lg text-sm font-medium {% if active_page == 'catalog' %}bg-indigo-600 text-white{% else %}text-slate-300 hover:text-white hover:bg-slate-800{% endif %}">
+          Catalog
+        </a>
+        <a href="/security" class="px-3 py-1.5 rounded-lg text-sm font-medium {% if active_page == 'security' %}bg-indigo-600 text-white{% else %}text-slate-300 hover:text-white hover:bg-slate-800{% endif %} flex items-center gap-1.5">
+          <i class="fa-solid fa-shield-halved text-xs" aria-hidden="true"></i> Security Gates
+        </a>
+        <a href="/docs" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white border border-slate-700 hover:border-slate-600 hidden sm:inline-flex items-center gap-1.5">
+          <i class="fa-solid fa-code text-xs" aria-hidden="true"></i> API Docs
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8" id="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 bg-slate-950/60 py-6 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-2">
+      <p>CSSS 441 Software Security & DevSecOps Automated Verification Pipeline</p>
+      <p class="flex items-center gap-2">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400" aria-hidden="true"></span>
+        <span>Service: <strong class="text-slate-400">csss441-book-catalog v1.0.0</strong></span>
+      </p>
+    </div>
+  </footer>
+
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>
+

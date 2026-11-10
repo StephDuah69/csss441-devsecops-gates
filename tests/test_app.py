@@ -8,9 +8,17 @@ Covers:
 - GET /books input validation (min/max length, regex, whitespace)
 """
 
+import sys
+from pathlib import Path
+
 from fastapi.testclient import TestClient
 
-from app.main import app
+# Ensure project root is in sys.path when running test directly
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from app.main import app  # noqa: E402
 
 client = TestClient(app)
 
@@ -112,3 +120,9 @@ def test_search_books_whitespace_only():
     # %20 is accepted by regex, but stripped to empty in logic, returning 400
     assert response.status_code == 400
     assert "Search query cannot be whitespace-only" in response.json()["detail"]
+
+
+if __name__ == "__main__":
+    import pytest
+
+    sys.exit(pytest.main(["-v", __file__]))

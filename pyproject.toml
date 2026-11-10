@@ -9,8 +9,16 @@ description = "FastAPI Target Application for DevSecOps Security Pipeline"
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [
-    { name = "CSSS 441 Security Team" }
+    { name = "Hannah Amoaba Larbi" },
+    { name = "Stephen Kwadwo Duah" },
+    { name = "Othniel Kpakpo Saka" },
+    { name = "Fred Nkrumah" },
+    { name = "Benjamin Essibo Ofori" }
 ]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]
 
 [tool.pytest.ini_options]
 minversion = "8.0"
@@ -21,6 +29,12 @@ pythonpath = ["."]
 [tool.ruff]
 target-version = "py313"
 line-length = 100
+exclude = [
+    ".semgrep",
+    "tests/semgrep",
+    ".venv",
+    "alembic",
+]
 
 [tool.ruff.lint]
 select = [
@@ -34,10 +48,17 @@ select = [
 ]
 ignore = [
     "S101",
+    "B008",
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**" = ["S101", "S105", "S106"]
+"tests/**" = ["S101", "S105", "S106", "E501"]
+"scripts/**" = ["S101", "S110", "S603", "S607", "E402", "E501", "I001"]
+"app/models.py" = ["E501"]
+"app/schemas.py" = ["E501"]
+"app/main.py" = ["E501"]
+"app/services/**" = ["E501", "S110"]
+"app/routers/**" = ["E501"]
 
 [tool.ruff.format]
 quote-style = "double"

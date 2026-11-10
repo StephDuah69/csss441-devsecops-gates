@@ -5,6 +5,9 @@ services:
       dockerfile: Dockerfile
     image: csss441-book-catalog:local
     container_name: csss441-api-service
+    environment:
+      - DATABASE_URL=${DATABASE_URL:-sqlite:////tmp/book_catalog.db}
+      - ADMIN_API_KEY=${ADMIN_API_KEY:-devsecops-admin-secret-2026}
     ports:
       - "127.0.0.1:8000:8000"
     restart: unless-stopped
@@ -24,7 +27,7 @@ services:
           cpus: "0.10"
           memory: 64M
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health').getcode() == 200 else 1)"]
+      test: ["CMD", "python", "-c", "import urllib.request; exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health/live').getcode() == 200 else 1)"]
       interval: 10s
       timeout: 3s
       retries: 3

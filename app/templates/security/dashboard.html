@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}DevSecOps Security Dashboard — CSSS 441{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+  <!-- Dashboard Header -->
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-800 pb-6">
+    <div>
+      <div class="flex items-center gap-3">
+        <h1 class="text-3xl font-extrabold text-white tracking-tight">DevSecOps Security Pipeline</h1>
+        {% if scorecard.overall_status == 'PASS' %}
+        <span class="px-3 py-1 text-xs font-bold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> ALL GATES PASSED
+        </span>
+        {% elif scorecard.overall_status == 'FAIL' %}
+        <span class="px-3 py-1 text-xs font-bold rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30 flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-rose-400"></span> POLICY VIOLATION
+        </span>
+        {% elif scorecard.is_stale %}
+        <span class="px-3 py-1 text-xs font-bold rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30">
+          STALE EVIDENCE (>7 DAYS)
+        </span>
+        {% else %}
+        <span class="px-3 py-1 text-xs font-bold rounded-full bg-slate-700 text-slate-300 border border-slate-600">
+          {{ scorecard.overall_status or 'NO DATA' }}
+        </span>
+        {% endif %}
+      </div>
+      <p class="text-sm text-slate-400 mt-1">
+        Continuous compliance, automated gate enforcement, and vulnerability posture for <code>csss441-book-catalog</code>.
+      </p>
+    </div>
+    <div class="flex items-center gap-2">
+      <a href="/api/security/scorecard" target="_blank" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium rounded-lg border border-slate-700 flex items-center gap-1.5">
+        <i class="fa-solid fa-file-code" aria-hidden="true"></i> Raw Scorecard JSON
+      </a>
+    </div>
+  </div>
+
+  <!-- Run Metadata Banner -->
+  <div class="bg-slate-800/40 border border-slate-700/60 p-4 rounded-xl grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+    <div>
+      <span class="text-slate-400 block">Scorecard Run ID:</span>
+      <span class="font-mono font-medium text-white truncate block">{{ scorecard.run_id or 'local-run-manual' }}</span>
+    </div>
+    <div>
+      <span class="text-slate-400 block">Commit Reference:</span>
+      <span class="font-mono font-medium text-indigo-400 block">{{ scorecard.commit_sha or 'HEAD' }}</span>
+    </div>
+    <div>
+      <span class="text-slate-400 block">Last Verification:</span>
+      <span class="text-white block">{{ scorecard.finish_time or scorecard.generated_at or 'Not recorded' }}</span>
+    </div>
+    <div>
+      <span class="text-slate-400 block">Gate Policy Engine:</span>
+      <span class="text-emerald-400 font-semibold block">Strict (0 High/Critical CVEs)</span>
+    </div>
+  </div>
+
+  <!-- Severity Breakdown Cards -->
+  <div>
+    <h2 class="text-lg font-bold text-white mb-3">Vulnerability Posture by Severity</h2>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-slate-800/50 border border-slate-700/60 p-4 rounded-xl">
+        <div class="flex justify-between items-center text-xs text-rose-400 font-semibold uppercase tracking-wider">
+          <span>Critical</span>
+          <i class="fa-solid fa-radiation text-rose-500" aria-hidden="true"></i>
+        </div>
+        <div class="text-3xl font-extrabold text-white mt-2">{{ vulnerabilities.critical }}</div>
+        <p class="text-xs text-slate-400 mt-1">Policy threshold: 0 permitted</p>
+      </div>
+
+      <div class="bg-slate-800/50 border border-slate-700/60 p-4 rounded-xl">
+        <div class="flex justify-between items-center text-xs text-amber-400 font-semibold uppercase tracking-wider">
+          <span>High</span>
+          <i class="fa-solid fa-fire text-amber-500" aria-hidden="true"></i>
+        </div>
+        <div class="text-3xl font-extrabold text-white mt-2">{{ vulnerabilities.high }}</div>
+        <p class="text-xs text-slate-400 mt-1">Blocks pull request merge</p>
+      </div>
+
+      <div class="bg-slate-800/50 border border-slate-700/60 p-4 rounded-xl">
+        <div class="flex justify-between items-center text-xs text-yellow-400 font-semibold uppercase tracking-wider">
+          <span>Medium</span>
+          <i class="fa-solid fa-triangle-exclamation text-yellow-500" aria-hidden="true"></i>
+        </div>
+        <div class="text-3xl font-extrabold text-white mt-2">{{ vulnerabilities.medium }}</div>
+        <p class="text-xs text-slate-400 mt-1">Requires scheduled remediation</p>
+      </div>
+
+      <div class="bg-slate-800/50 border border-slate-700/60 p-4 rounded-xl">
+        <div class="flex justify-between items-center text-xs text-blue-400 font-semibold uppercase tracking-wider">
+          <span>Low & Info</span>
+          <i class="fa-solid fa-circle-info text-blue-400" aria-hidden="true"></i>
+        </div>
+        <div class="text-3xl font-extrabold text-white mt-2">{{ vulnerabilities.low }}</div>
+        <p class="text-xs text-slate-400 mt-1">Tracked in DefectDojo</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Security Gate Verification Matrix -->
+  <div>
+    <h2 class="text-lg font-bold text-white mb-3">Automated Gate Verification Matrix</h2>
+    <div class="bg-slate-800/40 border border-slate-700/60 rounded-xl overflow-hidden shadow-sm">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm" aria-label="Security Gates Matrix">
+          <thead class="bg-slate-900/60 text-xs uppercase text-slate-400 border-b border-slate-700">
+            <tr>
+              <th scope="col" class="py-3 px-4">Gate / Scanner</th>
+              <th scope="col" class="py-3 px-4">Verification Scope</th>
+              <th scope="col" class="py-3 px-4">Enforcement Level</th>
+              <th scope="col" class="py-3 px-4">Status</th>
+              <th scope="col" class="py-3 px-4">Report</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800 text-xs sm:text-sm">
+            {% for gate in gates %}
+            <tr class="hover:bg-slate-800/30 transition">
+              <td class="py-3 px-4 font-semibold text-white flex items-center gap-2">
+                <span class="text-indigo-400" aria-hidden="true"><i class="fa-solid {{ gate.icon or 'fa-shield-halved' }}"></i></span>
+                {{ gate.name }}
+              </td>
+              <td class="py-3 px-4 text-slate-300">{{ gate.category }}</td>
+              <td class="py-3 px-4">
+                <span class="px-2 py-0.5 rounded text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">Mandatory</span>
+              </td>
+              <td class="py-3 px-4">
+                {% if gate.status == 'PASS' %}
+                <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">PASS</span>
+                {% elif gate.status == 'FAIL' %}
+                <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">FAIL</span>
+                {% elif gate.status == 'SKIPPED' %}
+                <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-700 text-slate-300">SKIPPED</span>
+                {% else %}
+                <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">{{ gate.status }}</span>
+                {% endif %}
+              </td>
+              <td class="py-3 px-4">
+                {% if gate.report_file %}
+                <a href="/api/security/reports/{{ gate.report_file }}?admin_key=devsecops-admin-secret-2026" target="_blank" class="text-indigo-400 hover:text-indigo-300 underline font-mono text-xs">
+                  {{ gate.report_file }}
+                </a>
+                {% else %}
+                <span class="text-slate-500 text-xs">Console log</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Terminal Command Instructions -->
+  <div class="bg-slate-950 border border-slate-800 rounded-xl p-5">
+    <h3 class="text-sm font-semibold text-white mb-2">Execute All Local Security Gates</h3>
+    <p class="text-xs text-slate-400 mb-3">Run the automated verification suite from your command prompt:</p>
+    <div class="bg-slate-900 border border-slate-800 rounded-lg p-3 font-mono text-xs text-emerald-400 flex justify-between items-center">
+      <span>python scripts/run_gates.py</span>
+      <span class="text-slate-500 text-xs">or: make gates</span>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

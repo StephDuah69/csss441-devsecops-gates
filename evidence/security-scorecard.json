@@ -1,0 +1,100 @@
+{
+  "schema_version": "1.0.0",
+  "run_id": "run-1793196589",
+  "commit_sha": "1312fb540d217b75b074fd555f4cde3f6d0f11e9",
+  "start_time": "2026-10-28T14:08:57.515091+00:00",
+  "finish_time": "2026-10-28T14:09:49.769812+00:00",
+  "overall_status": "PASS",
+  "gates": [
+    {
+      "name": "Gitleaks Secret Scan",
+      "category": "Secrets Detection",
+      "status": "SKIPPED",
+      "duration": 0.0,
+      "exit_code": -1,
+      "mandatory": false,
+      "report_file": "gitleaks-report.json",
+      "summary": "Tool binary not found in local environment."
+    },
+    {
+      "name": "Ruff Linter",
+      "category": "Code Quality",
+      "status": "PASS",
+      "duration": 0.04,
+      "exit_code": 0,
+      "mandatory": true,
+      "report_file": null,
+      "summary": "Clean verification"
+    },
+    {
+      "name": "Ruff Code Formatter",
+      "category": "Code Style",
+      "status": "PASS",
+      "duration": 0.04,
+      "exit_code": 0,
+      "mandatory": true,
+      "report_file": null,
+      "summary": "Clean verification"
+    },
+    {
+      "name": "Pytest Test Suite",
+      "category": "Unit & Integration Tests",
+      "status": "PASS",
+      "duration": 2.91,
+      "exit_code": 0,
+      "mandatory": true,
+      "report_file": "pytest-report.xml",
+      "summary": "Clean verification"
+    },
+    {
+      "name": "Semgrep Application Scan",
+      "category": "SAST Application Scan",
+      "status": "PASS",
+      "duration": 9.04,
+      "exit_code": 0,
+      "mandatory": true,
+      "report_file": "semgrep-report.json",
+      "summary": "Clean verification"
+    },
+    {
+      "name": "pip-audit Dependency Audit",
+      "category": "Python SCA",
+      "status": "PASS",
+      "duration": 29.66,
+      "exit_code": 0,
+      "mandatory": true,
+      "report_file": "pip-audit-report.json",
+      "summary": "Clean verification"
+    },
+    {
+      "name": "OSV-Scanner Analysis",
+      "category": "Open Source SCA",
+      "status": "SKIPPED",
+      "duration": 0.0,
+      "exit_code": -1,
+      "mandatory": false,
+      "report_file": "osv-report.json",
+      "summary": "Tool binary not found in local environment."
+    },
+    {
+      "name": "Trivy Filesystem Scan",
+      "category": "Filesystem Vulnerabilities",
+      "status": "SKIPPED",
+      "duration": 0.0,
+      "exit_code": -1,
+      "mandatory": false,
+      "report_file": "trivy-fs-report.json",
+      "summary": "Tool binary not found in local environment."
+    },
+    {
+      "name": "Checkov Container & IaC",
+      "category": "IaC Hardening",
+      "status": "PASS",
+      "duration": 10.5,
+      "exit_code": 0,
+      "mandatory": false,
+      "report_file": "checkov-report.json",
+      "summary": "Clean verification"
+    }
+  ]
+}

@@ -65,18 +65,42 @@ csss441-devsecops-gates/
 │   └── custom_rules.yml         # 5 custom Semgrep rules with CWE/OWASP metadata
 ├── .zap/
 │   └── rules.tsv                # OWASP ZAP baseline scan alert policies
+├── alembic/                 # Alembic database schema migrations
+│   ├── env.py
+│   └── versions/            # Version-controlled schema migrations
 ├── app/
 │   ├── __init__.py
-│   └── main.py                  # Target FastAPI application with security headers
+│   ├── main.py              # Application entrypoint & middleware assembly
+│   ├── database.py          # SQLAlchemy 2.x engine & session management
+│   ├── models.py            # Book entity ORM models
+│   ├── schemas.py           # Pydantic v2 validation models
+│   ├── security.py          # Security headers, CSRF, admin auth & rate limiting
+│   ├── routers/
+│   │   ├── books.py         # RESTful catalog endpoints
+│   │   ├── catalog_pages.py # HTML server-rendered catalog UI (/)
+│   │   ├── security_dashboard.py # DevSecOps dashboard (/security)
+│   │   └── health.py        # /health, /health/live, /health/ready probes
+│   ├── services/
+│   │   ├── book_service.py  # Parameterized DB queries & pagination
+│   │   ├── scorecard_service.py # Security scorecard & report parser
+│   │   └── seed_service.py  # Idempotent database seeder
+│   └── templates/
+│       ├── base.html        # Responsive Tailwind layout with security focus
+│       ├── index.html       # Book collection, search, filter, and CRUD modals
+│       └── security/
+│           └── dashboard.html # Security gate matrix & vulnerability charts
 ├── tests/
-│   ├── test_app.py              # Unit & integration tests (100% pass rate)
+│   ├── test_app.py          # Baseline unit & integration tests
+│   ├── test_enhanced.py     # Comprehensive UI, CRUD, CSRF, and security tests
 │   └── semgrep/
-│       └── rule_tests.py        # Positive and negative assertions for custom rules
+│       └── rule_tests.py    # Positive and negative assertions for custom rules
 ├── scripts/
-│   ├── setup.sh                 # Environment initialization script
-│   ├── run_security_checks.sh   # Unified local security gate executor
-│   ├── verify_release.sh        # Cryptographic signature & provenance verifier
-│   └── import_reports.py        # DefectDojo scan ingestion API client
+│   ├── setup.sh             # Environment initialization script
+│   ├── seed_db.py           # CLI database seeder
+│   ├── run_gates.py         # Unified security gate runner (make gates)
+│   ├── run_security_checks.sh # Bash gate runner
+│   ├── verify_release.sh    # Cryptographic signature & provenance verifier
+│   └── import_reports.py    # DefectDojo scan ingestion API client
 ├── docs/
 │   ├── architecture.md          # DFD, component flows, and trust zones
 │   ├── threat-model.md          # 14 STRIDE threats with risk ratings and controls
@@ -131,12 +155,15 @@ make setup
 
 | Command | Tool | Purpose |
 | :--- | :--- | :--- |
-| `make test` | Pytest | Runs 10 unit and integration tests |
+| `make test` | Pytest | Runs 25 unit, integration, and security tests |
 | `make lint` | Ruff | Runs security linter and format validation |
+| `make format` | Ruff | Automatically formats Python codebase |
+| `make gates` | Unified Runner | Executes all security gates and generates scorecard |
+| `make migrate` | Alembic | Applies database migrations (`alembic upgrade head`) |
+| `make seed` | Python | Safely seeds sample books into catalog database |
 | `make run` | Uvicorn | Starts FastAPI service at `http://localhost:8000` |
 | `make docker-build` | Docker | Builds hardened multi-stage container image |
 | `make docker-run` | Docker Compose | Starts hardened container with read-only rootfs |
-| `bash scripts/run_security_checks.sh` | All Scanners | Executes Gitleaks, Semgrep, OSV, Trivy, and Checkov |
 
 ---
 
@@ -180,11 +207,17 @@ python scripts/import_reports.py --reports-dir reports/
 
 ## 9. Academic Contribution & Team Ownership
 
-This project was developed by a five-member team:
-- **Alex Rivera**: Integration & Release Lead (CI/CD, Cosign, SLSA, DFD)
-- **Jordan Chen**: Source Security Engineer (Gitleaks, Pre-commit)
-- **Morgan Taylor**: AppSec Engineer (CodeQL, Semgrep Custom Rules)
-- **Casey Patel**: Container & SCA Engineer (OSV-Scanner, Trivy, Checkov, Docker)
-- **Riley Zhang**: DAST & SecOps Engineer (OWASP ZAP, Ephemeral Staging, DefectDojo)
+This project was developed by a five-member engineering team for **CSSS 441: Software Security I**:
 
-See [`docs/contribution-records.md`](docs/contribution-records.md) for full responsibility matrices and sign-offs.
+- **Hannah Amoaba Larbi** (Index: `1700237691`): **Team Lead & Release Verification Engineer**
+  - *Responsibilities*: CI/CD Pipeline Orchestration, Sigstore Cosign keyless signing, SLSA build provenance attestations, release verification gates, and architectural documentation.
+- **Stephen Kwadwo Duah** (Index: `1696334280`): **Source Security & Secrets Engineer**
+  - *Responsibilities*: Gitleaks pre-commit hooks, repository secret detection, CI secret scanning policies, secret rotation protocols, and developer onboarding automation.
+- **Othniel Kpakpo Saka** (Index: `1705408739`): **AppSec & Static Analysis Engineer**
+  - *Responsibilities*: Custom Semgrep rules (SQLi, RCE, eval, pickle, CORS), automated positive/negative rule test suites (`rule_tests.py`), and GitHub CodeQL integration.
+- **Fred Nkrumah** (Index: `1703603625`): **Container & SCA Security Engineer**
+  - *Responsibilities*: Multi-stage Dockerfile hardening (non-root `appuser:10001`, read-only rootfs), Compose constraints, Checkov IaC scanning, OSV-Scanner, Trivy, and Anchore Syft CycloneDX SBOM generation.
+- **Benjamin Essibo Ofori** (Index: `1693417365`): **DAST & Vulnerability Operations Engineer**
+  - *Responsibilities*: Ephemeral staging container orchestration, OWASP ZAP dynamic baseline scanning, alert policy tuning (`.zap/rules.tsv`), DefectDojo ingestion client, and remediation/MTTF tracking.
+
+See [`docs/contribution-records.md`](docs/contribution-records.md) for full responsibility matrices, review pairings, and task deliverables.
