@@ -103,7 +103,7 @@
 
         <!-- Book Title & Author -->
         <h2 class="text-base font-semibold text-white leading-snug group-hover:text-emerald-300 transition">
-          <a href="/books/{{ book.id }}">{{ book.title }}</a>
+          <a href="/books/{{ book.id }}" onclick='event.preventDefault(); openBookDrawer({{ book|tojson }});' class="cursor-pointer">{{ book.title }}</a>
         </h2>
         <p class="text-xs text-slate-400 mt-1.5 flex items-center gap-1.5">
           <i class="fa-solid fa-user-pen text-[11px] text-slate-500" aria-hidden="true"></i>
@@ -130,12 +130,15 @@
             {% endif %}
           </div>
 
-          <!-- Edit & Delete Action Buttons -->
+          <!-- Edit, Delete & Detail Action Buttons -->
           <div class="flex items-center gap-1">
-            <button onclick='openEditModal({{ book|tojson }})' class="p-1.5 text-slate-500 hover:text-emerald-400 hover:bg-white/[.05] rounded-lg transition" title="Edit book" aria-label="Edit {{ book.title }}">
+            <button onclick='openBookDrawer({{ book|tojson }})' class="p-1.5 text-slate-400 hover:text-emerald-400 hover:bg-white/[.05] rounded-lg transition" title="Inspect book drawer" aria-label="Inspect {{ book.title }}">
+              <i class="fa-solid fa-eye text-xs" aria-hidden="true"></i>
+            </button>
+            <button onclick='openEditModal({{ book|tojson }})' class="p-1.5 text-slate-400 hover:text-blue-400 hover:bg-white/[.05] rounded-lg transition" title="Edit book" aria-label="Edit {{ book.title }}">
               <i class="fa-solid fa-pen-to-square text-xs" aria-hidden="true"></i>
             </button>
-            <button onclick="openDeleteModal({{ book.id }}, '{{ book.title|replace('\'', '\\\'') }}')" class="p-1.5 text-slate-500 hover:text-rose-400 hover:bg-white/[.05] rounded-lg transition" title="Delete book" aria-label="Delete {{ book.title }}">
+            <button onclick="openDeleteModal({{ book.id }}, '{{ book.title|replace('\'', '\\\'') }}')" class="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-white/[.05] rounded-lg transition" title="Delete book" aria-label="Delete {{ book.title }}">
               <i class="fa-solid fa-trash-can text-xs" aria-hidden="true"></i>
             </button>
           </div>
@@ -179,6 +182,124 @@
     </a>
   </div>
   {% endif %}
+</div>
+
+<!-- Book Detail Slide-Over Drawer (Aegis CI Inspector Style) -->
+<div id="book-drawer-backdrop" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 transition-opacity duration-300 opacity-0 pointer-events-none" onclick="closeBookDrawer()">
+  <div class="fixed inset-y-0 right-0 max-w-lg w-full bg-[#0d121a] border-l border-white/[.12] shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300" id="book-drawer-panel" onclick="event.stopPropagation()">
+    <!-- Drawer Header Bar -->
+    <div class="p-5 border-b border-white/[.08] flex items-center justify-between bg-[#090d13]">
+      <div class="flex items-center gap-2.5">
+        <span class="grid h-8 w-8 place-items-center rounded-lg icon-emerald text-sm">
+          <i class="fa-solid fa-book-open"></i>
+        </span>
+        <div>
+          <span class="text-[10px] font-mono uppercase tracking-wider text-slate-500">Inventory Inspector</span>
+          <h3 id="drawer-book-title" class="text-sm font-semibold text-white truncate max-w-[260px]">Book Details</h3>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <a id="drawer-raw-api-btn" href="#" target="_blank" class="px-2 py-1 bg-white/[.05] hover:bg-white/[.1] text-[11px] font-mono text-slate-300 rounded border border-white/[.08] transition flex items-center gap-1" title="Inspect raw JSON API response">
+          <i class="fa-solid fa-code text-[10px]"></i> API
+        </a>
+        <button onclick="closeBookDrawer()" class="h-8 w-8 rounded-lg bg-white/[.05] hover:bg-white/[.1] text-slate-400 hover:text-white flex items-center justify-center transition" aria-label="Close drawer">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Drawer Body (Scrollable) -->
+    <div class="p-6 space-y-6 overflow-y-auto flex-1 font-sans">
+      <!-- Category & Neon Status Banner -->
+      <div id="drawer-hero-banner" class="rounded-xl border border-white/[.08] bg-[#121822] p-4 relative overflow-hidden">
+        <div id="drawer-hero-accent" class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-500"></div>
+        <div class="flex items-center justify-between mb-3">
+          <span id="drawer-category-badge" class="rounded px-2.5 py-1 text-[11px] font-mono border bg-emerald-400/10 text-emerald-300 border-emerald-400/20">
+            Security
+          </span>
+          <span id="drawer-stock-badge" class="rounded-full px-2.5 py-0.5 text-[10px] font-semibold font-mono border bg-emerald-400/10 text-emerald-400 border-emerald-400/20 flex items-center gap-1">
+            <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span> In Stock
+          </span>
+        </div>
+        <h2 id="drawer-full-title" class="text-lg font-bold text-white leading-tight">Software Security Engineering</h2>
+        <p id="drawer-author" class="text-xs text-slate-400 mt-1 flex items-center gap-1.5">
+          <i class="fa-solid fa-user-pen text-slate-500"></i>
+          <span>Author Name</span>
+        </p>
+      </div>
+
+      <!-- Quick Metrics Grid -->
+      <div class="grid grid-cols-2 gap-3 font-mono text-xs">
+        <div class="p-3 bg-[#080b10] border border-white/[.08] rounded-xl">
+          <span class="text-[10px] text-slate-500 block uppercase">Price</span>
+          <span id="drawer-price" class="text-base font-bold text-white mt-0.5 block">$49.99</span>
+        </div>
+        <div class="p-3 bg-[#080b10] border border-white/[.08] rounded-xl">
+          <span class="text-[10px] text-slate-500 block uppercase">Rating</span>
+          <span id="drawer-rating" class="text-base font-bold text-amber-400 mt-0.5 flex items-center gap-1">
+            <i class="fa-solid fa-star text-xs"></i> 4.8
+          </span>
+        </div>
+        <div class="p-3 bg-[#080b10] border border-white/[.08] rounded-xl">
+          <span class="text-[10px] text-slate-500 block uppercase">Published Year</span>
+          <span id="drawer-year" class="text-sm font-semibold text-slate-200 mt-0.5 block">2024</span>
+        </div>
+        <div class="p-3 bg-[#080b10] border border-white/[.08] rounded-xl">
+          <span class="text-[10px] text-slate-500 block uppercase">ISBN Identifier</span>
+          <span id="drawer-isbn" class="text-xs font-semibold text-slate-200 mt-0.5 block truncate">9781491929124</span>
+        </div>
+      </div>
+
+      <!-- Interactive Stock Status Toggle -->
+      <div class="p-4 rounded-xl border border-white/[.08] bg-[#0c1118]">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-semibold text-white">Stock Status Control</span>
+          <span class="text-[10px] font-mono text-slate-500">PUT /api/books/{id}</span>
+        </div>
+        <p class="text-xs text-slate-400 mb-3">Live toggle book availability between In Stock and Checked Out state directly via the API.</p>
+        <button id="drawer-toggle-stock-btn" onclick="toggleCurrentDrawerStock()" class="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-semibold border transition bg-emerald-400/10 hover:bg-emerald-400/20 text-emerald-300 border-emerald-400/30">
+          <i class="fa-solid fa-repeat text-xs"></i>
+          <span id="drawer-toggle-stock-label">Switch to Checked Out</span>
+        </button>
+      </div>
+
+      <!-- Defensive Security Verification Gate Attestation -->
+      <div class="p-4 rounded-xl border border-emerald-500/20 bg-emerald-950/10 space-y-3">
+        <div class="flex items-center gap-2 text-xs font-semibold text-emerald-400">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span>DevSecOps Defensive Controls Active</span>
+        </div>
+        <div class="space-y-2 text-[11px] font-mono text-slate-400">
+          <div class="flex items-center justify-between p-2 rounded bg-black/30 border border-white/[.05]">
+            <span>Schema Enforcement</span>
+            <span class="text-emerald-400">Pydantic v2 Strict</span>
+          </div>
+          <div class="flex items-center justify-between p-2 rounded bg-black/30 border border-white/[.05]">
+            <span>SQL Injection Defense</span>
+            <span class="text-emerald-400">SQLAlchemy Bind Parameters</span>
+          </div>
+          <div class="flex items-center justify-between p-2 rounded bg-black/30 border border-white/[.05]">
+            <span>CSRF Authentication</span>
+            <span class="text-emerald-400">HMAC-SHA256 Token</span>
+          </div>
+          <div class="flex items-center justify-between p-2 rounded bg-black/30 border border-white/[.05]">
+            <span>Rate Limiting</span>
+            <span class="text-emerald-400">SlowAPI Active (IP Bucket)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Drawer Footer Actions -->
+    <div class="p-4 border-t border-white/[.08] bg-[#090d13] flex items-center gap-2">
+      <button id="drawer-edit-btn" onclick="editFromDrawer()" class="flex-1 flex items-center justify-center gap-2 py-2 px-3 bg-white/[.06] hover:bg-white/[.12] text-white text-xs font-medium rounded-lg border border-white/[.08] transition">
+        <i class="fa-solid fa-pen-to-square text-xs"></i> Edit Book
+      </button>
+      <button id="drawer-delete-btn" onclick="deleteFromDrawer()" class="flex items-center justify-center gap-2 py-2 px-3 bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 text-xs font-medium rounded-lg border border-rose-500/20 transition">
+        <i class="fa-solid fa-trash-can text-xs"></i> Delete
+      </button>
+    </div>
+  </div>
 </div>
 
 <!-- Modal: Add / Edit Book (Styled to match Figma Command Palette) -->
@@ -284,6 +405,144 @@
 {% block extra_scripts %}
 <script>
   let targetDeleteId = null;
+  let currentDrawerBook = null;
+
+  function openBookDrawer(book) {
+    currentDrawerBook = book;
+    document.getElementById('drawer-book-title').textContent = book.title;
+    document.getElementById('drawer-full-title').textContent = book.title;
+    document.getElementById('drawer-author').innerHTML = `<i class="fa-solid fa-user-pen text-slate-500"></i> <span>${book.author}</span>`;
+    document.getElementById('drawer-price').textContent = `$${Number(book.price).toFixed(2)}`;
+    document.getElementById('drawer-year').textContent = book.year;
+    document.getElementById('drawer-isbn').textContent = book.isbn;
+    document.getElementById('drawer-category-badge').textContent = book.category;
+    document.getElementById('drawer-raw-api-btn').href = `/api/books/${book.id}`;
+
+    // Rating
+    const ratingEl = document.getElementById('drawer-rating');
+    if (book.rating) {
+      ratingEl.innerHTML = `<i class="fa-solid fa-star text-xs text-amber-400"></i> ${Number(book.rating).toFixed(1)}`;
+    } else {
+      ratingEl.innerHTML = `<span class="text-slate-500 font-normal text-xs">Unrated</span>`;
+    }
+
+    // Availability & Toggle button
+    const stockBadge = document.getElementById('drawer-stock-badge');
+    const toggleLabel = document.getElementById('drawer-toggle-stock-label');
+    const toggleBtn = document.getElementById('drawer-toggle-stock-btn');
+
+    if (book.availability === 'IN_STOCK') {
+      stockBadge.className = 'rounded-full px-2.5 py-0.5 text-[10px] font-semibold font-mono border bg-emerald-400/10 text-emerald-400 border-emerald-400/20 flex items-center gap-1';
+      stockBadge.innerHTML = '<span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span> In Stock';
+      toggleLabel.textContent = 'Switch to Checked Out';
+      toggleBtn.className = 'w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-semibold border transition bg-amber-400/10 hover:bg-amber-400/20 text-amber-300 border-amber-400/30';
+    } else if (book.availability === 'CHECKED_OUT') {
+      stockBadge.className = 'rounded-full px-2.5 py-0.5 text-[10px] font-semibold font-mono border bg-amber-400/10 text-amber-300 border-amber-400/20 flex items-center gap-1';
+      stockBadge.innerHTML = '<span class="h-1.5 w-1.5 rounded-full bg-amber-400"></span> Checked Out';
+      toggleLabel.textContent = 'Switch to In Stock';
+      toggleBtn.className = 'w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-semibold border transition bg-emerald-400/10 hover:bg-emerald-400/20 text-emerald-300 border-emerald-400/30';
+    } else {
+      stockBadge.className = 'rounded-full px-2.5 py-0.5 text-[10px] font-semibold font-mono border bg-rose-400/10 text-rose-300 border-rose-400/20 flex items-center gap-1';
+      stockBadge.innerHTML = '<span class="h-1.5 w-1.5 rounded-full bg-rose-400"></span> Unavailable';
+      toggleLabel.textContent = 'Switch to In Stock';
+      toggleBtn.className = 'w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-semibold border transition bg-emerald-400/10 hover:bg-emerald-400/20 text-emerald-300 border-emerald-400/30';
+    }
+
+    // Category accent styling
+    const heroAccent = document.getElementById('drawer-hero-accent');
+    const catBadge = document.getElementById('drawer-category-badge');
+    if (book.category && book.category.includes('DevOps')) {
+      heroAccent.className = 'absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-violet-500 via-purple-400 to-violet-600';
+      catBadge.className = 'rounded px-2.5 py-1 text-[11px] font-mono border bg-violet-400/10 text-violet-300 border-violet-400/20';
+    } else if (book.category && book.category.includes('Architecture')) {
+      heroAccent.className = 'absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-blue-500 via-sky-400 to-blue-600';
+      catBadge.className = 'rounded px-2.5 py-1 text-[11px] font-mono border bg-blue-400/10 text-blue-300 border-blue-400/20';
+    } else {
+      heroAccent.className = 'absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-500';
+      catBadge.className = 'rounded px-2.5 py-1 text-[11px] font-mono border bg-emerald-400/10 text-emerald-300 border-emerald-400/20';
+    }
+
+    // Open drawer
+    const backdrop = document.getElementById('book-drawer-backdrop');
+    const panel = document.getElementById('book-drawer-panel');
+    backdrop.classList.remove('pointer-events-none', 'opacity-0');
+    backdrop.classList.add('opacity-100');
+    panel.classList.remove('translate-x-full');
+  }
+
+  function closeBookDrawer() {
+    const backdrop = document.getElementById('book-drawer-backdrop');
+    const panel = document.getElementById('book-drawer-panel');
+    backdrop.classList.add('opacity-0', 'pointer-events-none');
+    backdrop.classList.remove('opacity-100');
+    panel.classList.add('translate-x-full');
+  }
+
+  async function toggleCurrentDrawerStock() {
+    if (!currentDrawerBook) return;
+    const newStatus = currentDrawerBook.availability === 'IN_STOCK' ? 'CHECKED_OUT' : 'IN_STOCK';
+    const csrfToken = document.getElementById('form-csrf') ? document.getElementById('form-csrf').value : '';
+    const adminKey = 'devsecops-admin-secret-2026';
+
+    try {
+      const response = await fetch(`/api/books/${currentDrawerBook.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Key': adminKey,
+          'X-CSRF-Token': csrfToken,
+        },
+        body: JSON.stringify({
+          title: currentDrawerBook.title,
+          author: currentDrawerBook.author,
+          isbn: currentDrawerBook.isbn,
+          category: currentDrawerBook.category,
+          year: currentDrawerBook.year,
+          price: currentDrawerBook.price,
+          availability: newStatus
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update book availability');
+      }
+
+      currentDrawerBook.availability = newStatus;
+      showToast(`Updated to ${newStatus.replace('_', ' ')}`, 'emerald');
+      openBookDrawer(currentDrawerBook);
+      setTimeout(() => window.location.reload(), 700);
+    } catch (err) {
+      showToast(err.message, 'rose');
+    }
+  }
+
+  function editFromDrawer() {
+    if (!currentDrawerBook) return;
+    const book = { ...currentDrawerBook };
+    closeBookDrawer();
+    openEditModal(book);
+  }
+
+  function deleteFromDrawer() {
+    if (!currentDrawerBook) return;
+    const id = currentDrawerBook.id;
+    const title = currentDrawerBook.title;
+    closeBookDrawer();
+    openDeleteModal(id, title);
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeBookDrawer();
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    {% if selected_book %}
+    openBookDrawer({{ selected_book|tojson }});
+    {% endif %}
+  });
+
 
   function openAddModal() {
     document.getElementById('modal-title').textContent = "Add New Book";

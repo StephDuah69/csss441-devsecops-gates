@@ -199,6 +199,13 @@
         <span>Artifacts & SBOM</span>
       </a>
 
+      <!-- Team Ownership & Academic Roster (Feature #2) -->
+      <button onclick="openTeamModal()" class="group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-400 hover:bg-white/[.035] hover:text-slate-200 transition">
+        <i class="fa-solid fa-users text-sm text-slate-500 group-hover:text-emerald-400" aria-hidden="true"></i>
+        <span>Team Ownership</span>
+        <span class="ml-auto rounded-full bg-emerald-400/10 px-2 py-0.5 text-[10px] font-mono text-emerald-300 border border-emerald-400/20">6 Devs</span>
+      </button>
+
       <div class="pt-4 mb-3 px-3 text-[10px] font-semibold uppercase tracking-[.18em] text-slate-600">
         Developer Tools
       </div>
@@ -246,7 +253,7 @@
   <div class="lg:pl-64 flex flex-col min-h-screen relative z-10">
     <!-- Top Navigation Bar -->
     <header class="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/[.07] bg-[#0b0f15]/85 px-4 backdrop-blur-xl sm:px-6 lg:px-8">
-      <!-- Left side: Mobile Hamburger & Live Status -->
+      <!-- Left side: Mobile Hamburger, Live Status & Defensive Controls Badge -->
       <div class="flex items-center gap-3">
         <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-slate-400 hover:text-white" aria-label="Open mobile navigation">
           <i class="fa-solid fa-bars text-lg"></i>
@@ -257,6 +264,12 @@
             <span class="inline-flex h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_0_4px_rgba(52,211,153,.15)] animate-pulse"></span>
             All systems operational
           </span>
+          <span class="h-3 w-px bg-white/10"></span>
+          <!-- Defensive Controls Live Header Badge (Feature #5) -->
+          <button onclick="openHeadersModal()" class="flex items-center gap-1.5 rounded-lg border border-emerald-500/20 bg-emerald-500/5 px-2.5 py-1 text-[11px] font-mono text-emerald-400 hover:bg-emerald-500/15 hover:border-emerald-500/40 transition" title="Inspect Active Security Headers">
+            <i class="fa-solid fa-shield-halved text-[10px]"></i>
+            <span>Hardened CSP/HSTS</span>
+          </button>
         </div>
       </div>
 
@@ -289,9 +302,10 @@
     <!-- Enterprise Footer -->
     <footer class="border-t border-white/[.06] bg-[#0b0f15]/60 py-6 text-xs text-slate-500">
       <div class="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-3">
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-3">
           <span class="inline-block h-2 w-2 rounded-full bg-emerald-400"></span>
           <span>CSSS 441 Software Security &bull; DevSecOps Verification Gates</span>
+          <button onclick="openTeamModal()" class="text-emerald-400 hover:text-emerald-300 underline underline-offset-2">Team Ownership</button>
         </div>
         <div class="flex items-center gap-4 text-slate-600">
           <span>Target: <strong class="text-slate-400 font-mono">csss441-book-catalog v1.0.0</strong></span>
@@ -336,6 +350,14 @@
           <kbd class="rounded border border-white/[.1] bg-white/[.04] px-2 py-0.5 text-[10px] font-mono text-emerald-400">S</kbd>
         </div>
         <div class="flex items-center justify-between py-1.5 border-b border-white/[.04]">
+          <span class="text-slate-300">View Team Ownership</span>
+          <kbd class="rounded border border-white/[.1] bg-white/[.04] px-2 py-0.5 text-[10px] font-mono text-emerald-400">T</kbd>
+        </div>
+        <div class="flex items-center justify-between py-1.5 border-b border-white/[.04]">
+          <span class="text-slate-300">Inspect Defensive Headers</span>
+          <kbd class="rounded border border-white/[.1] bg-white/[.04] px-2 py-0.5 text-[10px] font-mono text-emerald-400">H</kbd>
+        </div>
+        <div class="flex items-center justify-between py-1.5 border-b border-white/[.04]">
           <span class="text-slate-300">Jump to Book Catalog</span>
           <kbd class="rounded border border-white/[.1] bg-white/[.04] px-2 py-0.5 text-[10px] font-mono text-emerald-400">C</kbd>
         </div>
@@ -352,6 +374,232 @@
       <div class="mt-6 pt-3 border-t border-white/[.08] text-right">
         <button onclick="closeShortcutsModal()" class="px-4 py-1.5 bg-white/[.08] hover:bg-white/[.15] text-slate-300 text-xs font-medium rounded-lg transition">
           Got it
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Team Ownership Showcase Modal (Feature #2) -->
+  <div id="team-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-4 backdrop-blur-md hidden" onclick="handleTeamBackdropClick(event)">
+    <div class="command-in w-full max-w-3xl overflow-hidden rounded-2xl border border-white/[.12] bg-[#0e131b] shadow-[0_30px_100px_rgba(0,0,0,.9)] flex flex-col max-h-[85vh]">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between p-6 border-b border-white/[.08]">
+        <div class="flex items-center gap-3">
+          <div class="grid h-10 w-10 place-items-center rounded-xl border border-emerald-400/20 bg-emerald-400/10 text-emerald-400">
+            <i class="fa-solid fa-users text-lg"></i>
+          </div>
+          <div>
+            <h2 class="text-lg font-bold text-white tracking-tight">Engineering Team Ownership</h2>
+            <div class="text-xs text-slate-400 font-mono">CSSS 441 Software Security &bull; DevSecOps Pipeline</div>
+          </div>
+        </div>
+        <button onclick="closeTeamModal()" class="text-slate-400 hover:text-white p-2" aria-label="Close modal">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Members Grid -->
+      <div class="p-6 overflow-y-auto space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <!-- Member 1: Hannah -->
+          <div class="p-4 rounded-xl border border-white/[.08] bg-[#090d14] hover:border-emerald-400/30 transition flex flex-col justify-between">
+            <div class="flex items-center gap-3">
+              <img src="https://github.com/hannahamoaba.png" alt="hannahamoaba" class="w-12 h-12 rounded-full border border-white/[.1]" onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=Hannah+Larbi&background=047857&color=fff';">
+              <div>
+                <a href="https://github.com/hannahamoaba" target="_blank" class="text-sm font-semibold text-white hover:text-emerald-400 transition flex items-center gap-1.5">
+                  Hannah Amoaba Larbi
+                  <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-500"></i>
+                </a>
+                <div class="text-xs text-emerald-400 font-medium">Team Lead & Release Verification</div>
+                <div class="font-mono text-[11px] text-slate-400 mt-0.5">Index: <strong class="text-slate-200">1700237691</strong></div>
+              </div>
+            </div>
+            <div class="mt-3 pt-3 border-t border-white/[.05] text-[11px] text-slate-400 leading-relaxed">
+              CI/CD Pipeline Orchestration, Sigstore Cosign, SLSA Provenance, Release Verification Gates.
+            </div>
+          </div>
+
+          <!-- Member 2: Stephen -->
+          <div class="p-4 rounded-xl border border-white/[.08] bg-[#090d14] hover:border-emerald-400/30 transition flex flex-col justify-between">
+            <div class="flex items-center gap-3">
+              <img src="https://github.com/StephDuah69.png" alt="StephDuah69" class="w-12 h-12 rounded-full border border-white/[.1]" onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=Stephen+Duah&background=1d4ed8&color=fff';">
+              <div>
+                <a href="https://github.com/StephDuah69" target="_blank" class="text-sm font-semibold text-white hover:text-emerald-400 transition flex items-center gap-1.5">
+                  Stephen Kwadwo Duah
+                  <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-500"></i>
+                </a>
+                <div class="text-xs text-blue-400 font-medium">Source Security & Secrets Engineer</div>
+                <div class="font-mono text-[11px] text-slate-400 mt-0.5">Index: <strong class="text-slate-200">1696334280</strong></div>
+              </div>
+            </div>
+            <div class="mt-3 pt-3 border-t border-white/[.05] text-[11px] text-slate-400 leading-relaxed">
+              Gitleaks Pre-Commit Hooks, Secret Scanning, Repository Administration, CI Hardening.
+            </div>
+          </div>
+
+          <!-- Member 3: Othniel -->
+          <div class="p-4 rounded-xl border border-white/[.08] bg-[#090d14] hover:border-emerald-400/30 transition flex flex-col justify-between">
+            <div class="flex items-center gap-3">
+              <img src="https://github.com/thetravelerkweku-ops.png" alt="thetravelerkweku-ops" class="w-12 h-12 rounded-full border border-white/[.1]" onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=Othniel+Saka&background=6d28d9&color=fff';">
+              <div>
+                <a href="https://github.com/thetravelerkweku-ops" target="_blank" class="text-sm font-semibold text-white hover:text-emerald-400 transition flex items-center gap-1.5">
+                  Othniel Kpakpo Saka
+                  <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-500"></i>
+                </a>
+                <div class="text-xs text-violet-400 font-medium">AppSec & Static Analysis Engineer</div>
+                <div class="font-mono text-[11px] text-slate-400 mt-0.5">Index: <strong class="text-slate-200">1705408739</strong></div>
+              </div>
+            </div>
+            <div class="mt-3 pt-3 border-t border-white/[.05] text-[11px] text-slate-400 leading-relaxed">
+              5 Custom Semgrep SAST Rules (SQLi, RCE, eval, pickle, CORS), Rule Test Suites.
+            </div>
+          </div>
+
+          <!-- Member 4: Jesu -->
+          <div class="p-4 rounded-xl border border-white/[.08] bg-[#090d14] hover:border-emerald-400/30 transition flex flex-col justify-between">
+            <div class="flex items-center gap-3">
+              <img src="https://github.com/jesu-henry.png" alt="jesu-henry" class="w-12 h-12 rounded-full border border-white/[.1]" onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=Jesu+Quaijah&background=b45309&color=fff';">
+              <div>
+                <a href="https://github.com/jesu-henry" target="_blank" class="text-sm font-semibold text-white hover:text-emerald-400 transition flex items-center gap-1.5">
+                  Jesu Henry Quaijah
+                  <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-500"></i>
+                </a>
+                <div class="text-xs text-cyan-400 font-medium">Static Code Analysis Engineer</div>
+                <div class="font-mono text-[11px] text-slate-400 mt-0.5">Index: <strong class="text-slate-200">1699277211</strong></div>
+              </div>
+            </div>
+            <div class="mt-3 pt-3 border-t border-white/[.05] text-[11px] text-slate-400 leading-relaxed">
+              GitHub CodeQL Workflows, Python AST Rule Verification, Security Policy Tuning.
+            </div>
+          </div>
+
+          <!-- Member 5: Fred -->
+          <div class="p-4 rounded-xl border border-white/[.08] bg-[#090d14] hover:border-emerald-400/30 transition flex flex-col justify-between">
+            <div class="flex items-center gap-3">
+              <img src="https://github.com/Afrifar055-sketch.png" alt="Afrifar055-sketch" class="w-12 h-12 rounded-full border border-white/[.1]" onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=Fred+Nkrumah&background=0e7490&color=fff';">
+              <div>
+                <a href="https://github.com/Afrifar055-sketch" target="_blank" class="text-sm font-semibold text-white hover:text-emerald-400 transition flex items-center gap-1.5">
+                  Fred Nkrumah
+                  <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-500"></i>
+                </a>
+                <div class="text-xs text-amber-400 font-medium">Container & SCA Security Engineer</div>
+                <div class="font-mono text-[11px] text-slate-400 mt-0.5">Index: <strong class="text-slate-200">1703603625</strong></div>
+              </div>
+            </div>
+            <div class="mt-3 pt-3 border-t border-white/[.05] text-[11px] text-slate-400 leading-relaxed">
+              Multi-Stage Hardened Docker (user 10001), Checkov IaC, Trivy, OSV, CycloneDX SBOM.
+            </div>
+          </div>
+
+          <!-- Member 6: Benjamin -->
+          <div class="p-4 rounded-xl border border-white/[.08] bg-[#090d14] hover:border-emerald-400/30 transition flex flex-col justify-between">
+            <div class="flex items-center gap-3">
+              <img src="https://github.com/ben244294.png" alt="ben244294" class="w-12 h-12 rounded-full border border-white/[.1]" onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=Benjamin+Ofori&background=be185d&color=fff';">
+              <div>
+                <a href="https://github.com/ben244294" target="_blank" class="text-sm font-semibold text-white hover:text-emerald-400 transition flex items-center gap-1.5">
+                  Benjamin Essibo Ofori
+                  <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-500"></i>
+                </a>
+                <div class="text-xs text-rose-400 font-medium">DAST & Vulnerability Operations</div>
+                <div class="font-mono text-[11px] text-slate-400 mt-0.5">Index: <strong class="text-slate-200">1693417365</strong></div>
+              </div>
+            </div>
+            <div class="mt-3 pt-3 border-t border-white/[.05] text-[11px] text-slate-400 leading-relaxed">
+              Ephemeral Staging Containers, OWASP ZAP DAST, DefectDojo Client (import_reports.py).
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 border-t border-white/[.08] bg-[#090d14] flex justify-between items-center text-xs text-slate-500">
+        <span>Verified against <strong class="text-slate-400 font-mono">docs/contribution-records.md</strong></span>
+        <button onclick="closeTeamModal()" class="px-4 py-1.5 bg-white/[.08] hover:bg-white/[.15] text-slate-300 font-medium rounded-lg transition">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Defensive Security Headers Modal (Feature #5) -->
+  <div id="headers-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-4 backdrop-blur-md hidden" onclick="handleHeadersBackdropClick(event)">
+    <div class="command-in w-full max-w-2xl overflow-hidden rounded-2xl border border-white/[.12] bg-[#0e131b] shadow-[0_30px_100px_rgba(0,0,0,.9)] flex flex-col max-h-[85vh]">
+      <!-- Header -->
+      <div class="flex items-center justify-between p-6 border-b border-white/[.08]">
+        <div class="flex items-center gap-3">
+          <div class="grid h-10 w-10 place-items-center rounded-xl icon-emerald text-lg">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <div>
+            <h2 class="text-lg font-bold text-white tracking-tight">Active Defensive Security Headers</h2>
+            <div class="text-xs text-slate-400 font-mono">FastAPI HTTP Middleware &bull; OWASP ASVS Verified</div>
+          </div>
+        </div>
+        <button onclick="closeHeadersModal()" class="text-slate-400 hover:text-white p-2" aria-label="Close modal">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Headers List -->
+      <div class="p-6 overflow-y-auto space-y-3 font-mono text-xs">
+        <div class="p-3 rounded-lg border border-white/[.06] bg-[#080b10]">
+          <div class="flex items-center justify-between text-emerald-400 font-semibold mb-1">
+            <span>Content-Security-Policy (CSP)</span>
+            <span class="text-[10px] bg-emerald-400/10 text-emerald-300 px-2 py-0.5 rounded border border-emerald-400/20">Active</span>
+          </div>
+          <div class="text-slate-400 break-all text-[11px]">default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://github.com https://ui-avatars.com;</div>
+        </div>
+
+        <div class="p-3 rounded-lg border border-white/[.06] bg-[#080b10]">
+          <div class="flex items-center justify-between text-blue-400 font-semibold mb-1">
+            <span>Strict-Transport-Security (HSTS)</span>
+            <span class="text-[10px] bg-blue-400/10 text-blue-300 px-2 py-0.5 rounded border border-blue-400/20">Active</span>
+          </div>
+          <div class="text-slate-400 text-[11px]">max-age=31536000; includeSubDomains; preload</div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="p-3 rounded-lg border border-white/[.06] bg-[#080b10]">
+            <div class="flex items-center justify-between text-violet-400 font-semibold mb-1">
+              <span>X-Frame-Options</span>
+              <span class="text-[10px] text-emerald-400">DENY</span>
+            </div>
+            <div class="text-slate-500 text-[10px]">Prevents Clickjacking in iframes</div>
+          </div>
+
+          <div class="p-3 rounded-lg border border-white/[.06] bg-[#080b10]">
+            <div class="flex items-center justify-between text-amber-400 font-semibold mb-1">
+              <span>X-Content-Type-Options</span>
+              <span class="text-[10px] text-emerald-400">nosniff</span>
+            </div>
+            <div class="text-slate-500 text-[10px]">Blocks MIME-type confusion attacks</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="p-3 rounded-lg border border-white/[.06] bg-[#080b10]">
+            <div class="flex items-center justify-between text-teal-400 font-semibold mb-1">
+              <span>Rate Limiting (SlowAPI)</span>
+              <span class="text-[10px] text-emerald-400">60 req/min</span>
+            </div>
+            <div class="text-slate-500 text-[10px]">Protects API against brute-force & DoS</div>
+          </div>
+
+          <div class="p-3 rounded-lg border border-white/[.06] bg-[#080b10]">
+            <div class="flex items-center justify-between text-emerald-400 font-semibold mb-1">
+              <span>CSRF Protection</span>
+              <span class="text-[10px] text-emerald-400">Double-Submit</span>
+            </div>
+            <div class="text-slate-500 text-[10px]">HMAC token header verification</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="p-4 border-t border-white/[.08] bg-[#090d14] flex justify-between items-center text-xs text-slate-500">
+        <span>Emitted by <strong class="text-slate-400 font-mono">app/security.py</strong></span>
+        <button onclick="closeHeadersModal()" class="px-4 py-1.5 bg-white/[.08] hover:bg-white/[.15] text-slate-300 font-medium rounded-lg transition">
+          Close
         </button>
       </div>
     </div>
@@ -382,6 +630,28 @@
             <div class="text-[10px] text-slate-500">Trigger complete automated verification on main</div>
           </div>
           <span class="ml-auto font-mono text-[10px] text-slate-600">Enter</span>
+        </button>
+
+        <button onclick="openTeamModal(); closeCommandPalette();" class="palette-item group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition hover:bg-white/[.055]">
+          <span class="grid h-8 w-8 place-items-center rounded-lg border border-white/[.07] bg-white/[.025] text-slate-400 group-hover:text-emerald-400 group-hover:border-emerald-400/30">
+            <i class="fa-solid fa-users text-xs"></i>
+          </span>
+          <div>
+            <div class="text-xs font-medium text-slate-200">View Team Ownership</div>
+            <div class="text-[10px] text-slate-500">Academic roster & student index numbers</div>
+          </div>
+          <span class="ml-auto font-mono text-[10px] text-slate-600">6 Devs</span>
+        </button>
+
+        <button onclick="openHeadersModal(); closeCommandPalette();" class="palette-item group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition hover:bg-white/[.055]">
+          <span class="grid h-8 w-8 place-items-center rounded-lg border border-white/[.07] bg-white/[.025] text-slate-400 group-hover:text-emerald-400 group-hover:border-emerald-400/30">
+            <i class="fa-solid fa-shield-halved text-xs"></i>
+          </span>
+          <div>
+            <div class="text-xs font-medium text-slate-200">Inspect Defensive Headers</div>
+            <div class="text-[10px] text-slate-500">CSP, HSTS, Rate Limiting & CSRF</div>
+          </div>
+          <span class="ml-auto font-mono text-[10px] text-slate-600">Headers</span>
         </button>
 
         <a href="/security#findings" onclick="closeCommandPalette()" class="palette-item group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition hover:bg-white/[.055]">
@@ -508,6 +778,9 @@
         closeCommandPalette();
         closeGateDrawer();
         closeShortcutsModal();
+        closeTeamModal();
+        closeHeadersModal();
+        if (typeof closeBookDrawer === 'function') closeBookDrawer();
         return;
       }
 
@@ -526,6 +799,12 @@
             simToggle.checked = !simToggle.checked;
             toggleGateSimulation(simToggle.checked);
           }
+        } else if (e.key === 't' || e.key === 'T') {
+          e.preventDefault();
+          toggleTeamModal();
+        } else if (e.key === 'h' || e.key === 'H') {
+          e.preventDefault();
+          toggleHeadersModal();
         } else if (e.key === 'c' || e.key === 'C') {
           window.location.href = '/';
         } else if (e.key === 'p' || e.key === 'P') {
@@ -579,6 +858,52 @@
     function handleShortcutsBackdropClick(e) {
       if (e.target.id === 'shortcuts-modal') {
         closeShortcutsModal();
+      }
+    }
+
+    function openTeamModal() {
+      document.getElementById('team-modal').classList.remove('hidden');
+    }
+
+    function closeTeamModal() {
+      document.getElementById('team-modal').classList.add('hidden');
+    }
+
+    function toggleTeamModal() {
+      const modal = document.getElementById('team-modal');
+      if (modal.classList.contains('hidden')) {
+        openTeamModal();
+      } else {
+        closeTeamModal();
+      }
+    }
+
+    function handleTeamBackdropClick(e) {
+      if (e.target.id === 'team-modal') {
+        closeTeamModal();
+      }
+    }
+
+    function openHeadersModal() {
+      document.getElementById('headers-modal').classList.remove('hidden');
+    }
+
+    function closeHeadersModal() {
+      document.getElementById('headers-modal').classList.add('hidden');
+    }
+
+    function toggleHeadersModal() {
+      const modal = document.getElementById('headers-modal');
+      if (modal.classList.contains('hidden')) {
+        openHeadersModal();
+      } else {
+        closeHeadersModal();
+      }
+    }
+
+    function handleHeadersBackdropClick(e) {
+      if (e.target.id === 'headers-modal') {
+        closeHeadersModal();
       }
     }
 
