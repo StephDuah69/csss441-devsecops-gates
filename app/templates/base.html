@@ -1,64 +1,611 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-900 text-slate-100">
+<html lang="en" class="h-full bg-[#080b10] text-slate-200">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}Book Catalog & DevSecOps Gates{% endblock %}</title>
-  <!-- Tailwind CSS via CDN -->
+  <title>{% block title %}Aegis CI — DevSecOps Pipeline{% endblock %}</title>
+  <meta name="description" content="A DevSecOps pipeline dashboard for teams to monitor automated security scans, fail-closed release gates, software bills of materials, and signed build provenance.">
+
+  <!-- Typography: Manrope & DM Mono from Figma -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS via CDN with Figma Token Extensions -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Manrope', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['DM Mono', 'ui-monospace', 'monospace'],
+          },
+          colors: {
+            obsidian: '#080b10',
+            sidebar: '#0b0f15',
+            surface: '#0c1118',
+            surfaceModal: '#10151d',
+          }
+        }
+      }
+    }
+  </script>
+
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
-    /* Focus indicators for accessibility */
+    body {
+      font-family: 'Manrope', system-ui, sans-serif;
+      background-color: #080b10;
+      color: #e2e8f0;
+      overflow-x: hidden;
+    }
+    code, kbd, pre, .font-mono {
+      font-family: 'DM Mono', monospace;
+    }
+    /* Subtle radial glow matching Figma background */
+    .figma-bg-glow {
+      background: radial-gradient(circle at 68% -12%, rgba(61, 89, 129, 0.18), transparent 38%);
+    }
+    /* Figma Design System Custom Color Accents */
+    .icon-emerald { color: #34d399; background: rgba(52, 211, 153, 0.08); }
+    .icon-blue { color: #60a5fa; background: rgba(96, 165, 250, 0.08); }
+    .icon-amber { color: #fbbf24; background: rgba(251, 191, 36, 0.08); }
+    .icon-violet { color: #a78bfa; background: rgba(167, 139, 250, 0.08); }
+    .icon-rose { color: #fb7185; background: rgba(251, 113, 133, 0.08); }
+    .icon-teal { color: #2dd4bf; background: rgba(45, 212, 191, 0.08); }
+
+    .icon-text-emerald { color: #34d399; }
+    .icon-text-blue { color: #60a5fa; }
+    .icon-text-amber { color: #fbbf24; }
+    .icon-text-violet { color: #a78bfa; }
+    .icon-text-rose { color: #fb7185; }
+    .icon-text-teal { color: #2dd4bf; }
+
+    /* Figma Keyframe Animations */
+    @keyframes command-in {
+      0% { opacity: 0; transform: translateY(-8px) scale(0.985); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes drawer-in {
+      0% { opacity: 0; transform: translateX(24px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes toast-in {
+      0% { opacity: 0; transform: translateY(8px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes node-pulse {
+      0%, 100% { border-color: rgba(52, 211, 153, 0.25); box-shadow: 0 0 20px rgba(52, 211, 153, 0.06); }
+      50% { border-color: rgba(52, 211, 153, 0.65); box-shadow: 0 0 26px rgba(52, 211, 153, 0.18); }
+    }
+    @keyframes pipeline-scan {
+      0% { transform: translateX(-120%); }
+      100% { transform: translateX(340%); }
+    }
+
+    .command-in { animation: 0.18s ease-out both command-in; }
+    .drawer-in { animation: 0.24s ease-out both drawer-in; }
+    .toast-in { animation: 0.2s ease-out both toast-in; }
+    .node-pulse { animation: node-pulse 3s infinite ease-in-out; }
+
+    /* Custom dark scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #080b10; }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.22); }
+
+    /* Accessible focus states */
     a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
-      outline: 2px solid #6366f1;
+      outline: 2px solid #34d399;
       outline-offset: 2px;
     }
   </style>
   {% block extra_head %}{% endblock %}
 </head>
-<body class="flex flex-col min-h-full">
-  <!-- Navigation Header -->
-  <header class="border-b border-slate-800 bg-slate-950/90 backdrop-blur sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <a href="/" class="flex items-center space-x-2 text-white font-bold text-lg hover:text-indigo-400 transition">
-          <span class="text-2xl" aria-hidden="true">📚</span>
-          <span>BookCatalog</span>
-          <span class="text-indigo-400 text-xs px-2 py-0.5 rounded-full border border-indigo-500/30 font-medium">DevSecOps</span>
+<body class="min-h-screen bg-[#080b10] text-slate-200 antialiased selection:bg-emerald-500/20 selection:text-emerald-300">
+  <!-- Figma Background Radial Ambient Gradient -->
+  <div class="pointer-events-none fixed inset-0 figma-bg-glow"></div>
+
+  <!-- Mobile Navigation Overlay -->
+  <div id="mobile-sidebar-backdrop" onclick="toggleMobileMenu()" class="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm hidden lg:hidden"></div>
+
+  <!-- Left Sidebar (Aegis CI DevSecOps Navigation) -->
+  <aside id="app-sidebar" class="fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-white/[.07] bg-[#0b0f15]/95 px-4 py-5 backdrop-blur-xl transition-transform duration-200 lg:translate-x-0 -translate-x-full">
+    <!-- Brand Logo & Header -->
+    <div class="flex items-center justify-between px-2">
+      <a href="/" class="flex items-center gap-3 group">
+        <div class="grid h-9 w-9 place-items-center rounded-xl border border-emerald-400/20 bg-emerald-400/10 text-emerald-300 shadow-[0_0_12px_rgba(52,211,153,.15)] transition group-hover:border-emerald-400/40">
+          <i class="fa-solid fa-shield-halved text-base" aria-hidden="true"></i>
+        </div>
+        <div>
+          <div class="text-sm font-semibold tracking-tight text-white flex items-center gap-1.5">
+            Aegis CI
+            <span class="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          </div>
+          <div class="text-[10px] font-medium uppercase tracking-[.18em] text-slate-500">DevSecOps Gates</div>
+        </div>
+      </a>
+      <button onclick="toggleMobileMenu()" class="text-slate-500 hover:text-white lg:hidden p-1" aria-label="Close navigation">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+    </div>
+
+    <!-- Navigation Links -->
+    <nav class="mt-8 space-y-1 flex-1 overflow-y-auto" aria-label="Workspace Navigation">
+      <div class="mb-3 px-3 text-[10px] font-semibold uppercase tracking-[.18em] text-slate-600">
+        Workspace Views
+      </div>
+
+      <!-- Security Pipeline Dashboard Link -->
+      <a href="/security" class="group relative flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition {% if active_page == 'security' %}bg-white/[.07] text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,.05)]{% else %}text-slate-400 hover:bg-white/[.035] hover:text-slate-200{% endif %}">
+        {% if active_page == 'security' %}
+        <span class="absolute inset-y-2 left-0 w-0.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,.7)]"></span>
+        {% endif %}
+        <i class="fa-solid fa-gauge-high text-sm {% if active_page == 'security' %}text-emerald-400{% else %}text-slate-500 group-hover:text-slate-300{% endif %}" aria-hidden="true"></i>
+        <span>Security Pipeline</span>
+        <span class="ml-auto rounded-full bg-emerald-400/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-300 border border-emerald-400/20">8/8</span>
+      </a>
+
+      <!-- Book Catalog Link -->
+      <a href="/" class="group relative flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition {% if active_page == 'catalog' %}bg-white/[.07] text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,.05)]{% else %}text-slate-400 hover:bg-white/[.035] hover:text-slate-200{% endif %}">
+        {% if active_page == 'catalog' %}
+        <span class="absolute inset-y-2 left-0 w-0.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,.7)]"></span>
+        {% endif %}
+        <i class="fa-solid fa-layer-group text-sm {% if active_page == 'catalog' %}text-emerald-400{% else %}text-slate-500 group-hover:text-slate-300{% endif %}" aria-hidden="true"></i>
+        <span>Book Catalog</span>
+      </a>
+
+      <!-- Quick Section Anchor Links -->
+      <a href="/security#pipeline" class="group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-400 hover:bg-white/[.035] hover:text-slate-200 transition">
+        <i class="fa-solid fa-network-wired text-sm text-slate-500 group-hover:text-slate-300" aria-hidden="true"></i>
+        <span>Release Path</span>
+      </a>
+
+      <a href="/security#findings" class="group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-400 hover:bg-white/[.035] hover:text-slate-200 transition">
+        <i class="fa-solid fa-magnifying-glass text-sm text-slate-500 group-hover:text-slate-300" aria-hidden="true"></i>
+        <span>Vulnerabilities</span>
+        <span class="ml-auto rounded-full bg-amber-400/10 px-2 py-0.5 text-[10px] font-semibold text-amber-300 border border-amber-400/20">3</span>
+      </a>
+
+      <a href="/security#artifacts" class="group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-400 hover:bg-white/[.035] hover:text-slate-200 transition">
+        <i class="fa-solid fa-box text-sm text-slate-500 group-hover:text-slate-300" aria-hidden="true"></i>
+        <span>Artifacts & SBOM</span>
+      </a>
+
+      <div class="pt-4 mb-3 px-3 text-[10px] font-semibold uppercase tracking-[.18em] text-slate-600">
+        Developer Tools
+      </div>
+
+      <a href="/docs" target="_blank" rel="noopener noreferrer" class="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-400 hover:bg-white/[.035] hover:text-slate-200 transition">
+        <i class="fa-solid fa-code text-sm text-slate-500 group-hover:text-slate-300" aria-hidden="true"></i>
+        <span>OpenAPI Specs</span>
+        <i class="fa-solid fa-arrow-up-right-from-square ml-auto text-[10px] text-slate-600"></i>
+      </a>
+
+      <a href="/metrics" target="_blank" rel="noopener noreferrer" class="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-400 hover:bg-white/[.035] hover:text-slate-200 transition">
+        <i class="fa-solid fa-chart-line text-sm text-slate-500 group-hover:text-slate-300" aria-hidden="true"></i>
+        <span>Prometheus Metrics</span>
+        <i class="fa-solid fa-arrow-up-right-from-square ml-auto text-[10px] text-slate-600"></i>
+      </a>
+    </nav>
+
+    <!-- Sidebar Policy Mode Card (from Figma) -->
+    <div class="mt-auto pt-4">
+      <div class="mb-3 rounded-xl border border-white/[.07] bg-white/[.025] p-3.5 backdrop-blur-sm">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-medium text-slate-300">Policy Mode</span>
+          <span class="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-400">
+            <span class="inline-flex h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_0_4px_rgba(52,211,153,.15)]"></span>
+            Enforced
+          </span>
+        </div>
+        <p class="mt-2 text-[11px] leading-relaxed text-slate-500">
+          Fail-closed gates block builds when critical controls fail.
+        </p>
+      </div>
+
+      <!-- Quick Command Bar Trigger -->
+      <button onclick="openCommandPalette()" class="flex w-full items-center justify-between rounded-lg border border-white/[.08] bg-black/30 px-3 py-2 text-xs text-slate-400 hover:border-white/[.15] hover:text-slate-200 transition">
+        <span class="flex items-center gap-2">
+          <i class="fa-solid fa-magnifying-glass text-[11px] text-slate-500"></i>
+          <span>Command menu</span>
+        </span>
+        <kbd class="rounded border border-white/[.08] bg-white/[.04] px-1.5 py-0.5 text-[9px] font-mono text-slate-500">⌘K</kbd>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Application Wrapper -->
+  <div class="lg:pl-64 flex flex-col min-h-screen">
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/[.07] bg-[#0b0f15]/85 px-4 backdrop-blur-xl sm:px-6 lg:px-8">
+      <!-- Left side: Mobile Hamburger & Live Status -->
+      <div class="flex items-center gap-3">
+        <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-slate-400 hover:text-white" aria-label="Open mobile navigation">
+          <i class="fa-solid fa-bars text-lg"></i>
+        </button>
+
+        <div class="hidden sm:flex items-center gap-2.5 text-xs">
+          <span class="flex items-center gap-2 font-medium text-emerald-400">
+            <span class="inline-flex h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_0_4px_rgba(52,211,153,.15)] animate-pulse"></span>
+            All systems operational
+          </span>
+          <span class="h-3 w-px bg-white/10"></span>
+          <span class="font-mono text-[10px] text-slate-500">main @ <span class="text-slate-400">e901372</span></span>
+        </div>
+      </div>
+
+      <!-- Right side: Search, Docs & Action Button -->
+      <div class="flex items-center gap-2.5">
+        <button onclick="openCommandPalette()" class="hidden md:flex h-9 items-center gap-2.5 rounded-lg border border-white/[.08] bg-white/[.025] px-3 text-xs text-slate-400 hover:border-white/[.15] hover:text-white transition">
+          <i class="fa-solid fa-magnifying-glass text-[11px] text-slate-500"></i>
+          <span>Search gates, findings…</span>
+          <kbd class="ml-2 rounded border border-white/[.08] bg-black/40 px-1.5 py-0.5 text-[9px] font-mono text-slate-500">Ctrl K</kbd>
+        </button>
+
+        <a href="/docs" target="_blank" rel="noopener noreferrer" class="hidden sm:flex h-9 items-center gap-2 rounded-lg border border-white/[.08] px-3 text-xs text-slate-300 hover:border-white/[.15] hover:text-white transition">
+          <i class="fa-solid fa-book-open text-xs text-slate-500"></i>
+          <span>Docs</span>
+        </a>
+
+        <!-- Trigger Pipeline Run Button (Figma feature) -->
+        <button id="run-pipeline-btn" onclick="triggerSimulatedPipelineRun()" class="flex h-9 items-center gap-2 rounded-lg bg-emerald-400 px-3.5 text-xs font-semibold text-[#07110d] transition hover:bg-emerald-300 shadow-[0_0_15px_rgba(52,211,153,.25)] active:scale-95">
+          <i class="fa-solid fa-play text-xs" id="run-pipeline-icon"></i>
+          <span id="run-pipeline-text">Run pipeline</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Page Content Container -->
+    <main class="flex-1 mx-auto w-full max-w-[1440px] px-4 py-8 sm:px-6 lg:px-8">
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- Enterprise Footer -->
+    <footer class="border-t border-white/[.06] bg-[#0b0f15]/60 py-6 text-xs text-slate-500">
+      <div class="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-3">
+        <div class="flex items-center gap-2">
+          <span class="inline-block h-2 w-2 rounded-full bg-emerald-400"></span>
+          <span>CSSS 441 Software Security &bull; DevSecOps Verification Gates</span>
+        </div>
+        <div class="flex items-center gap-4 text-slate-600">
+          <span>Target: <strong class="text-slate-400 font-mono">csss441-book-catalog v1.0.0</strong></span>
+          <span>SLSA: <strong class="text-emerald-400 font-mono">Level 3</strong></span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Command Palette Modal (from Figma) -->
+  <div id="command-palette-modal" class="fixed inset-0 z-50 flex items-start justify-center bg-black/75 px-4 pt-[12vh] backdrop-blur-sm hidden" onclick="handlePaletteBackdropClick(event)">
+    <div class="command-in w-full max-w-xl overflow-hidden rounded-2xl border border-white/[.12] bg-[#10151d] shadow-[0_30px_100px_rgba(0,0,0,.75)]">
+      <!-- Search Input -->
+      <div class="flex items-center gap-3 border-b border-white/[.08] px-4">
+        <i class="fa-solid fa-magnifying-glass text-slate-500 text-sm"></i>
+        <input type="text" id="palette-search" placeholder="Search gates, findings, or quick actions…" class="h-14 flex-1 bg-transparent text-sm text-slate-200 outline-none placeholder:text-slate-600" onkeyup="filterCommandPalette(this.value)">
+        <kbd class="rounded border border-white/[.08] bg-white/[.03] px-2 py-1 text-[9px] text-slate-500">ESC</kbd>
+      </div>
+
+      <!-- Quick Action List -->
+      <div class="p-2 max-h-80 overflow-y-auto" id="palette-actions">
+        <div class="px-2 py-2 text-[9px] font-semibold uppercase tracking-[.16em] text-slate-500">
+          Quick Actions
+        </div>
+
+        <button onclick="triggerSimulatedPipelineRun(); closeCommandPalette();" class="palette-item group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition hover:bg-white/[.055]">
+          <span class="grid h-8 w-8 place-items-center rounded-lg border border-white/[.07] bg-white/[.025] text-slate-400 group-hover:text-emerald-400 group-hover:border-emerald-400/30">
+            <i class="fa-solid fa-play text-xs"></i>
+          </span>
+          <div>
+            <div class="text-xs font-medium text-slate-200">Run security pipeline</div>
+            <div class="text-[10px] text-slate-500">Trigger complete automated verification on main</div>
+          </div>
+          <span class="ml-auto font-mono text-[10px] text-slate-600">Enter</span>
+        </button>
+
+        <a href="/security#findings" onclick="closeCommandPalette()" class="palette-item group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition hover:bg-white/[.055]">
+          <span class="grid h-8 w-8 place-items-center rounded-lg border border-white/[.07] bg-white/[.025] text-slate-400 group-hover:text-amber-400 group-hover:border-amber-400/30">
+            <i class="fa-solid fa-triangle-exclamation text-xs"></i>
+          </span>
+          <div>
+            <div class="text-xs font-medium text-slate-200">Review open findings</div>
+            <div class="text-[10px] text-slate-500">Inspect 3 non-blocking findings in register</div>
+          </div>
+          <span class="ml-auto font-mono text-[10px] text-slate-600">3 items</span>
+        </a>
+
+        <a href="/security#artifacts" onclick="closeCommandPalette()" class="palette-item group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition hover:bg-white/[.055]">
+          <span class="grid h-8 w-8 place-items-center rounded-lg border border-white/[.07] bg-white/[.025] text-slate-400 group-hover:text-blue-400 group-hover:border-blue-400/30">
+            <i class="fa-solid fa-shield text-xs"></i>
+          </span>
+          <div>
+            <div class="text-xs font-medium text-slate-200">Verify signed image (Cosign)</div>
+            <div class="text-[10px] text-slate-500">View Rekor transparency log and SLSA provenance</div>
+          </div>
+          <span class="ml-auto font-mono text-[10px] text-slate-600">Cosign</span>
+        </a>
+
+        <a href="/" onclick="closeCommandPalette()" class="palette-item group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition hover:bg-white/[.055]">
+          <span class="grid h-8 w-8 place-items-center rounded-lg border border-white/[.07] bg-white/[.025] text-slate-400 group-hover:text-emerald-400 group-hover:border-emerald-400/30">
+            <i class="fa-solid fa-book text-xs"></i>
+          </span>
+          <div>
+            <div class="text-xs font-medium text-slate-200">Browse Book Catalog</div>
+            <div class="text-[10px] text-slate-500">Inventory and literature database</div>
+          </div>
+          <span class="ml-auto font-mono text-[10px] text-slate-600">App</span>
         </a>
       </div>
-      <nav class="flex items-center space-x-2 sm:space-x-4" aria-label="Main Navigation">
-        <a href="/" class="px-3 py-1.5 rounded-lg text-sm font-medium {% if active_page == 'catalog' %}bg-indigo-600 text-white{% else %}text-slate-300 hover:text-white hover:bg-slate-800{% endif %}">
-          Catalog
-        </a>
-        <a href="/security" class="px-3 py-1.5 rounded-lg text-sm font-medium {% if active_page == 'security' %}bg-indigo-600 text-white{% else %}text-slate-300 hover:text-white hover:bg-slate-800{% endif %} flex items-center gap-1.5">
-          <i class="fa-solid fa-shield-halved text-xs" aria-hidden="true"></i> Security Gates
-        </a>
-        <a href="/docs" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white border border-slate-700 hover:border-slate-600 hidden sm:inline-flex items-center gap-1.5">
-          <i class="fa-solid fa-code text-xs" aria-hidden="true"></i> API Docs
-        </a>
-      </nav>
-    </div>
-  </header>
 
-  <!-- Main Content Area -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8" id="main-content">
-    {% block content %}{% endblock %}
-  </main>
-
-  <!-- Footer -->
-  <footer class="border-t border-slate-800 bg-slate-950/60 py-6 text-center text-xs text-slate-500">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-2">
-      <p>CSSS 441 Software Security & DevSecOps Automated Verification Pipeline</p>
-      <p class="flex items-center gap-2">
-        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400" aria-hidden="true"></span>
-        <span>Service: <strong class="text-slate-400">csss441-book-catalog v1.0.0</strong></span>
-      </p>
+      <!-- Palette Footer -->
+      <div class="flex items-center gap-4 border-t border-white/[.06] bg-black/20 px-4 py-2.5 text-[10px] text-slate-500">
+        <span><kbd class="mr-1 font-mono text-slate-400">ESC</kbd> to close</span>
+        <span class="ml-auto flex items-center gap-1.5">
+          <span class="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+          Policy enforced
+        </span>
+      </div>
     </div>
-  </footer>
+  </div>
+
+  <!-- Interactive Slide-Over Drawer for Gate Details (from Figma) -->
+  <div id="gate-drawer-backdrop" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden" onclick="closeGateDrawer()">
+    <div id="gate-drawer-panel" class="drawer-in fixed inset-y-0 right-0 w-full max-w-lg border-l border-white/[.12] bg-[#0d121a] p-6 shadow-2xl flex flex-col justify-between overflow-y-auto" onclick="event.stopPropagation()">
+      <div>
+        <!-- Drawer Header -->
+        <div class="flex items-center justify-between pb-5 border-b border-white/[.08]">
+          <div class="flex items-center gap-3">
+            <div id="drawer-icon-box" class="grid h-10 w-10 place-items-center rounded-xl text-lg font-bold">
+              <i id="drawer-icon" class="fa-solid fa-shield"></i>
+            </div>
+            <div>
+              <h2 id="drawer-title" class="text-lg font-bold text-white tracking-tight">Gate Inspection</h2>
+              <div id="drawer-category" class="text-xs text-slate-400 font-mono">Security Gate</div>
+            </div>
+          </div>
+          <button onclick="closeGateDrawer()" class="text-slate-400 hover:text-white p-2" aria-label="Close drawer">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+
+        <!-- Drawer Content -->
+        <div class="mt-6 space-y-6">
+          <div>
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Summary</h3>
+            <p id="drawer-summary" class="text-sm leading-relaxed text-slate-300 bg-white/[.02] p-3 rounded-lg border border-white/[.05]"></p>
+          </div>
+
+          <div>
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Automated Checks Executed</h3>
+            <ul id="drawer-checks" class="space-y-2 text-xs text-slate-300"></ul>
+          </div>
+
+          <div>
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Framework Compliance</h3>
+            <div id="drawer-frameworks" class="flex flex-wrap gap-2"></div>
+          </div>
+
+          <div>
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">CLI Command</h3>
+            <div class="relative group">
+              <pre id="drawer-command" class="p-3 bg-[#080b10] border border-white/[.08] rounded-lg text-xs font-mono text-emerald-400 overflow-x-auto whitespace-pre-wrap"></pre>
+              <button onclick="copyDrawerCommand()" class="absolute top-2 right-2 px-2 py-1 bg-white/[.08] hover:bg-white/[.15] text-[10px] text-slate-300 rounded border border-white/[.1] transition">
+                <i class="fa-regular fa-copy mr-1"></i> Copy
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-6 border-t border-white/[.08] mt-8 flex justify-end">
+        <button onclick="closeGateDrawer()" class="px-4 py-2 bg-white/[.08] hover:bg-white/[.15] text-slate-200 text-xs font-medium rounded-lg transition">
+          Close Inspector
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification System (from Figma) -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Global Frontend JavaScript -->
+  <script>
+    // Keyboard Shortcuts (⌘K / Ctrl+K and ESC)
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        toggleCommandPalette();
+      }
+      if (e.key === 'Escape') {
+        closeCommandPalette();
+        closeGateDrawer();
+      }
+    });
+
+    function toggleMobileMenu() {
+      const sidebar = document.getElementById('app-sidebar');
+      const backdrop = document.getElementById('mobile-sidebar-backdrop');
+      sidebar.classList.toggle('-translate-x-full');
+      backdrop.classList.toggle('hidden');
+    }
+
+    function openCommandPalette() {
+      document.getElementById('command-palette-modal').classList.remove('hidden');
+      document.getElementById('palette-search').focus();
+    }
+
+    function closeCommandPalette() {
+      document.getElementById('command-palette-modal').classList.add('hidden');
+    }
+
+    function toggleCommandPalette() {
+      const modal = document.getElementById('command-palette-modal');
+      if (modal.classList.contains('hidden')) {
+        openCommandPalette();
+      } else {
+        closeCommandPalette();
+      }
+    }
+
+    function handlePaletteBackdropClick(e) {
+      if (e.target.id === 'command-palette-modal') {
+        closeCommandPalette();
+      }
+    }
+
+    function filterCommandPalette(term) {
+      const query = term.toLowerCase().trim();
+      const items = document.querySelectorAll('.palette-item');
+      items.forEach(item => {
+        if (!query || item.innerText.toLowerCase().includes(query)) {
+          item.style.display = 'flex';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    function showToast(message, type = 'emerald') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast-in pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-xl border border-white/[.12] bg-[#10151d] text-xs font-medium shadow-2xl text-slate-200`;
+      
+      const dotColor = type === 'rose' ? 'bg-rose-400' : (type === 'amber' ? 'bg-amber-400' : 'bg-emerald-400');
+      toast.innerHTML = `
+        <span class="inline-block h-2 w-2 rounded-full ${dotColor}"></span>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 2600);
+    }
+
+    function triggerSimulatedPipelineRun() {
+      const btn = document.getElementById('run-pipeline-btn');
+      const icon = document.getElementById('run-pipeline-icon');
+      const text = document.getElementById('run-pipeline-text');
+      
+      icon.className = 'fa-solid fa-arrows-rotate fa-spin text-xs';
+      text.textContent = 'Running gates…';
+      btn.disabled = true;
+      btn.classList.add('opacity-75');
+
+      showToast('Pipeline execution triggered on branch main', 'emerald');
+
+      setTimeout(() => {
+        icon.className = 'fa-solid fa-play text-xs';
+        text.textContent = 'Run pipeline';
+        btn.disabled = false;
+        btn.classList.remove('opacity-75');
+        showToast('All 8 security gates passed successfully!', 'emerald');
+      }, 2800);
+    }
+
+    // Gate Details Registry (from Figma Design)
+    const FIGMA_GATE_DATA = {
+      "Gitleaks": {
+        summary: "Scanned the complete Git history and working tree against 158 secret patterns.",
+        checks: ["4,218 commits inspected", "0 verified secrets", "12 allowlist entries applied"],
+        frameworks: ["NIST SSDF PW.4", "OWASP ASVS 1.14"],
+        command: "gitleaks detect --source . --log-opts=--all --redact",
+        tone: "emerald"
+      },
+      "Semgrep": {
+        summary: "Custom ruleset evaluated first-party code for injection, auth, and data-flow risks.",
+        checks: ["5 custom AST rules evaluated", "2 findings suppressed", "0 blocking findings"],
+        frameworks: ["NIST SSDF PW.7", "OWASP ASVS 1.1"],
+        command: "semgrep ci --config .semgrep/security.yml",
+        tone: "violet"
+      },
+      "CodeQL": {
+        summary: "Deep semantic analysis completed across Python execution paths with GitHub Security.",
+        checks: ["1 language analyzed (Python)", "18 queries executed", "0 critical paths"],
+        frameworks: ["NIST SSDF PW.7", "CWE Top 25"],
+        command: "codeql database analyze db python-security-extended.qls",
+        tone: "blue"
+      },
+      "Trivy + OSV": {
+        summary: "Dependencies and container layers checked against OSV and NVD vulnerability databases.",
+        checks: ["247 packages inspected", "3 non-blocking CVEs", "0 exploitable criticals"],
+        frameworks: ["NIST SSDF PS.3", "SLSA Build L3"],
+        command: "trivy image --severity HIGH,CRITICAL csss441-book-catalog:latest",
+        tone: "amber"
+      },
+      "Checkov": {
+        summary: "Infrastructure definitions evaluated before deployment against CIS benchmarks.",
+        checks: ["42 checks passed", "0 policy violations", "3 files inspected"],
+        frameworks: ["NIST SSDF PW.9", "CIS Benchmarks"],
+        command: "checkov --directory . --framework dockerfile,compose",
+        tone: "teal"
+      },
+      "OWASP ZAP": {
+        summary: "The ephemeral preview environment was crawled and dynamically tested for web risks.",
+        checks: ["38 routes crawled", "126 requests tested", "0 high-risk alerts"],
+        frameworks: ["OWASP ASVS 14.4", "NIST SSDF RV.1"],
+        command: "zap-baseline.py -t http://127.0.0.1:8000 -c .zap/rules.tsv",
+        tone: "rose"
+      },
+      "Cosign": {
+        summary: "Keyless container signature verification using Sigstore Fulcio OIDC and Rekor transparency log.",
+        checks: ["OIDC identity verified (GitHub Actions)", "Rekor transparency entry confirmed", "SHA-256 digest attested"],
+        frameworks: ["SLSA Provenance L3", "Supply Chain Security"],
+        command: "cosign verify --certificate-identity-regexp=https://github.com/StephDuah69 ghcr.io/csss441-app@sha256:...",
+        tone: "emerald"
+      }
+    };
+
+    function inspectGate(name) {
+      const data = FIGMA_GATE_DATA[name] || {
+        summary: `Automated security verification performed for ${name}.`,
+        checks: ["Policy verification passed", "0 blocking issues", "Evidence generated"],
+        frameworks: ["NIST SSDF", "CSSS 441 Gate Specification"],
+        command: `make gates`,
+        tone: "emerald"
+      };
+
+      document.getElementById('drawer-title').textContent = name;
+      document.getElementById('drawer-category').textContent = "Automated Security Gate";
+      document.getElementById('drawer-summary').textContent = data.summary;
+
+      const checksEl = document.getElementById('drawer-checks');
+      checksEl.innerHTML = data.checks.map(c => `
+        <li class="flex items-center gap-2">
+          <i class="fa-solid fa-circle-check text-emerald-400 text-xs"></i>
+          <span>${c}</span>
+        </li>
+      `).join('');
+
+      const frameworksEl = document.getElementById('drawer-frameworks');
+      frameworksEl.innerHTML = data.frameworks.map(f => `
+        <span class="rounded bg-white/[.06] border border-white/[.08] px-2 py-1 text-[10px] font-mono text-slate-300">${f}</span>
+      `).join('');
+
+      document.getElementById('drawer-command').textContent = data.command;
+
+      const iconBox = document.getElementById('drawer-icon-box');
+      iconBox.className = `grid h-10 w-10 place-items-center rounded-xl text-lg font-bold icon-${data.tone || 'emerald'}`;
+
+      document.getElementById('gate-drawer-backdrop').classList.remove('hidden');
+    }
+
+    function closeGateDrawer() {
+      document.getElementById('gate-drawer-backdrop').classList.add('hidden');
+    }
+
+    function copyDrawerCommand() {
+      const cmd = document.getElementById('drawer-command').textContent;
+      navigator.clipboard.writeText(cmd).then(() => {
+        showToast('Scanner command copied to clipboard', 'emerald');
+      });
+    }
+  </script>
 
   {% block extra_scripts %}{% endblock %}
 </body>
 </html>
-

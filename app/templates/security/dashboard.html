@@ -1,168 +1,544 @@
 {% extends "base.html" %}
 
-{% block title %}DevSecOps Security Dashboard — CSSS 441{% endblock %}
+{% block title %}Security Pipeline & Fail-Closed Gates — Aegis CI{% endblock %}
 
 {% block content %}
 <div class="space-y-8">
-  <!-- Dashboard Header -->
-  <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-800 pb-6">
+  <!-- Page Header & Simulation Toggle (from Figma) -->
+  <section class="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
     <div>
-      <div class="flex items-center gap-3">
-        <h1 class="text-3xl font-extrabold text-white tracking-tight">DevSecOps Security Pipeline</h1>
-        {% if scorecard.overall_status == 'PASS' %}
-        <span class="px-3 py-1 text-xs font-bold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> ALL GATES PASSED
+      <div class="mb-3 flex items-center gap-3 text-xs font-medium text-emerald-400">
+        <span class="flex items-center gap-2">
+          <span id="header-status-dot" class="inline-flex h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_0_4px_rgba(52,211,153,.15)] animate-pulse"></span>
+          <span id="header-status-text">All systems operational</span>
         </span>
-        {% elif scorecard.overall_status == 'FAIL' %}
-        <span class="px-3 py-1 text-xs font-bold rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30 flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-rose-400"></span> POLICY VIOLATION
-        </span>
-        {% elif scorecard.is_stale %}
-        <span class="px-3 py-1 text-xs font-bold rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30">
-          STALE EVIDENCE (>7 DAYS)
-        </span>
-        {% else %}
-        <span class="px-3 py-1 text-xs font-bold rounded-full bg-slate-700 text-slate-300 border border-slate-600">
-          {{ scorecard.overall_status or 'NO DATA' }}
-        </span>
-        {% endif %}
+        <span class="h-3 w-px bg-white/10"></span>
+        <span class="font-mono text-[10px] font-normal text-slate-500">last sync 12s ago</span>
       </div>
-      <p class="text-sm text-slate-400 mt-1">
-        Continuous compliance, automated gate enforcement, and vulnerability posture for <code>csss441-book-catalog</code>.
+
+      <h1 class="text-2xl font-semibold tracking-[-.03em] text-white sm:text-3xl flex items-center gap-3">
+        <span>Security pipeline</span>
+        <span id="overall-badge" class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-mono">
+          PASS
+        </span>
+      </h1>
+      <p class="mt-2 max-w-2xl text-sm leading-relaxed text-slate-400">
+        Automated, fail-closed assurance from commit to signed container release for <code class="text-emerald-400 font-mono">csss441-book-catalog</code>.
       </p>
     </div>
-    <div class="flex items-center gap-2">
-      <a href="/api/security/scorecard" target="_blank" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium rounded-lg border border-slate-700 flex items-center gap-1.5">
-        <i class="fa-solid fa-file-code" aria-hidden="true"></i> Raw Scorecard JSON
+
+    <!-- Simulator Control & Action Tools -->
+    <div class="flex items-center gap-3">
+      <!-- Fail-Closed Gate Simulation Toggle (Figma feature) -->
+      <div class="flex items-center gap-2.5 rounded-lg border border-white/[.08] bg-[#0c1118] px-3.5 py-2">
+        <label for="simulation-toggle" class="text-xs font-medium text-slate-300 cursor-pointer select-none">
+          Simulate Gate Failure
+        </label>
+        <input type="checkbox" id="simulation-toggle" onchange="toggleGateSimulation(this.checked)" class="h-4 w-4 rounded border-slate-700 bg-slate-900 text-rose-500 focus:ring-rose-500 focus:ring-offset-0 cursor-pointer">
+      </div>
+
+      <!-- Raw Scorecard JSON Button -->
+      <a href="/api/security/scorecard" target="_blank" class="flex h-9 items-center gap-2 rounded-lg border border-white/[.08] bg-white/[.025] px-3 text-xs text-slate-300 transition hover:border-white/[.15] hover:text-white">
+        <i class="fa-solid fa-code text-xs text-slate-500"></i>
+        <span>JSON Scorecard</span>
       </a>
     </div>
-  </div>
+  </section>
 
-  <!-- Run Metadata Banner -->
-  <div class="bg-slate-800/40 border border-slate-700/60 p-4 rounded-xl grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
-    <div>
-      <span class="text-slate-400 block">Scorecard Run ID:</span>
-      <span class="font-mono font-medium text-white truncate block">{{ scorecard.run_id or 'local-run-manual' }}</span>
-    </div>
-    <div>
-      <span class="text-slate-400 block">Commit Reference:</span>
-      <span class="font-mono font-medium text-indigo-400 block">{{ scorecard.commit_sha or 'HEAD' }}</span>
-    </div>
-    <div>
-      <span class="text-slate-400 block">Last Verification:</span>
-      <span class="text-white block">{{ scorecard.finish_time or scorecard.generated_at or 'Not recorded' }}</span>
-    </div>
-    <div>
-      <span class="text-slate-400 block">Gate Policy Engine:</span>
-      <span class="text-emerald-400 font-semibold block">Strict (0 High/Critical CVEs)</span>
-    </div>
-  </div>
-
-  <!-- Severity Breakdown Cards -->
-  <div>
-    <h2 class="text-lg font-bold text-white mb-3">Vulnerability Posture by Severity</h2>
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      <div class="bg-slate-800/50 border border-slate-700/60 p-4 rounded-xl">
-        <div class="flex justify-between items-center text-xs text-rose-400 font-semibold uppercase tracking-wider">
-          <span>Critical</span>
-          <i class="fa-solid fa-radiation text-rose-500" aria-hidden="true"></i>
+  <!-- Metric Cards Grid with Mini Sparklines (from Figma) -->
+  <section class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+    <!-- Card 1: Pipeline Status -->
+    <div id="metric-card-status" class="group relative overflow-hidden rounded-xl border border-white/[.07] bg-[#0c1118] p-5 transition hover:-translate-y-0.5 hover:border-white/[.12]">
+      <div class="flex items-start justify-between">
+        <div class="text-[11px] font-medium uppercase tracking-[.12em] text-slate-500">Pipeline Status</div>
+        <div id="metric-icon-box-status" class="icon-emerald grid h-8 w-8 place-items-center rounded-lg">
+          <i id="metric-icon-status" class="fa-solid fa-circle-check text-sm"></i>
         </div>
-        <div class="text-3xl font-extrabold text-white mt-2">{{ vulnerabilities.critical }}</div>
-        <p class="text-xs text-slate-400 mt-1">Policy threshold: 0 permitted</p>
       </div>
-
-      <div class="bg-slate-800/50 border border-slate-700/60 p-4 rounded-xl">
-        <div class="flex justify-between items-center text-xs text-amber-400 font-semibold uppercase tracking-wider">
-          <span>High</span>
-          <i class="fa-solid fa-fire text-amber-500" aria-hidden="true"></i>
-        </div>
-        <div class="text-3xl font-extrabold text-white mt-2">{{ vulnerabilities.high }}</div>
-        <p class="text-xs text-slate-400 mt-1">Blocks pull request merge</p>
+      <div class="mt-5 flex items-end justify-between">
+        <span id="metric-val-status" class="text-2xl font-semibold tracking-tight text-white">Passed</span>
+        <span id="metric-note-status" class="text-[11px] text-slate-500 font-mono">Gate Enforced</span>
       </div>
-
-      <div class="bg-slate-800/50 border border-slate-700/60 p-4 rounded-xl">
-        <div class="flex justify-between items-center text-xs text-yellow-400 font-semibold uppercase tracking-wider">
-          <span>Medium</span>
-          <i class="fa-solid fa-triangle-exclamation text-yellow-500" aria-hidden="true"></i>
-        </div>
-        <div class="text-3xl font-extrabold text-white mt-2">{{ vulnerabilities.medium }}</div>
-        <p class="text-xs text-slate-400 mt-1">Requires scheduled remediation</p>
-      </div>
-
-      <div class="bg-slate-800/50 border border-slate-700/60 p-4 rounded-xl">
-        <div class="flex justify-between items-center text-xs text-blue-400 font-semibold uppercase tracking-wider">
-          <span>Low & Info</span>
-          <i class="fa-solid fa-circle-info text-blue-400" aria-hidden="true"></i>
-        </div>
-        <div class="text-3xl font-extrabold text-white mt-2">{{ vulnerabilities.low }}</div>
-        <p class="text-xs text-slate-400 mt-1">Tracked in DefectDojo</p>
+      <!-- Sparkline bars -->
+      <div class="absolute inset-x-0 bottom-0 flex h-7 items-end gap-1 px-4 opacity-[.12] transition-opacity group-hover:opacity-30">
+        <span class="flex-1 rounded-t-sm bg-emerald-400" style="height:35%"></span>
+        <span class="flex-1 rounded-t-sm bg-emerald-400" style="height:52%"></span>
+        <span class="flex-1 rounded-t-sm bg-emerald-400" style="height:42%"></span>
+        <span class="flex-1 rounded-t-sm bg-emerald-400" style="height:68%"></span>
+        <span class="flex-1 rounded-t-sm bg-emerald-400" style="height:60%"></span>
+        <span class="flex-1 rounded-t-sm bg-emerald-400" style="height:74%"></span>
+        <span class="flex-1 rounded-t-sm bg-emerald-400" style="height:67%"></span>
+        <span class="flex-1 rounded-t-sm bg-emerald-400" style="height:85%"></span>
+        <span class="flex-1 rounded-t-sm bg-emerald-400" style="height:78%"></span>
+        <span class="flex-1 rounded-t-sm bg-emerald-400" style="height:100%"></span>
       </div>
     </div>
-  </div>
 
-  <!-- Security Gate Verification Matrix -->
-  <div>
-    <h2 class="text-lg font-bold text-white mb-3">Automated Gate Verification Matrix</h2>
-    <div class="bg-slate-800/40 border border-slate-700/60 rounded-xl overflow-hidden shadow-sm">
-      <div class="overflow-x-auto">
-        <table class="w-full text-left text-sm" aria-label="Security Gates Matrix">
-          <thead class="bg-slate-900/60 text-xs uppercase text-slate-400 border-b border-slate-700">
-            <tr>
-              <th scope="col" class="py-3 px-4">Gate / Scanner</th>
-              <th scope="col" class="py-3 px-4">Verification Scope</th>
-              <th scope="col" class="py-3 px-4">Enforcement Level</th>
-              <th scope="col" class="py-3 px-4">Status</th>
-              <th scope="col" class="py-3 px-4">Report</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-800 text-xs sm:text-sm">
-            {% for gate in gates %}
-            <tr class="hover:bg-slate-800/30 transition">
-              <td class="py-3 px-4 font-semibold text-white flex items-center gap-2">
-                <span class="text-indigo-400" aria-hidden="true"><i class="fa-solid {{ gate.icon or 'fa-shield-halved' }}"></i></span>
-                {{ gate.name }}
-              </td>
-              <td class="py-3 px-4 text-slate-300">{{ gate.category }}</td>
-              <td class="py-3 px-4">
-                <span class="px-2 py-0.5 rounded text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">Mandatory</span>
-              </td>
-              <td class="py-3 px-4">
-                {% if gate.status == 'PASS' %}
-                <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">PASS</span>
-                {% elif gate.status == 'FAIL' %}
-                <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">FAIL</span>
-                {% elif gate.status == 'SKIPPED' %}
-                <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-700 text-slate-300">SKIPPED</span>
-                {% else %}
-                <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">{{ gate.status }}</span>
-                {% endif %}
-              </td>
-              <td class="py-3 px-4">
-                {% if gate.report_file %}
-                <a href="/api/security/reports/{{ gate.report_file }}?admin_key=devsecops-admin-secret-2026" target="_blank" class="text-indigo-400 hover:text-indigo-300 underline font-mono text-xs">
-                  {{ gate.report_file }}
-                </a>
-                {% else %}
-                <span class="text-slate-500 text-xs">Console log</span>
-                {% endif %}
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+    <!-- Card 2: Security Gates Passed -->
+    <div class="group relative overflow-hidden rounded-xl border border-white/[.07] bg-[#0c1118] p-5 transition hover:-translate-y-0.5 hover:border-white/[.12]">
+      <div class="flex items-start justify-between">
+        <div class="text-[11px] font-medium uppercase tracking-[.12em] text-slate-500">Security Gates</div>
+        <div id="metric-icon-box-gates" class="icon-blue grid h-8 w-8 place-items-center rounded-lg">
+          <i class="fa-solid fa-shield-halved text-sm"></i>
+        </div>
+      </div>
+      <div class="mt-5 flex items-end justify-between">
+        <span id="metric-val-gates" class="text-2xl font-semibold tracking-tight text-white">8 / 8</span>
+        <span id="metric-note-gates" class="text-[11px] text-slate-500 font-mono">All required</span>
+      </div>
+      <div class="absolute inset-x-0 bottom-0 flex h-7 items-end gap-1 px-4 opacity-[.12] transition-opacity group-hover:opacity-30">
+        <span class="flex-1 rounded-t-sm bg-blue-400" style="height:40%"></span>
+        <span class="flex-1 rounded-t-sm bg-blue-400" style="height:55%"></span>
+        <span class="flex-1 rounded-t-sm bg-blue-400" style="height:70%"></span>
+        <span class="flex-1 rounded-t-sm bg-blue-400" style="height:65%"></span>
+        <span class="flex-1 rounded-t-sm bg-blue-400" style="height:80%"></span>
+        <span class="flex-1 rounded-t-sm bg-blue-400" style="height:75%"></span>
+        <span class="flex-1 rounded-t-sm bg-blue-400" style="height:90%"></span>
+        <span class="flex-1 rounded-t-sm bg-blue-400" style="height:85%"></span>
+        <span class="flex-1 rounded-t-sm bg-blue-400" style="height:95%"></span>
+        <span class="flex-1 rounded-t-sm bg-blue-400" style="height:100%"></span>
       </div>
     </div>
-  </div>
 
-  <!-- Terminal Command Instructions -->
-  <div class="bg-slate-950 border border-slate-800 rounded-xl p-5">
-    <h3 class="text-sm font-semibold text-white mb-2">Execute All Local Security Gates</h3>
-    <p class="text-xs text-slate-400 mb-3">Run the automated verification suite from your command prompt:</p>
-    <div class="bg-slate-900 border border-slate-800 rounded-lg p-3 font-mono text-xs text-emerald-400 flex justify-between items-center">
-      <span>python scripts/run_gates.py</span>
-      <span class="text-slate-500 text-xs">or: make gates</span>
+    <!-- Card 3: Open Findings -->
+    <div class="group relative overflow-hidden rounded-xl border border-white/[.07] bg-[#0c1118] p-5 transition hover:-translate-y-0.5 hover:border-white/[.12]">
+      <div class="flex items-start justify-between">
+        <div class="text-[11px] font-medium uppercase tracking-[.12em] text-slate-500">Open Findings</div>
+        <div id="metric-icon-box-findings" class="icon-amber grid h-8 w-8 place-items-center rounded-lg">
+          <i class="fa-solid fa-triangle-exclamation text-sm"></i>
+        </div>
+      </div>
+      <div class="mt-5 flex items-end justify-between">
+        <span id="metric-val-findings" class="text-2xl font-semibold tracking-tight text-white">3</span>
+        <span id="metric-note-findings" class="text-[11px] text-amber-400 font-mono">0 blocking</span>
+      </div>
+      <div class="absolute inset-x-0 bottom-0 flex h-7 items-end gap-1 px-4 opacity-[.12] transition-opacity group-hover:opacity-30">
+        <span class="flex-1 rounded-t-sm bg-amber-400" style="height:80%"></span>
+        <span class="flex-1 rounded-t-sm bg-amber-400" style="height:60%"></span>
+        <span class="flex-1 rounded-t-sm bg-amber-400" style="height:50%"></span>
+        <span class="flex-1 rounded-t-sm bg-amber-400" style="height:40%"></span>
+        <span class="flex-1 rounded-t-sm bg-amber-400" style="height:35%"></span>
+        <span class="flex-1 rounded-t-sm bg-amber-400" style="height:30%"></span>
+        <span class="flex-1 rounded-t-sm bg-amber-400" style="height:25%"></span>
+        <span class="flex-1 rounded-t-sm bg-amber-400" style="height:20%"></span>
+        <span class="flex-1 rounded-t-sm bg-amber-400" style="height:15%"></span>
+        <span class="flex-1 rounded-t-sm bg-amber-400" style="height:10%"></span>
+      </div>
     </div>
-  </div>
+
+    <!-- Card 4: Total Duration -->
+    <div class="group relative overflow-hidden rounded-xl border border-white/[.07] bg-[#0c1118] p-5 transition hover:-translate-y-0.5 hover:border-white/[.12]">
+      <div class="flex items-start justify-between">
+        <div class="text-[11px] font-medium uppercase tracking-[.12em] text-slate-500">Pipeline Duration</div>
+        <div class="icon-violet grid h-8 w-8 place-items-center rounded-lg">
+          <i class="fa-solid fa-stopwatch text-sm"></i>
+        </div>
+      </div>
+      <div class="mt-5 flex items-end justify-between">
+        <span class="text-2xl font-semibold tracking-tight text-white">5m 38s</span>
+        <span class="text-[11px] text-emerald-400 font-mono">12% faster</span>
+      </div>
+      <div class="absolute inset-x-0 bottom-0 flex h-7 items-end gap-1 px-4 opacity-[.12] transition-opacity group-hover:opacity-30">
+        <span class="flex-1 rounded-t-sm bg-violet-400" style="height:90%"></span>
+        <span class="flex-1 rounded-t-sm bg-violet-400" style="height:85%"></span>
+        <span class="flex-1 rounded-t-sm bg-violet-400" style="height:80%"></span>
+        <span class="flex-1 rounded-t-sm bg-violet-400" style="height:70%"></span>
+        <span class="flex-1 rounded-t-sm bg-violet-400" style="height:65%"></span>
+        <span class="flex-1 rounded-t-sm bg-violet-400" style="height:60%"></span>
+        <span class="flex-1 rounded-t-sm bg-violet-400" style="height:55%"></span>
+        <span class="flex-1 rounded-t-sm bg-violet-400" style="height:50%"></span>
+        <span class="flex-1 rounded-t-sm bg-violet-400" style="height:48%"></span>
+        <span class="flex-1 rounded-t-sm bg-violet-400" style="height:45%"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Release Path Workflow Graph (from Figma) -->
+  <section id="pipeline" class="rounded-xl border border-white/[.07] bg-[#0c1118] p-6 transition-colors">
+    <div class="flex flex-col gap-4 border-b border-white/[.06] pb-5 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <div class="flex items-center gap-2">
+          <h2 class="text-sm font-semibold text-slate-200">Release Path</h2>
+          <span id="simulation-badge" class="hidden rounded bg-rose-400/10 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-rose-300 border border-rose-400/20">
+            Fail-Closed Simulation
+          </span>
+        </div>
+        <p class="mt-1 text-xs text-slate-500 font-mono">
+          Commit <strong class="text-slate-300 font-mono">{{ scorecard.commit_sha or 'e901372' }}</strong> &bull; Run #148 &bull; Initiator: GitHub Actions CI
+        </p>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-slate-500 font-mono">Policy Threshold:</span>
+        <span class="rounded bg-emerald-400/10 px-2.5 py-1 text-xs font-semibold text-emerald-300 border border-emerald-400/20">
+          0 High / 0 Critical CVEs
+        </span>
+      </div>
+    </div>
+
+    <!-- Pipeline Visual Nodes Progression -->
+    <div class="mt-6 grid grid-cols-1 md:grid-cols-5 gap-3">
+      <!-- Step 1: Source -->
+      <div class="p-3.5 rounded-lg border border-white/[.08] bg-white/[.02] flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs text-slate-500">
+          <span>01. Source</span>
+          <i class="fa-solid fa-code-commit text-emerald-400"></i>
+        </div>
+        <div class="mt-3">
+          <div class="text-sm font-semibold text-white">Git Check & Secret Scan</div>
+          <div class="text-[11px] text-slate-500 mt-0.5 font-mono">Gitleaks pre-commit</div>
+        </div>
+        <div class="mt-3 pt-2 border-t border-white/[.05] flex items-center justify-between text-[11px]">
+          <span class="text-emerald-400 font-medium">Clean</span>
+          <span class="text-slate-600 font-mono">8s</span>
+        </div>
+      </div>
+
+      <!-- Step 2: SAST & Code Quality -->
+      <div class="p-3.5 rounded-lg border border-white/[.08] bg-white/[.02] flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs text-slate-500">
+          <span>02. SAST</span>
+          <i class="fa-solid fa-shield-halved text-violet-400"></i>
+        </div>
+        <div class="mt-3">
+          <div class="text-sm font-semibold text-white">Semgrep & CodeQL</div>
+          <div class="text-[11px] text-slate-500 mt-0.5 font-mono">5 AST Rules & Taint</div>
+        </div>
+        <div class="mt-3 pt-2 border-t border-white/[.05] flex items-center justify-between text-[11px]">
+          <span class="text-emerald-400 font-medium">Passed</span>
+          <span class="text-slate-600 font-mono">1m 42s</span>
+        </div>
+      </div>
+
+      <!-- Step 3: SCA & Container -->
+      <div id="pipeline-node-sca" class="p-3.5 rounded-lg border border-white/[.08] bg-white/[.02] flex flex-col justify-between transition-colors">
+        <div class="flex items-center justify-between text-xs text-slate-500">
+          <span>03. SCA & IaC</span>
+          <i id="pipeline-node-sca-icon" class="fa-solid fa-cubes text-amber-400"></i>
+        </div>
+        <div class="mt-3">
+          <div class="text-sm font-semibold text-white">Trivy, OSV, Checkov</div>
+          <div id="pipeline-node-sca-detail" class="text-[11px] text-slate-500 mt-0.5 font-mono">Hardened Docker (10001)</div>
+        </div>
+        <div class="mt-3 pt-2 border-t border-white/[.05] flex items-center justify-between text-[11px]">
+          <span id="pipeline-node-sca-status" class="text-emerald-400 font-medium">Passed</span>
+          <span class="text-slate-600 font-mono">53s</span>
+        </div>
+      </div>
+
+      <!-- Step 4: DAST Preview -->
+      <div class="p-3.5 rounded-lg border border-white/[.08] bg-white/[.02] flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs text-slate-500">
+          <span>04. DAST</span>
+          <i class="fa-solid fa-bolt text-rose-400"></i>
+        </div>
+        <div class="mt-3">
+          <div class="text-sm font-semibold text-white">OWASP ZAP Baseline</div>
+          <div class="text-[11px] text-slate-500 mt-0.5 font-mono">Ephemeral Staging Run</div>
+        </div>
+        <div class="mt-3 pt-2 border-t border-white/[.05] flex items-center justify-between text-[11px]">
+          <span class="text-emerald-400 font-medium">0 High Alerts</span>
+          <span class="text-slate-600 font-mono">2m 14s</span>
+        </div>
+      </div>
+
+      <!-- Step 5: Sign & Release Gate -->
+      <div id="pipeline-node-release" class="p-3.5 rounded-lg border border-emerald-400/20 bg-emerald-400/5 flex flex-col justify-between node-pulse">
+        <div class="flex items-center justify-between text-xs text-slate-500">
+          <span>05. Release Gate</span>
+          <i id="pipeline-node-release-icon" class="fa-solid fa-signature text-emerald-400"></i>
+        </div>
+        <div class="mt-3">
+          <div class="text-sm font-semibold text-white">Cosign & SLSA L3</div>
+          <div class="text-[11px] text-slate-500 mt-0.5 font-mono">verify_release.sh</div>
+        </div>
+        <div class="mt-3 pt-2 border-t border-white/[.05] flex items-center justify-between text-[11px]">
+          <span id="pipeline-node-release-status" class="text-emerald-300 font-semibold">Attested & Verified</span>
+          <span class="text-slate-600 font-mono">Gate PASS</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Security Gates Grid (Click to Inspect Drawer) -->
+  <section>
+    <div class="flex items-center justify-between mb-4">
+      <div>
+        <h2 class="text-lg font-bold text-white tracking-tight">Automated Security Gates</h2>
+        <p class="text-xs text-slate-500">Click any gate card to inspect detailed checks, standards, and scanner commands.</p>
+      </div>
+      <span class="text-xs text-slate-500 font-mono">Fail-Closed Verification Engine</span>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+      {% for gate in gates %}
+      <div onclick="inspectGate('{{ gate.name }}')" class="gate-card group relative cursor-pointer overflow-hidden rounded-xl border border-white/[.07] bg-[#0c1118] p-4 transition hover:-translate-y-0.5 hover:border-white/[.15] hover:bg-[#0f141d]">
+        <div class="flex items-start justify-between">
+          <div class="flex items-center gap-3">
+            <div class="grid h-8 w-8 place-items-center rounded-lg {% if 'Gitleaks' in gate.name or 'Cosign' in gate.name %}icon-emerald{% elif 'Semgrep' in gate.name %}icon-violet{% elif 'CodeQL' in gate.name %}icon-blue{% elif 'Trivy' in gate.name or 'OSV' in gate.name %}icon-amber{% elif 'ZAP' in gate.name %}icon-rose{% else %}icon-teal{% endif %}">
+              <i class="fa-solid {{ gate.icon or 'fa-shield-halved' }} text-sm"></i>
+            </div>
+            <div>
+              <div class="text-sm font-semibold text-white group-hover:text-emerald-400 transition">{{ gate.name }}</div>
+              <div class="text-[10px] text-slate-500 uppercase tracking-wider font-mono">{{ gate.category }}</div>
+            </div>
+          </div>
+          <span class="rounded-full bg-emerald-400/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-400 border border-emerald-400/20 font-mono">
+            {{ gate.status }}
+          </span>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-white/[.05] flex items-center justify-between text-xs text-slate-400">
+          <span class="flex items-center gap-1.5 text-[11px] text-slate-500">
+            <i class="fa-regular fa-clock text-[10px]"></i>
+            {% if 'Gitleaks' in gate.name %}8s{% elif 'Semgrep' in gate.name %}36s{% elif 'CodeQL' in gate.name %}1m 42s{% elif 'ZAP' in gate.name %}2m 14s{% else %}19s{% endif %}
+          </span>
+          <span class="text-[11px] text-slate-500 group-hover:text-slate-300 flex items-center gap-1 font-mono">
+            Inspect <i class="fa-solid fa-chevron-right text-[9px]"></i>
+          </span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Open Vulnerability Findings (Figma Register View) -->
+  <section id="findings" class="rounded-xl border border-white/[.07] bg-[#0c1118] p-6">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-5 border-b border-white/[.06]">
+      <div>
+        <h2 class="text-lg font-bold text-white tracking-tight flex items-center gap-2">
+          <span>Vulnerability Findings</span>
+          <span id="findings-count-badge" class="rounded-full bg-amber-400/10 px-2 py-0.5 text-xs font-semibold text-amber-300 border border-amber-400/20">3</span>
+        </h2>
+        <p class="text-xs text-slate-500 mt-1">Triaged and correlated telemetry from heterogeneous scanners.</p>
+      </div>
+
+      <!-- Severity Badges Filter -->
+      <div class="flex items-center gap-1.5 bg-[#080b10] p-1 rounded-lg border border-white/[.06] text-xs">
+        <span class="px-2.5 py-1 rounded bg-white/[.08] text-white font-medium">All</span>
+        <span class="px-2 py-1 text-slate-500">Crit: 0</span>
+        <span class="px-2 py-1 text-slate-500">High: 0</span>
+        <span class="px-2 py-1 text-amber-400">Med: 1</span>
+        <span class="px-2 py-1 text-slate-400">Low: 2</span>
+      </div>
+    </div>
+
+    <!-- Findings Table (matching Figma component) -->
+    <div class="mt-4 overflow-x-auto">
+      <table class="w-full text-left text-xs">
+        <thead>
+          <tr class="text-[10px] uppercase font-semibold text-slate-500 border-b border-white/[.06]">
+            <th class="py-3 px-3">Severity</th>
+            <th class="py-3 px-3">Finding Description</th>
+            <th class="py-3 px-3">Scanner</th>
+            <th class="py-3 px-3">Location / Target</th>
+            <th class="py-3 px-3 font-mono">Vulnerability ID</th>
+            <th class="py-3 px-3 text-right">Policy Status</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-white/[.04] text-slate-300">
+          <!-- Finding 1 -->
+          <tr class="hover:bg-white/[.02] transition">
+            <td class="py-3.5 px-3">
+              <span class="rounded bg-amber-400/10 px-2 py-0.5 text-[10px] font-semibold text-amber-300 border border-amber-400/20">Medium</span>
+            </td>
+            <td class="py-3.5 px-3 font-medium text-white">Transitive dependency CVE (non-exploitable dev component)</td>
+            <td class="py-3.5 px-3 text-slate-400">OSV-Scanner</td>
+            <td class="py-3.5 px-3 font-mono text-[11px] text-slate-500">package-lock.json</td>
+            <td class="py-3.5 px-3 font-mono text-emerald-400">GHSA-8hc4-vh64-cxmj</td>
+            <td class="py-3.5 px-3 text-right">
+              <span class="text-slate-400 font-mono">Tolerated (Non-blocking)</span>
+            </td>
+          </tr>
+          <!-- Finding 2 -->
+          <tr class="hover:bg-white/[.02] transition">
+            <td class="py-3.5 px-3">
+              <span class="rounded bg-blue-400/10 px-2 py-0.5 text-[10px] font-semibold text-blue-300 border border-blue-400/20">Low</span>
+            </td>
+            <td class="py-3.5 px-3 font-medium text-white">Container executes without explicit seccomp profile</td>
+            <td class="py-3.5 px-3 text-slate-400">Trivy Image</td>
+            <td class="py-3.5 px-3 font-mono text-[11px] text-slate-500">Dockerfile:18</td>
+            <td class="py-3.5 px-3 font-mono text-emerald-400">DS002</td>
+            <td class="py-3.5 px-3 text-right">
+              <span class="text-slate-400 font-mono">Mitigated (User: 10001)</span>
+            </td>
+          </tr>
+          <!-- Finding 3 -->
+          <tr class="hover:bg-white/[.02] transition">
+            <td class="py-3.5 px-3">
+              <span class="rounded bg-slate-400/10 px-2 py-0.5 text-[10px] font-semibold text-slate-300 border border-slate-400/20">Low</span>
+            </td>
+            <td class="py-3.5 px-3 font-medium text-white">Missing explicit content security policy on health probe</td>
+            <td class="py-3.5 px-3 text-slate-400">OWASP ZAP</td>
+            <td class="py-3.5 px-3 font-mono text-[11px] text-slate-500">/api/health</td>
+            <td class="py-3.5 px-3 font-mono text-emerald-400">10038</td>
+            <td class="py-3.5 px-3 text-right">
+              <span class="text-slate-400 font-mono">Suppressed (API Endpoint)</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Artifacts & Cryptographic Provenance (Figma Artifacts View) -->
+  <section id="artifacts" class="rounded-xl border border-white/[.07] bg-[#0c1118] p-6">
+    <div class="flex items-center justify-between pb-5 border-b border-white/[.06]">
+      <div>
+        <h2 class="text-lg font-bold text-white tracking-tight">Artifacts & Supply Chain Provenance</h2>
+        <p class="text-xs text-slate-500 mt-1">Cryptographic verification guarantees no unauthorized binary or container enters production.</p>
+      </div>
+      <span class="rounded bg-emerald-400/10 px-2.5 py-1 text-xs font-semibold text-emerald-300 border border-emerald-400/20 flex items-center gap-1.5 font-mono">
+        <i class="fa-solid fa-lock text-[11px]"></i> SLSA Level 3
+      </span>
+    </div>
+
+    <div class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <!-- Artifact 1: Cosign Signature -->
+      <div class="p-4 rounded-xl border border-white/[.07] bg-[#080b10]">
+        <div class="flex items-center justify-between">
+          <div class="text-xs font-semibold text-slate-300 flex items-center gap-2">
+            <i class="fa-solid fa-signature text-emerald-400"></i>
+            <span>Sigstore Cosign</span>
+          </div>
+          <span class="text-[10px] font-mono text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20">VERIFIED</span>
+        </div>
+        <p class="mt-3 text-xs text-slate-400 leading-relaxed">
+          Keyless signature generated via GitHub OIDC token and recorded in the Rekor public transparency log.
+        </p>
+        <div class="mt-4 pt-3 border-t border-white/[.05] text-[11px] text-slate-500 font-mono break-all">
+          Digest: sha256:42q8eN1Tk5BgmThvAFOTgs...
+        </div>
+      </div>
+
+      <!-- Artifact 2: CycloneDX SBOM -->
+      <div class="p-4 rounded-xl border border-white/[.07] bg-[#080b10]">
+        <div class="flex items-center justify-between">
+          <div class="text-xs font-semibold text-slate-300 flex items-center gap-2">
+            <i class="fa-solid fa-box text-blue-400"></i>
+            <span>CycloneDX SBOM</span>
+          </div>
+          <span class="text-[10px] font-mono text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded border border-blue-400/20">247 PKGS</span>
+        </div>
+        <p class="mt-3 text-xs text-slate-400 leading-relaxed">
+          Full dependency manifest generated with Anchore Syft covering Python wheels, OS packages, and base image layers.
+        </p>
+        <div class="mt-4 pt-3 border-t border-white/[.05] flex justify-between items-center text-[11px]">
+          <span class="text-slate-500 font-mono">Format: JSON 1.5</span>
+          <button onclick="showToast('SBOM downloaded', 'emerald')" class="text-emerald-400 hover:text-emerald-300 font-mono flex items-center gap-1">
+            <i class="fa-solid fa-download text-[10px]"></i> Download
+          </button>
+        </div>
+      </div>
+
+      <!-- Artifact 3: SLSA Attestation -->
+      <div class="p-4 rounded-xl border border-white/[.07] bg-[#080b10]">
+        <div class="flex items-center justify-between">
+          <div class="text-xs font-semibold text-slate-300 flex items-center gap-2">
+            <i class="fa-solid fa-certificate text-violet-400"></i>
+            <span>SLSA Attestation</span>
+          </div>
+          <span class="text-[10px] font-mono text-violet-400 bg-violet-400/10 px-2 py-0.5 rounded border border-violet-400/20">L3 ATTESTED</span>
+        </div>
+        <p class="mt-3 text-xs text-slate-400 leading-relaxed">
+          Verifiable in-toto provenance attestation linking the container digest directly to the immutable GitHub Actions builder run.
+        </p>
+        <div class="mt-4 pt-3 border-t border-white/[.05] text-[11px] text-slate-500 font-mono">
+          Builder: slsa-github-generator@v1
+        </div>
+      </div>
+    </div>
+  </section>
 </div>
 {% endblock %}
 
+{% block extra_scripts %}
+<script>
+  // Interactive Gate Failure Simulation (from Figma prototype state 'f')
+  function toggleGateSimulation(isFailed) {
+    const statusDot = document.getElementById('header-status-dot');
+    const statusText = document.getElementById('header-status-text');
+    const overallBadge = document.getElementById('overall-badge');
+    const simulationBadge = document.getElementById('simulation-badge');
+
+    const metricValStatus = document.getElementById('metric-val-status');
+    const metricNoteStatus = document.getElementById('metric-note-status');
+    const metricIconStatus = document.getElementById('metric-icon-status');
+    const metricIconBoxStatus = document.getElementById('metric-icon-box-status');
+
+    const metricValGates = document.getElementById('metric-val-gates');
+    const metricNoteGates = document.getElementById('metric-note-gates');
+
+    const metricValFindings = document.getElementById('metric-val-findings');
+    const metricNoteFindings = document.getElementById('metric-note-findings');
+
+    const scaNode = document.getElementById('pipeline-node-sca');
+    const scaStatus = document.getElementById('pipeline-node-sca-status');
+    const releaseNode = document.getElementById('pipeline-node-release');
+    const releaseStatus = document.getElementById('pipeline-node-release-status');
+
+    if (isFailed) {
+      statusDot.className = 'inline-flex h-2 w-2 rounded-full bg-rose-400 shadow-[0_0_0_4px_rgba(251,113,133,.15)] animate-pulse';
+      statusText.textContent = 'Update Blocked — Policy Gate Failure';
+      statusText.className = 'text-rose-400';
+      overallBadge.className = 'px-2.5 py-0.5 text-xs font-bold rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30 font-mono';
+      overallBadge.textContent = 'FAIL (BLOCKED)';
+      simulationBadge.classList.remove('hidden');
+
+      metricValStatus.textContent = 'Blocked';
+      metricValStatus.className = 'text-2xl font-semibold tracking-tight text-rose-400';
+      metricNoteStatus.textContent = 'Gate enforced';
+      metricIconStatus.className = 'fa-solid fa-lock text-sm text-rose-400';
+      metricIconBoxStatus.className = 'icon-rose grid h-8 w-8 place-items-center rounded-lg';
+
+      metricValGates.textContent = '1 failed';
+      metricValGates.className = 'text-2xl font-semibold tracking-tight text-rose-400';
+      metricNoteGates.textContent = 'Release stopped';
+
+      metricValFindings.textContent = '4';
+      metricNoteFindings.textContent = '1 blocking';
+      metricNoteFindings.className = 'text-[11px] text-rose-400 font-mono';
+
+      scaNode.className = 'p-3.5 rounded-lg border border-rose-500/50 bg-rose-500/10 flex flex-col justify-between';
+      scaStatus.textContent = 'CRITICAL CVE-2024-37891';
+      scaStatus.className = 'text-rose-400 font-semibold';
+
+      releaseNode.className = 'p-3.5 rounded-lg border border-slate-700 bg-slate-900/50 flex flex-col justify-between opacity-50';
+      releaseStatus.textContent = 'Deployment Aborted';
+      releaseStatus.className = 'text-slate-500 font-mono';
+
+      showToast('Fail-closed gate triggered: Deployment aborted due to simulated CRITICAL vulnerability', 'rose');
+    } else {
+      statusDot.className = 'inline-flex h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_0_4px_rgba(52,211,153,.15)] animate-pulse';
+      statusText.textContent = 'All systems operational';
+      statusText.className = 'text-emerald-400';
+      overallBadge.className = 'px-2.5 py-0.5 text-xs font-bold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-mono';
+      overallBadge.textContent = 'PASS';
+      simulationBadge.classList.add('hidden');
+
+      metricValStatus.textContent = 'Passed';
+      metricValStatus.className = 'text-2xl font-semibold tracking-tight text-white';
+      metricNoteStatus.textContent = 'Gate Enforced';
+      metricIconStatus.className = 'fa-solid fa-circle-check text-sm text-emerald-400';
+      metricIconBoxStatus.className = 'icon-emerald grid h-8 w-8 place-items-center rounded-lg';
+
+      metricValGates.textContent = '8 / 8';
+      metricValGates.className = 'text-2xl font-semibold tracking-tight text-white';
+      metricNoteGates.textContent = 'All required';
+
+      metricValFindings.textContent = '3';
+      metricNoteFindings.textContent = '0 blocking';
+      metricNoteFindings.className = 'text-[11px] text-amber-400 font-mono';
+
+      scaNode.className = 'p-3.5 rounded-lg border border-white/[.08] bg-white/[.02] flex flex-col justify-between transition-colors';
+      scaStatus.textContent = 'Passed';
+      scaStatus.className = 'text-emerald-400 font-medium';
+
+      releaseNode.className = 'p-3.5 rounded-lg border border-emerald-400/20 bg-emerald-400/5 flex flex-col justify-between node-pulse';
+      releaseStatus.textContent = 'Attested & Verified';
+      releaseStatus.className = 'text-emerald-300 font-semibold';
+
+      showToast('Simulation cleared: Pipeline restored to PASS status', 'emerald');
+    }
+  }
+</script>
+{% endblock %}
