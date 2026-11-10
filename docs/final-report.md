@@ -8,7 +8,7 @@
 - **Hannah Amoaba Larbi** (Index: `1700237691`) — Team Lead & Release Verification
 - **Stephen Kwadwo Duah** (Index: `1696334280`) — Source Security & Secrets
 - **Othniel Kpakpo Saka** (Index: `1705408739`) — AppSec & Static Analysis
-- **Jesu Henry Quaijah** — Static Code Analysis
+- **Jesu Henry Quaijah** (Index: `1699277211`) — Static Code Analysis
 - **Fred Nkrumah** (Index: `1703603625`) — Container & SCA Security
 - **Benjamin Essibo Ofori** (Index: `1693417365`) — DAST & Vulnerability Operations  
 **Target Application**: Hardened Book Catalog & DevSecOps Security Operations Dashboard  
@@ -185,7 +185,7 @@ Automated Pytest suite results: **25 passed, 0 failures in 1.58s** across both b
 | **Hannah Amoaba Larbi** | `1700237691` | [@hannahamoaba](https://github.com/hannahamoaba) | Team Lead & Release Verification Engineer | CI/CD pipeline orchestration, Sigstore Cosign keyless signing, SLSA build provenance attestations, `verify_release.sh`, FastAPI application architecture. | GitHub Actions, Cosign, SLSA, Docker, FastAPI, SQLAlchemy |
 | **Stephen Kwadwo Duah** | `1696334280` | [@StephDuah69](https://github.com/StephDuah69) | Source Security & Secrets Engineer | Gitleaks pre-commit hooks, CI secret scanning configuration, developer environment setup automation (`setup.sh`), secret rotation protocols. | Gitleaks, Pre-commit, Git hooks, Bash, PowerShell |
 | **Othniel Kpakpo Saka** | `1705408739` | [@thetravelerkweku-ops](https://github.com/thetravelerkweku-ops) | AppSec & Static Analysis Engineer | 5 custom Semgrep SAST rules, Semgrep positive/negative rule test harness (`rule_tests.py`), SAST gate policies. | Semgrep, CodeQL, AST, Python typing, YAML |
-| **Jesu Henry Quaijah** | Group Contributor | [@jesu-henry](https://github.com/jesu-henry) | Static Code Analysis Engineer | GitHub CodeQL static analysis workflows, Python AST rule verification, security policy tuning. | CodeQL, AST, Python typing, YAML |
+| **Jesu Henry Quaijah** | `1699277211` | [@jesu-henry](https://github.com/jesu-henry) | Static Code Analysis Engineer | GitHub CodeQL static analysis workflows, Python AST rule verification, security policy tuning. | CodeQL, AST, Python typing, YAML |
 | **Fred Nkrumah** | `1703603625` | [@Afrifar055-sketch](https://github.com/Afrifar055-sketch) | Container & SCA Security Engineer | Multi-stage hardened Dockerfile, Compose resource constraints, OSV-Scanner, Trivy (FS/Image) scanning, Checkov IaC policies, Anchore Syft SBOMs. | Dockerfile, Checkov, Trivy, OSV-Scanner, Syft, pip-compile |
 | **Benjamin Essibo Ofori** | `1693417365` | [@ben244294](https://github.com/ben244294) | DAST & Vulnerability Operations Engineer | Ephemeral staging environment orchestration in CI, OWASP ZAP baseline scan alert policies (`rules.tsv`), DefectDojo API ingestion client (`import_reports.py`), MTTF tracking. | OWASP ZAP, DefectDojo, HTTPX, Docker Compose, Python |
 

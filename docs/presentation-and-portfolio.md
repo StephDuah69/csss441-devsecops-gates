@@ -45,7 +45,7 @@ This script is structured to demonstrate all required course elements in exactly
   1. **Hannah Amoaba Larbi** ([@hannahamoaba](https://github.com/hannahamoaba)) — Index: `1700237691` (Team Lead & Release Verification Engineer)
   2. **Stephen Kwadwo Duah** ([@StephDuah69](https://github.com/StephDuah69)) — Index: `1696334280` (Source Security & Secrets Engineer)
   3. **Othniel Kpakpo Saka** ([@thetravelerkweku-ops](https://github.com/thetravelerkweku-ops)) — Index: `1705408739` (AppSec & Static Analysis Engineer)
-  4. **Jesu Henry Quaijah** ([@jesu-henry](https://github.com/jesu-henry)) — Group Contributor (Static Code Analysis Engineer)
+  4. **Jesu Henry Quaijah** ([@jesu-henry](https://github.com/jesu-henry)) — Index: `1699277211` (Static Code Analysis Engineer)
   5. **Fred Nkrumah** ([@Afrifar055-sketch](https://github.com/Afrifar055-sketch)) — Index: `1703603625` (Container & SCA Security Engineer)
   6. **Benjamin Essibo Ofori** ([@ben244294](https://github.com/ben244294)) — Index: `1693417365` (DAST & Vulnerability Operations Engineer)
 
@@ -134,7 +134,7 @@ This script is structured to demonstrate all required course elements in exactly
   - *Engineered 5 custom Semgrep static analysis rules targeting SQL injection, RCE, unsafe deserialization, and CORS flaws, validated by automated positive and negative test suites.*
   - *Configured and validated SAST gate policies to ensure zero high-severity code vulnerabilities reach main branches.*
 
-### Member 4: Jesu Henry Quaijah ([@jesu-henry](https://github.com/jesu-henry))
+### Member 4: Jesu Henry Quaijah (Index No: 1699277211 | [@jesu-henry](https://github.com/jesu-henry))
 - **Role**: Static Code Analysis Engineer
 - **Role Summary**: Integrated GitHub CodeQL static analysis workflows, tuned CodeQL query suites for Python, and conducted code reviews for AST rule enforcement.
 - **Tools Used**: CodeQL, GitHub Security, Python AST, YAML.
@@ -150,7 +150,7 @@ This script is structured to demonstrate all required course elements in exactly
   - *Hardened production container images through multi-stage builds, non-root user isolation (`appuser:10001`), read-only root filesystems, and Checkov Infrastructure-as-Code compliance.*
   - *Integrated dual-layer Software Composition Analysis (OSV-Scanner, Trivy, pip-audit) and automated CycloneDX SBOM generation into CI builds.*
 
-### Member 5: Benjamin Essibo Ofori (Index No: 1693417365 | [@ben244294](https://github.com/ben244294))
+### Member 6: Benjamin Essibo Ofori (Index No: 1693417365 | [@ben244294](https://github.com/ben244294))
 - **Role**: DAST & Vulnerability Operations Engineer
 - **Role Summary**: Orchestrated ephemeral staging test environments in CI, integrated automated OWASP ZAP baseline DAST scans, tuned alert threshold policies (`.zap/rules.tsv`), and built the DefectDojo vulnerability ingestion client (`scripts/import_reports.py`).
 - **Tools Used**: OWASP ZAP, DefectDojo, Docker Compose, HTTPX, Python.
