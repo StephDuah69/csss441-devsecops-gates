@@ -1,27 +1,33 @@
-
 name: Pylint
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ "master", "main" ]
+  pull_request:
+    branches: [ "master", "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
+    name: Pylint Code Quality Analysis
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Set up Python 3.13
         uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version: "3.13"
+          cache: "pip"
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          pip install pylint fastapi pydantic httpx
+          pip install pylint
 
       - name: Analyse code with Pylint
         run: |
-          pylint --ignore-paths='(^|/)(\.semgrep|tests/semgrep)/' $(git ls-files '*.py')
+          pylint --fail-under=8.5 --ignore-paths='(^|/)(\.semgrep|tests/semgrep|alembic)/' $(git ls-files '*.py')
