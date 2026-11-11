@@ -74,20 +74,23 @@ async def security_headers_middleware(request: Request, call_next):
     response.headers["Cache-Control"] = "no-store"
     response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
 
-    # Content Security Policy (allows Tailwind CDN, FontAwesome, Lucide, HTMX)
+    # Content Security Policy (allows Tailwind CDN, FontAwesome, Swagger UI, ReDoc)
     csp_directives = [
         "default-src 'self'",
         (
-            "script-src 'self' 'unsafe-inline' "
-            "https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://unpkg.com"
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' "
+            "https://cdn.tailwindcss.com https://cdnjs.cloudflare.com "
+            "https://unpkg.com https://cdn.jsdelivr.net"
         ),
         (
             "style-src 'self' 'unsafe-inline' "
-            "https://cdnjs.cloudflare.com https://fonts.googleapis.com"
+            "https://cdnjs.cloudflare.com https://fonts.googleapis.com "
+            "https://cdn.jsdelivr.net"
         ),
         "font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com",
-        "img-src 'self' data: https:",
+        "img-src 'self' data: https: https://fastapi.tiangolo.com",
         "connect-src 'self'",
+        "worker-src 'self' blob:",
         "frame-ancestors 'none'",
     ]
     response.headers["Content-Security-Policy"] = "; ".join(csp_directives)
