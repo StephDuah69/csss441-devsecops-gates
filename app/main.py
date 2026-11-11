@@ -50,7 +50,7 @@ app = FastAPI(
         "observability, and provenance verification."
     ),
     version=APP_VERSION,
-    docs_url="/docs",
+    docs_url=None,
     redoc_url="/redoc",
     lifespan=lifespan,
 )

@@ -202,3 +202,14 @@ def test_report_path_traversal_prevention():
         params={"admin_key": ADMIN_API_KEY},
     )
     assert response.status_code in (404, 422)
+
+
+def test_custom_openapi_docs_page_renders():
+    """Verify GET /docs renders the Aegis CI themed OpenAPI specification page."""
+    response = client.get("/docs")
+    assert response.status_code == 200
+    assert "text/html" in response.headers["Content-Type"]
+    assert "OpenAPI 3.1 Interactive Specs" in response.text
+    assert "swagger-ui" in response.text
+    assert "devsecops-admin-secret-2026" in response.text
+

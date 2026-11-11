@@ -141,3 +141,18 @@ def serve_book_detail(
         },
     )
 
+
+@router.get("/docs", response_class=HTMLResponse)
+def serve_docs_page(request: Request):
+    """Render OpenAPI interactive documentation with Aegis CI dark theme."""
+    return templates.TemplateResponse(
+        request=request,
+        name="docs.html",
+        context={
+            "active_page": "docs",
+            "openapi_url": "/openapi.json",
+            "app_title": "CSSS 441 Secure Book Catalogue",
+        },
+    )
+
+

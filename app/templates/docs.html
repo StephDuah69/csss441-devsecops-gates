@@ -1,0 +1,424 @@
+{% extends "base.html" %}
+
+{% block title %}OpenAPI 3.1 Interactive Specs — Aegis CI{% endblock %}
+
+{% block extra_head %}
+<!-- Swagger UI Base CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css">
+
+<style>
+  /* ============================================================
+     Aegis CI Obsidian Dark Theme Overrides for Swagger UI
+     Colors: Obsidian #080b10, Surface #0c1118, Modal #10151d
+     Typography: Manrope (Headings/Body), DM Mono (Paths/Code)
+     ============================================================ */
+  .swagger-ui {
+    font-family: 'Manrope', system-ui, -apple-system, sans-serif !important;
+    color: #cbd5e1 !important;
+  }
+  .swagger-ui .wrapper {
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+  .swagger-ui .information-container,
+  .swagger-ui .topbar {
+    display: none !important;
+  }
+  .swagger-ui .scheme-container {
+    background: #080b10 !important;
+    box-shadow: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 12px !important;
+    padding: 14px 20px !important;
+    margin-bottom: 24px !important;
+  }
+  .swagger-ui .schemes > label {
+    color: #94a3b8 !important;
+    font-size: 0.75rem !important;
+    font-family: 'DM Mono', monospace !important;
+    text-transform: uppercase !important;
+  }
+  .swagger-ui select {
+    background: #0c1118 !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 8px !important;
+    padding: 6px 12px !important;
+    font-family: 'DM Mono', monospace !important;
+  }
+
+  /* Tags & Section Headers */
+  .swagger-ui .opblock-tag-section {
+    margin-bottom: 24px !important;
+  }
+  .swagger-ui .opblock-tag {
+    color: #ffffff !important;
+    font-family: 'Manrope', sans-serif !important;
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding: 12px 0 !important;
+  }
+  .swagger-ui .opblock-tag:hover {
+    color: #34d399 !important;
+  }
+  .swagger-ui .opblock-tag small {
+    color: #64748b !important;
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.75rem !important;
+    margin-left: 10px !important;
+  }
+
+  /* Operation Cards */
+  .swagger-ui .opblock {
+    background: #0c1118 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
+    margin: 0 0 12px 0 !important;
+    border: 1px solid rgba(255, 255, 255, 0.07) !important;
+    transition: all 0.2s ease !important;
+  }
+  .swagger-ui .opblock:hover {
+    border-color: rgba(255, 255, 255, 0.16) !important;
+    transform: translateY(-1px) !important;
+  }
+
+  /* Method Badges */
+  .swagger-ui .opblock .opblock-summary-method {
+    font-family: 'DM Mono', monospace !important;
+    font-weight: 700 !important;
+    font-size: 0.75rem !important;
+    border-radius: 6px !important;
+    padding: 5px 12px !important;
+    min-width: 70px !important;
+    text-shadow: none !important;
+  }
+
+  /* GET — Emerald */
+  .swagger-ui .opblock.opblock-get {
+    border-color: rgba(52, 211, 153, 0.25) !important;
+    background: rgba(52, 211, 153, 0.02) !important;
+  }
+  .swagger-ui .opblock.opblock-get .opblock-summary-method {
+    background: rgba(52, 211, 153, 0.15) !important;
+    color: #34d399 !important;
+    border: 1px solid rgba(52, 211, 153, 0.3) !important;
+  }
+
+  /* POST — Blue */
+  .swagger-ui .opblock.opblock-post {
+    border-color: rgba(96, 165, 250, 0.25) !important;
+    background: rgba(96, 165, 250, 0.02) !important;
+  }
+  .swagger-ui .opblock.opblock-post .opblock-summary-method {
+    background: rgba(96, 165, 250, 0.15) !important;
+    color: #60a5fa !important;
+    border: 1px solid rgba(96, 165, 250, 0.3) !important;
+  }
+
+  /* PUT — Amber */
+  .swagger-ui .opblock.opblock-put {
+    border-color: rgba(251, 191, 36, 0.25) !important;
+    background: rgba(251, 191, 36, 0.02) !important;
+  }
+  .swagger-ui .opblock.opblock-put .opblock-summary-method {
+    background: rgba(251, 191, 36, 0.15) !important;
+    color: #fbbf24 !important;
+    border: 1px solid rgba(251, 191, 36, 0.3) !important;
+  }
+
+  /* DELETE — Rose */
+  .swagger-ui .opblock.opblock-delete {
+    border-color: rgba(251, 113, 133, 0.25) !important;
+    background: rgba(251, 113, 133, 0.02) !important;
+  }
+  .swagger-ui .opblock.opblock-delete .opblock-summary-method {
+    background: rgba(251, 113, 133, 0.15) !important;
+    color: #fb7185 !important;
+    border: 1px solid rgba(251, 113, 133, 0.3) !important;
+  }
+
+  /* Paths and Descriptions */
+  .swagger-ui .opblock .opblock-summary-path {
+    color: #f8fafc !important;
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.875rem !important;
+  }
+  .swagger-ui .opblock .opblock-summary-description {
+    color: #94a3b8 !important;
+    font-size: 0.8125rem !important;
+  }
+
+  /* Opblock Inner Content (Try it out, parameters, response) */
+  .swagger-ui .opblock-body {
+    background: #080b10 !important;
+  }
+  .swagger-ui .opblock .opblock-section-header {
+    background: #05070a !important;
+    box-shadow: none !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+    padding: 10px 20px !important;
+  }
+  .swagger-ui .opblock .opblock-section-header h4 {
+    color: #e2e8f0 !important;
+    font-family: 'Manrope', sans-serif !important;
+    font-size: 0.8125rem !important;
+  }
+
+  /* Tables and Parameter Lists */
+  .swagger-ui table thead tr th, .swagger-ui table thead tr td {
+    color: #94a3b8 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.75rem !important;
+  }
+  .swagger-ui .parameter__name {
+    color: #ffffff !important;
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.8125rem !important;
+  }
+  .swagger-ui .parameter__type {
+    color: #60a5fa !important;
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.75rem !important;
+  }
+  .swagger-ui .parameter__in {
+    color: #64748b !important;
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.75rem !important;
+  }
+  .swagger-ui table tbody tr td {
+    padding: 12px 10px !important;
+    border-color: rgba(255, 255, 255, 0.04) !important;
+    color: #cbd5e1 !important;
+  }
+
+  /* Form Elements */
+  .swagger-ui input[type=text],
+  .swagger-ui input[type=password],
+  .swagger-ui input[type=search],
+  .swagger-ui textarea {
+    background: #0c1118 !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 8px !important;
+    color: #ffffff !important;
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.8125rem !important;
+    padding: 8px 12px !important;
+  }
+  .swagger-ui input:focus, .swagger-ui textarea:focus {
+    border-color: #34d399 !important;
+    outline: none !important;
+    box-shadow: 0 0 0 1px #34d399 !important;
+  }
+
+  /* Action Buttons */
+  .swagger-ui .btn {
+    border-radius: 8px !important;
+    font-family: 'Manrope', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 0.75rem !important;
+    transition: all 0.2s ease !important;
+    box-shadow: none !important;
+  }
+  .swagger-ui .btn.try-out__btn {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    color: #e2e8f0 !important;
+  }
+  .swagger-ui .btn.try-out__btn:hover {
+    background: rgba(255, 255, 255, 0.12) !important;
+    color: #ffffff !important;
+  }
+  .swagger-ui .btn.execute {
+    background: #34d399 !important;
+    border-color: #34d399 !important;
+    color: #07110d !important;
+    font-weight: 700 !important;
+  }
+  .swagger-ui .btn.execute:hover {
+    background: #10b981 !important;
+  }
+  .swagger-ui .btn.btn-clear {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #94a3b8 !important;
+  }
+  .swagger-ui .btn.authorize {
+    background: rgba(52, 211, 153, 0.1) !important;
+    border: 1px solid rgba(52, 211, 153, 0.3) !important;
+    color: #34d399 !important;
+    padding: 6px 16px !important;
+  }
+  .swagger-ui .btn.authorize svg {
+    fill: #34d399 !important;
+  }
+
+  /* Responses Section */
+  .swagger-ui .responses-inner {
+    padding: 16px 20px !important;
+    background: #080b10 !important;
+  }
+  .swagger-ui .response-col_status {
+    color: #34d399 !important;
+    font-family: 'DM Mono', monospace !important;
+    font-weight: 700 !important;
+  }
+  .swagger-ui .response-col_description {
+    color: #cbd5e1 !important;
+  }
+  .swagger-ui .highlight-code, .swagger-ui pre {
+    background: #040608 !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 8px !important;
+    color: #e2e8f0 !important;
+  }
+  .swagger-ui .microlight {
+    color: #e2e8f0 !important;
+    font-family: 'DM Mono', monospace !important;
+  }
+
+  /* Schemas & Models */
+  .swagger-ui section.models {
+    background: #0c1118 !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 12px !important;
+  }
+  .swagger-ui section.models h4 {
+    color: #ffffff !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+    font-family: 'Manrope', sans-serif !important;
+  }
+  .swagger-ui .model-container {
+    background: #080b10 !important;
+    margin: 8px 0 !important;
+    border-radius: 8px !important;
+  }
+  .swagger-ui .model-box {
+    background: transparent !important;
+  }
+  .swagger-ui .model {
+    color: #cbd5e1 !important;
+    font-family: 'DM Mono', monospace !important;
+  }
+  .swagger-ui .model-title {
+    color: #f8fafc !important;
+    font-weight: 600 !important;
+  }
+  .swagger-ui .prop-type {
+    color: #60a5fa !important;
+  }
+
+  /* Auth Dialog Modal */
+  .swagger-ui .dialog-ux .backdrop-ux {
+    background: rgba(0, 0, 0, 0.75) !important;
+    backdrop-filter: blur(8px) !important;
+  }
+  .swagger-ui .dialog-ux .modal-ux {
+    background: #10151d !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 30px 100px rgba(0, 0, 0, 0.85) !important;
+    color: #e2e8f0 !important;
+  }
+  .swagger-ui .modal-ux-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  }
+  .swagger-ui .modal-ux-header h3 {
+    color: #ffffff !important;
+    font-family: 'Manrope', sans-serif !important;
+    font-size: 1rem !important;
+  }
+  .swagger-ui .modal-ux-content h4 {
+    color: #e2e8f0 !important;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+  <!-- Page Header Banner Matching Aegis CI Design System -->
+  <section class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-6 border-b border-white/[.06]">
+    <div>
+      <div class="mb-2 flex items-center gap-2 text-xs font-mono text-slate-500">
+        <span>DEVELOPER TOOLS</span>
+        <span>&bull;</span>
+        <span class="text-emerald-400">OpenAPI 3.1.0</span>
+        <span>&bull;</span>
+        <span class="text-blue-400">Pydantic v2 Schema</span>
+      </div>
+      <h1 class="text-2xl font-semibold tracking-tight text-white sm:text-3xl flex items-center gap-3">
+        <span>API Specifications</span>
+        <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-mono">
+          STRICT REST
+        </span>
+      </h1>
+      <p class="mt-1 text-sm text-slate-400 max-w-2xl">
+        Interactive endpoint contracts, schema models, and security requirement definitions for the CSSS 441 Book Catalog API.
+      </p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-wrap items-center gap-2">
+      <a href="/openapi.json" target="_blank" class="flex h-9 items-center gap-2 rounded-lg border border-white/[.08] bg-white/[.025] hover:bg-white/[.08] px-3.5 text-xs font-medium text-slate-300 transition" title="Raw OpenAPI Specification">
+        <i class="fa-solid fa-code text-xs text-slate-400"></i>
+        <span>JSON Spec</span>
+      </a>
+
+      <a href="/redoc" target="_blank" class="flex h-9 items-center gap-2 rounded-lg border border-white/[.08] bg-white/[.025] hover:bg-white/[.08] px-3.5 text-xs font-medium text-slate-300 transition" title="ReDoc Alternate View">
+        <i class="fa-solid fa-book-bookmark text-xs text-slate-400"></i>
+        <span>ReDoc</span>
+      </a>
+
+      <a href="/" class="flex h-9 items-center gap-2 rounded-lg bg-emerald-400 px-3.5 text-xs font-semibold text-[#07110d] transition hover:bg-emerald-300 shadow-[0_0_15px_rgba(52,211,153,.2)]">
+        <i class="fa-solid fa-layer-group text-xs"></i>
+        <span>Catalog UI</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Defensive Security Attestation Bar -->
+  <div class="p-3.5 rounded-xl border border-emerald-500/20 bg-emerald-950/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono text-slate-400">
+    <div class="flex items-center gap-2 text-emerald-400 font-semibold">
+      <i class="fa-solid fa-shield-halved"></i>
+      <span>Admin Security Key:</span>
+      <code class="px-2 py-0.5 rounded bg-black/40 border border-emerald-500/30 text-emerald-300 text-[11px]">devsecops-admin-secret-2026</code>
+    </div>
+    <div class="flex items-center gap-4 text-[11px] text-slate-500">
+      <span>Pass via header: <strong class="text-slate-300">X-Admin-Key</strong></span>
+      <span>Rate Limit: <strong class="text-slate-300">60 req/min</strong></span>
+    </div>
+  </div>
+
+  <!-- Swagger UI Mount Container -->
+  <div class="rounded-2xl border border-white/[.08] bg-[#0c1118] p-4 sm:p-6 shadow-2xl">
+    <div id="swagger-ui"></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<!-- Swagger UI Bundle JS -->
+<script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    window.ui = SwaggerUIBundle({
+      url: '{{ openapi_url }}',
+      dom_id: '#swagger-ui',
+      deepLinking: true,
+      presets: [
+        SwaggerUIBundle.presets.apis
+      ],
+      layout: "BaseLayout",
+      defaultModelsExpandDepth: 1,
+      defaultModelExpandDepth: 1,
+      showExtensions: true,
+      showCommonExtensions: true,
+      displayRequestDuration: true,
+      filter: true
+    });
+  });
+</script>
+{% endblock %}

@@ -267,10 +267,13 @@
         Developer Tools
       </div>
 
-      <a href="/docs" target="_blank" rel="noopener noreferrer" class="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-400 hover:bg-white/[.035] hover:text-slate-200 transition">
-        <i class="fa-solid fa-code text-sm text-slate-500 group-hover:text-slate-300" aria-hidden="true"></i>
+      <a href="/docs" class="group relative flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition {% if active_page == 'docs' %}bg-white/[.07] text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,.05)]{% else %}text-slate-400 hover:bg-white/[.035] hover:text-slate-200{% endif %}">
+        {% if active_page == 'docs' %}
+        <span class="absolute inset-y-2 left-0 w-0.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,.7)]"></span>
+        {% endif %}
+        <i class="fa-solid fa-code text-sm {% if active_page == 'docs' %}text-emerald-400{% else %}text-slate-500 group-hover:text-slate-300{% endif %}" aria-hidden="true"></i>
         <span>OpenAPI Specs</span>
-        <i class="fa-solid fa-arrow-up-right-from-square ml-auto text-[10px] text-slate-600"></i>
+        <span class="ml-auto rounded-full bg-emerald-400/10 px-1.5 py-0.5 text-[9px] font-mono text-emerald-300 border border-emerald-400/20">3.1</span>
       </a>
 
       <button onclick="openTelemetryModal()" class="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-400 hover:bg-white/[.035] hover:text-slate-200 transition text-left">
