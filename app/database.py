@@ -23,17 +23,16 @@ engine = create_engine(
     pool_pre_ping=True,
 )
 
-SessionLocal = sessionmaker(
+SessionLocal = sessionmaker(  # pylint: disable=invalid-name
     autocommit=False,
     autoflush=False,
     bind=engine,
 )
 
 
-class Base(DeclarativeBase):
+class Base(DeclarativeBase):  # pylint: disable=too-few-public-methods
     """Base declarative class for all SQLAlchemy database models."""
 
-    pass
 
 
 def get_db() -> Generator[Session]:

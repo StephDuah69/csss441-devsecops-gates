@@ -46,6 +46,7 @@ class BookBase(BaseModel):
     @field_validator("isbn")
     @classmethod
     def validate_isbn(cls, v: str) -> str:
+        """Validate ISBN format."""
         clean = v.replace("-", "").replace(" ", "").strip()
         if not re.match(ISBN_PATTERN, clean):
             raise ValueError("Invalid ISBN format. Must be a valid 10 or 13-digit ISBN.")
@@ -54,6 +55,7 @@ class BookBase(BaseModel):
     @field_validator("availability")
     @classmethod
     def validate_availability(cls, v: str) -> str:
+        """Validate availability status."""
         allowed = {"IN_STOCK", "CHECKED_OUT", "UNAVAILABLE"}
         upper_v = v.strip().upper()
         if upper_v not in allowed:
@@ -63,8 +65,6 @@ class BookBase(BaseModel):
 
 class BookCreate(BookBase):
     """Schema for book creation."""
-
-    pass
 
 
 class BookUpdate(BaseModel):
@@ -84,6 +84,7 @@ class BookUpdate(BaseModel):
     @field_validator("availability")
     @classmethod
     def validate_availability(cls, v: str | None) -> str | None:
+        """Validate optional availability status."""
         if v is None:
             return None
         allowed = {"IN_STOCK", "CHECKED_OUT", "UNAVAILABLE"}

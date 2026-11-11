@@ -33,7 +33,7 @@ logger = logging.getLogger("csss441.api")
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_: FastAPI):
     """Application lifespan event: initialize DB tables and seed initial catalogue."""
     logger.info("Initializing database schema...")
     Base.metadata.create_all(bind=engine)
@@ -45,7 +45,10 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="CSSS 441 Secure Book Catalogue",
-    description="Target application for DevSecOps automated security gates, observability, and provenance verification.",
+    description=(
+        "Target application for DevSecOps automated security gates, "
+        "observability, and provenance verification."
+    ),
     version=APP_VERSION,
     docs_url="/docs",
     redoc_url="/redoc",

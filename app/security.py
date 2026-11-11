@@ -77,8 +77,14 @@ async def security_headers_middleware(request: Request, call_next):
     # Content Security Policy (allows Tailwind CDN, FontAwesome, Lucide, HTMX)
     csp_directives = [
         "default-src 'self'",
-        "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://unpkg.com",
-        "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com",
+        (
+            "script-src 'self' 'unsafe-inline' "
+            "https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://unpkg.com"
+        ),
+        (
+            "style-src 'self' 'unsafe-inline' "
+            "https://cdnjs.cloudflare.com https://fonts.googleapis.com"
+        ),
         "font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com",
         "img-src 'self' data: https:",
         "connect-src 'self'",

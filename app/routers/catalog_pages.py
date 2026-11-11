@@ -81,7 +81,7 @@ def serve_book_detail(
     db: Session = Depends(get_db),
 ):
     """Render catalog dashboard with direct book drawer opened."""
-    book = book_service.get_book(db, book_id)
+    book = book_service.get_book_by_id(db, book_id)
     items, total = book_service.list_books(
         db=db,
         sort_by="title",

@@ -80,6 +80,11 @@ def get_book_by_id(db: Session, book_id: int) -> BookModel | None:
     return db.get(BookModel, book_id)
 
 
+# Convenience alias
+get_book = get_book_by_id
+
+
+
 def get_book_by_isbn(db: Session, isbn: str) -> BookModel | None:
     """Check existence of a book by ISBN."""
     stmt = select(BookModel).where(BookModel.isbn == isbn.strip())
