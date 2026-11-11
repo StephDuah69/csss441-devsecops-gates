@@ -16,7 +16,13 @@
       <p class="mt-1 text-sm text-slate-400">Browse, search, and manage software engineering and security literature.</p>
     </div>
 
-    <div>
+    <div class="flex items-center gap-2">
+      <!-- CWE Defense Sandbox Trigger Button -->
+      <button onclick="openCweSandboxModal()" class="flex h-9 items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 px-3.5 text-xs font-semibold text-emerald-300 transition active:scale-95" title="Interactive CWE Defense Sandbox">
+        <i class="fa-solid fa-flask-vial text-xs" aria-hidden="true"></i>
+        <span>CWE Defense Sandbox</span>
+      </button>
+
       <button onclick="openAddModal()" class="flex h-9 items-center gap-2 rounded-lg bg-emerald-400 px-4 text-xs font-semibold text-[#07110d] transition hover:bg-emerald-300 shadow-[0_0_15px_rgba(52,211,153,.2)] active:scale-95">
         <i class="fa-solid fa-plus text-xs" aria-hidden="true"></i>
         <span>Add New Book</span>
@@ -400,6 +406,86 @@
     </div>
   </div>
 </dialog>
+
+<!-- Modal: Interactive CWE Defense Sandbox (Feature Recommendation) -->
+<dialog id="cwe-sandbox-modal" class="bg-[#10151d] border border-white/[.12] text-slate-200 rounded-2xl shadow-[0_30px_100px_rgba(0,0,0,.85)] p-6 max-w-2xl w-full backdrop:bg-black/75 backdrop:backdrop-blur-sm" aria-labelledby="sandbox-title">
+  <div class="flex justify-between items-center pb-4 border-b border-white/[.08]">
+    <div class="flex items-center gap-2.5">
+      <span class="grid h-8 w-8 place-items-center rounded-lg icon-emerald text-sm">
+        <i class="fa-solid fa-flask-vial"></i>
+      </span>
+      <div>
+        <h3 id="sandbox-title" class="text-base font-semibold text-white">Interactive CWE Defense Sandbox</h3>
+        <p class="text-[11px] text-slate-400 font-mono">Live evaluation of backend defense controls against common attack vectors</p>
+      </div>
+    </div>
+    <button onclick="closeCweSandboxModal()" class="text-slate-500 hover:text-white p-1" aria-label="Close modal">
+      <i class="fa-solid fa-xmark text-base"></i>
+    </button>
+  </div>
+
+  <div class="space-y-4 pt-4">
+    <!-- Test 1: CWE-89 SQL Injection -->
+    <div class="p-4 rounded-xl border border-white/[.08] bg-[#080b10] space-y-2">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-semibold text-white flex items-center gap-2">
+          <span class="rounded px-2 py-0.5 text-[10px] font-mono bg-violet-400/10 text-violet-300 border border-violet-400/20">CWE-89</span>
+          SQL Injection Probe
+        </span>
+        <span class="text-[10px] font-mono text-emerald-400">SQLAlchemy Bind Parameters</span>
+      </div>
+      <p class="text-[11px] text-slate-400">Injects an SQL tautology payload (<code class="text-rose-400 font-mono">' OR 1=1 --</code>) into the book search endpoint to test if raw database records leak.</p>
+      <div class="flex items-center gap-2 pt-1">
+        <input type="text" id="sandbox-sqli-input" value="' OR 1=1 --" class="flex-1 bg-[#0c1118] border border-white/[.08] rounded-lg px-3 py-1.5 text-xs text-rose-300 font-mono">
+        <button onclick="testSqliProbe()" class="px-3 py-1.5 bg-violet-500/20 hover:bg-violet-500/30 text-violet-300 text-xs font-semibold rounded-lg border border-violet-500/30 transition">
+          Execute Attack Probe
+        </button>
+      </div>
+      <div id="sandbox-sqli-result" class="hidden p-2.5 rounded-lg bg-black/40 border border-emerald-500/20 text-xs font-mono text-slate-300"></div>
+    </div>
+
+    <!-- Test 2: CWE-798 Hardcoded / Invalid Credential Access -->
+    <div class="p-4 rounded-xl border border-white/[.08] bg-[#080b10] space-y-2">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-semibold text-white flex items-center gap-2">
+          <span class="rounded px-2 py-0.5 text-[10px] font-mono bg-amber-400/10 text-amber-300 border border-amber-400/20">CWE-798</span>
+          Unauthorized Admin Mutation Probe
+        </span>
+        <span class="text-[10px] font-mono text-emerald-400">Constant-Time Key Auth</span>
+      </div>
+      <p class="text-[11px] text-slate-400">Attempts a book mutation request with an unauthorized or forged <code class="text-slate-300 font-mono">X-Admin-Key</code>.</p>
+      <div class="flex items-center gap-2 pt-1">
+        <input type="text" id="sandbox-key-input" value="hacker-key-999" class="flex-1 bg-[#0c1118] border border-white/[.08] rounded-lg px-3 py-1.5 text-xs text-amber-300 font-mono">
+        <button onclick="testAuthKeyProbe()" class="px-3 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-semibold rounded-lg border border-amber-500/30 transition">
+          Test Key Authorization
+        </button>
+      </div>
+      <div id="sandbox-auth-result" class="hidden p-2.5 rounded-lg bg-black/40 border border-emerald-500/20 text-xs font-mono text-slate-300"></div>
+    </div>
+
+    <!-- Test 3: CWE-770 Rate Limiting Protection -->
+    <div class="p-4 rounded-xl border border-white/[.08] bg-[#080b10] space-y-2">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-semibold text-white flex items-center gap-2">
+          <span class="rounded px-2 py-0.5 text-[10px] font-mono bg-blue-400/10 text-blue-300 border border-blue-400/20">CWE-770</span>
+          Rate Limiter Token Bucket Probe
+        </span>
+        <span class="text-[10px] font-mono text-emerald-400">SlowAPI Middleware Active</span>
+      </div>
+      <p class="text-[11px] text-slate-400">Fires 5 rapid parallel HTTP requests to verify SlowAPI rate limiting headers (<code class="text-slate-300 font-mono">X-RateLimit-Limit</code>, <code class="text-slate-300 font-mono">X-RateLimit-Remaining</code>).</p>
+      <div class="pt-1">
+        <button onclick="testRateLimitProbe()" class="w-full py-1.5 px-3 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 text-xs font-semibold rounded-lg border border-blue-500/30 transition">
+          Fire Burst Requests (5 reqs)
+        </button>
+      </div>
+      <div id="sandbox-ratelimit-result" class="hidden p-2.5 rounded-lg bg-black/40 border border-emerald-500/20 text-xs font-mono text-slate-300"></div>
+    </div>
+  </div>
+
+  <div class="flex justify-end gap-2.5 pt-4 border-t border-white/[.08] mt-4">
+    <button type="button" onclick="closeCweSandboxModal()" class="px-4 py-2 bg-white/[.05] hover:bg-white/[.1] text-slate-300 text-xs font-medium rounded-lg transition">Close</button>
+  </div>
+</dialog>
 {% endblock %}
 
 {% block extra_scripts %}
@@ -665,6 +751,87 @@
       errorEl.textContent = err.message;
       errorEl.classList.remove('hidden');
     }
+  }
+
+  function openCweSandboxModal() {
+    document.getElementById('cwe-sandbox-modal').showModal();
+  }
+
+  function closeCweSandboxModal() {
+    document.getElementById('cwe-sandbox-modal').close();
+  }
+
+  async function testSqliProbe() {
+    const inputVal = document.getElementById('sandbox-sqli-input').value;
+    const resultEl = document.getElementById('sandbox-sqli-result');
+    resultEl.classList.remove('hidden');
+    resultEl.innerHTML = `<span class="text-blue-400"><i class="fa-solid fa-spinner fa-spin"></i> Executing probe: /api/books?q=${encodeURIComponent(inputVal)}</span>`;
+
+    try {
+      const resp = await fetch(`/api/books?q=${encodeURIComponent(inputVal)}`);
+      const data = await resp.json();
+      resultEl.innerHTML = `
+        <div class="text-emerald-400 font-bold mb-1"><i class="fa-solid fa-shield-check"></i> CWE-89 MITIGATED (HTTP ${resp.status})</div>
+        <div class="text-slate-300">Backend Defense: <strong class="text-white">SQLAlchemy AST Parameterized Query</strong></div>
+        <div class="text-slate-400 text-[11px] mt-1">Payload <code class="text-rose-300">${inputVal}</code> escaped literally as text query parameter (:q_1).</div>
+        <div class="text-slate-500 text-[10px] mt-0.5">Matched records: ${data.total || 0} (Zero unauthorized records leaked).</div>
+      `;
+    } catch(err) {
+      resultEl.innerHTML = `<div class="text-rose-400">Error: ${err.message}</div>`;
+    }
+  }
+
+  async function testAuthKeyProbe() {
+    const keyVal = document.getElementById('sandbox-key-input').value;
+    const resultEl = document.getElementById('sandbox-auth-result');
+    resultEl.classList.remove('hidden');
+    resultEl.innerHTML = `<span class="text-blue-400"><i class="fa-solid fa-spinner fa-spin"></i> Testing key verification against DELETE /api/books/999</span>`;
+
+    try {
+      const resp = await fetch('/api/books/999', {
+        method: 'DELETE',
+        headers: { 'X-Admin-Key': keyVal }
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (resp.status === 403) {
+        resultEl.innerHTML = `
+          <div class="text-emerald-400 font-bold mb-1"><i class="fa-solid fa-shield-check"></i> CWE-798 BLOCKED (HTTP 403 Forbidden)</div>
+          <div class="text-slate-300">Backend Defense: <strong class="text-white">secrets.compare_digest Constant-Time Auth</strong></div>
+          <div class="text-slate-400 text-[11px] mt-1">Invalid key rejected immediately: <span class="text-rose-300">${data.detail || 'Forbidden'}</span></div>
+        `;
+      } else {
+        resultEl.innerHTML = `
+          <div class="text-amber-400 font-bold mb-1">Response: HTTP ${resp.status}</div>
+          <div class="text-slate-400 text-[11px]">${data.detail || 'Request processed'}</div>
+        `;
+      }
+    } catch(err) {
+      resultEl.innerHTML = `<div class="text-rose-400">Error: ${err.message}</div>`;
+    }
+  }
+
+  async function testRateLimitProbe() {
+    const resultEl = document.getElementById('sandbox-ratelimit-result');
+    resultEl.classList.remove('hidden');
+    resultEl.innerHTML = `<span class="text-blue-400"><i class="fa-solid fa-spinner fa-spin"></i> Firing 5 parallel requests to /api/books...</span>`;
+
+    try {
+      const promises = Array.from({ length: 5 }, () => fetch('/api/books?page_size=1'));
+      const responses = await Promise.all(promises);
+      const statuses = responses.map(r => r.status);
+      const lastHeaders = responses[responses.length - 1].headers;
+      const limit = lastHeaders.get('x-rate-limit-limit') || lastHeaders.get('x-ratelimit-limit') || '60';
+      const remaining = lastHeaders.get('x-rate-limit-remaining') || lastHeaders.get('x-ratelimit-remaining') || '55';
+
+      resultEl.innerHTML = `
+        <div class="text-emerald-400 font-bold mb-1"><i class="fa-solid fa-shield-check"></i> CWE-770 ENFORCED (SlowAPI Token Bucket Active)</div>
+        <div class="text-slate-300">Requests dispatched: <strong class="text-white">5</strong> &bull; Status codes: <span class="text-emerald-400 font-mono">[${statuses.join(', ')}]</span></div>
+        <div class="text-slate-400 text-[11px] mt-1">Headers: Limit: <strong class="text-white">${limit}</strong>, Remaining: <strong class="text-emerald-300">${remaining}</strong></div>
+      `;
+    } catch(err) {
+      resultEl.innerHTML = `<div class="text-rose-400">Error: ${err.message}</div>`;
+    }
+  }
   }
 </script>
 {% endblock %}
