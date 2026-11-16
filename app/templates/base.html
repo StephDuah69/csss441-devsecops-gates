@@ -132,47 +132,28 @@
     /* ============================================================
        White Theme Option (High-Contrast Executive Light Mode)
        ============================================================ */
-    html.theme-white body {
+    html.theme-white,
+    html.theme-white body,
+    html.theme-white main,
+    html.theme-white div.lg\:pl-64 {
       background-color: #f8fafc !important;
       color: #0f172a !important;
     }
-    html.theme-white .figma-bg-glow {
-      background: radial-gradient(circle at 68% -12%, rgba(203, 213, 225, 0.4), transparent 50%) !important;
-    }
+
+    /* Completely eliminate dark glowing ambient layers in white mode */
+    html.theme-white .figma-bg-glow,
     html.theme-white .cyber-grid {
-      background-image: radial-gradient(rgba(15, 23, 42, 0.08) 1px, transparent 1px) !important;
-      opacity: 0.55 !important;
+      display: none !important;
+      opacity: 0 !important;
     }
 
-    /* Core Surface Panels & Hex Containers */
-    html.theme-white aside,
-    html.theme-white header,
-    html.theme-white footer,
-    html.theme-white .bg-\[\#080b10\],
-    html.theme-white .bg-\[\#090d13\],
-    html.theme-white .bg-\[\#090d14\],
-    html.theme-white .bg-\[\#0b0f15\],
-    html.theme-white .bg-\[\#0b0f15\]\/95,
-    html.theme-white .bg-\[\#0b0f15\]\/85,
-    html.theme-white .bg-\[\#0b0f15\]\/60,
-    html.theme-white .bg-\[\#0c1118\],
-    html.theme-white .bg-\[\#0c1118\]\/90,
-    html.theme-white .bg-\[\#0c1118\]\/50,
-    html.theme-white .bg-\[\#0d121a\],
-    html.theme-white .bg-\[\#0e131b\],
-    html.theme-white .bg-\[\#0f141d\],
-    html.theme-white .bg-\[\#10151d\],
-    html.theme-white .bg-\[\#121822\] {
-      background-color: #ffffff !important;
-      border-color: #e2e8f0 !important;
-      color: #0f172a !important;
-    }
+    /* Structural Surface Panels: Aside, Header, Footer, Sections, Articles */
     html.theme-white aside {
       background-color: #ffffff !important;
       border-right-color: #e2e8f0 !important;
     }
     html.theme-white header {
-      background-color: rgba(255, 255, 255, 0.95) !important;
+      background-color: rgba(255, 255, 255, 0.96) !important;
       backdrop-filter: blur(12px) !important;
       border-bottom-color: #e2e8f0 !important;
     }
@@ -181,31 +162,63 @@
       border-top-color: #e2e8f0 !important;
       color: #475569 !important;
     }
-
-    /* Structural Borders & Elevated Cards */
-    html.theme-white .border-white\/\[\.05\],
-    html.theme-white .border-white\/\[\.06\],
-    html.theme-white .border-white\/\[\.07\],
-    html.theme-white .border-white\/\[\.08\],
-    html.theme-white .border-white\/\[\.1\],
-    html.theme-white .border-white\/\[\.12\],
-    html.theme-white .border-white\/\[\.15\] {
-      border-color: #e2e8f0 !important;
-    }
+    html.theme-white section,
+    html.theme-white article,
     html.theme-white .tilt-card,
     html.theme-white .gate-card,
     html.theme-white .book-card,
     html.theme-white .isometric-node,
-    html.theme-white article {
+    html.theme-white [id^="metric-card-"],
+    html.theme-white #pipeline,
+    html.theme-white #findings,
+    html.theme-white #artifacts,
+    html.theme-white #drawer-hero-banner {
       background-color: #ffffff !important;
       border-color: #e2e8f0 !important;
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -2px rgba(0, 0, 0, 0.04) !important;
+      color: #0f172a !important;
     }
     html.theme-white .isometric-node:hover {
       box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.08), 0 0 15px rgba(16, 185, 129, 0.15) !important;
     }
     html.theme-white .tilt-glare {
       background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(0, 0, 0, 0.04) 0%, transparent 60%) !important;
+    }
+
+    /* Universal Hex Background Override for all Tailwind custom color blocks */
+    html.theme-white [class*="bg-[#"]:not(#telemetry-console-body):not(#sandbox-sqli-result):not(#sandbox-admin-result):not(#sandbox-ratelimit-result):not(#drawer-command):not(.book-3d):not(.book-3d *):not(.relative:has(#cyber-globe-canvas)) {
+      background-color: #f8fafc !important;
+      border-color: #e2e8f0 !important;
+      color: #0f172a !important;
+    }
+
+    /* Universal Translucent Black/White Override (Buttons, Badges, Dropdowns) */
+    html.theme-white [class*="bg-white/"]:not(.fixed.inset-0),
+    html.theme-white [class*="bg-black/"]:not(.fixed.inset-0):not(#telemetry-console-body):not(#sandbox-sqli-result):not(#sandbox-admin-result):not(#sandbox-ratelimit-result):not(#drawer-command):not(.book-3d):not(.book-3d *):not(.relative:has(#cyber-globe-canvas)) {
+      background-color: #f1f5f9 !important;
+      border-color: #cbd5e1 !important;
+      color: #0f172a !important;
+    }
+
+    /* All white borders become crisp slate borders */
+    html.theme-white [class*="border-white"] {
+      border-color: #e2e8f0 !important;
+    }
+
+    /* Action Buttons (Export Audit, JSON, got it, close) */
+    html.theme-white button:not(#run-pipeline-btn):not(#simulate-breach-btn):not(#remediate-btn),
+    html.theme-white a.rounded-xl[href*="/api/security/scorecard"],
+    html.theme-white a.rounded-lg[href*="/api/security/scorecard"] {
+      background-color: #f8fafc !important;
+      border: 1px solid #cbd5e1 !important;
+      color: #0f172a !important;
+    }
+    html.theme-white button:not(#run-pipeline-btn):not(#simulate-breach-btn):not(#remediate-btn):hover,
+    html.theme-white a.rounded-xl[href*="/api/security/scorecard"]:hover,
+    html.theme-white a.rounded-lg[href*="/api/security/scorecard"]:hover {
+      background-color: #f1f5f9 !important;
+      border-color: #94a3b8 !important;
+      color: #000000 !important;
     }
 
     /* High-Contrast Typography Hierarchy (Eliminating low contrast text) */
@@ -227,16 +240,17 @@
     }
 
     /* Sidebar Navigation Links */
-    html.theme-white aside a.bg-white\/\[\.07\] {
+    html.theme-white aside a.bg-white\/\[\.07\],
+    html.theme-white aside a[class*="bg-white"] {
       background-color: #f1f5f9 !important;
       color: #0f172a !important;
       box-shadow: inset 0 0 0 1px #cbd5e1 !important;
       font-weight: 600 !important;
     }
-    html.theme-white aside a:not(.bg-white\/\[\.07\]) {
+    html.theme-white aside a:not([class*="bg-white/07"]):not(.bg-white\/\[\.07\]) {
       color: #334155 !important;
     }
-    html.theme-white aside a:not(.bg-white\/\[\.07\]):hover {
+    html.theme-white aside a:hover {
       background-color: #f1f5f9 !important;
       color: #0f172a !important;
     }
@@ -248,6 +262,15 @@
       background-color: #ffffff !important;
       border-color: #cbd5e1 !important;
       color: #0f172a !important;
+    }
+    html.theme-white input::placeholder {
+      color: #94a3b8 !important;
+    }
+    html.theme-white input:focus,
+    html.theme-white select:focus {
+      border-color: #059669 !important;
+      box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.15) !important;
+    }
     }
     html.theme-white input::placeholder {
       color: #94a3b8 !important;
@@ -1821,9 +1844,30 @@
       }
     }
 
-    function toggleThemeMode() {
-      const isWhite = document.documentElement.classList.toggle('theme-white');
+    function applyThemeToDOM(isWhite) {
+      if (isWhite) {
+        document.documentElement.classList.add('theme-white');
+        document.documentElement.classList.remove('bg-[#080b10]');
+        if (document.body) {
+          document.body.classList.remove('bg-[#080b10]');
+          document.body.style.backgroundColor = '#f8fafc';
+        }
+        document.documentElement.style.backgroundColor = '#f8fafc';
+      } else {
+        document.documentElement.classList.remove('theme-white');
+        document.documentElement.classList.add('bg-[#080b10]');
+        if (document.body) {
+          document.body.classList.add('bg-[#080b10]');
+          document.body.style.backgroundColor = '';
+        }
+        document.documentElement.style.backgroundColor = '';
+      }
       syncThemeUI(isWhite);
+    }
+
+    function toggleThemeMode() {
+      const isWhite = !document.documentElement.classList.contains('theme-white');
+      applyThemeToDOM(isWhite);
       if (isWhite) {
         showToast('White Background Option Enabled', 'amber');
         try { localStorage.setItem('aegis_theme_mode', 'white'); } catch(e) {}
@@ -1838,19 +1882,12 @@
     // Ensure Cyber Obsidian Dark is the flagship Main Theme by default
     try {
       localStorage.removeItem('aegis_auditor_mode');
-      if (localStorage.getItem('aegis_main_theme_v2') !== 'set') {
-        localStorage.setItem('aegis_main_theme_v2', 'set');
-        localStorage.setItem('aegis_theme_mode', 'main');
-        document.documentElement.classList.remove('theme-white');
-      } else if (localStorage.getItem('aegis_theme_mode') === 'white') {
-        document.documentElement.classList.add('theme-white');
-      } else {
-        document.documentElement.classList.remove('theme-white');
-      }
+      const isExplicitWhite = localStorage.getItem('aegis_theme_mode') === 'white';
+      applyThemeToDOM(isExplicitWhite);
     } catch(e) {}
 
     window.addEventListener('DOMContentLoaded', () => {
-      syncThemeUI(document.documentElement.classList.contains('theme-white'));
+      applyThemeToDOM(document.documentElement.classList.contains('theme-white'));
     });
 
     function handlePaletteBackdropClick(e) {
