@@ -53,9 +53,18 @@
 
     <!-- Security Posture Circular Gauge & Interactive Defense Control Suite -->
     <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 self-start lg:self-center">
-      <!-- Circular Progress Meter -->
-      <div class="flex items-center gap-4 bg-[#0c1118] border border-white/[.08] p-3 rounded-2xl shadow-xl">
-        <div class="relative w-16 h-16 flex items-center justify-center">
+      <!-- 3D Cyber Defense Wireframe Hologram & Circular Gauge -->
+      <div class="flex items-center gap-3.5 bg-[#0c1118] border border-white/[.08] p-2.5 sm:p-3 rounded-2xl shadow-xl">
+        <!-- 3D Rotating Cyber Globe Canvas -->
+        <div class="relative w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center rounded-xl bg-black/40 border border-white/[.06] overflow-hidden group cursor-pointer" onclick="toggleGlobeSpeed()" title="Interactive 3D Defense Hologram — Click to toggle radar speed">
+          <canvas id="cyber-globe-canvas" width="160" height="160" class="w-full h-full"></canvas>
+          <div id="globe-status-pill" class="absolute bottom-1 px-1.5 py-0.5 rounded text-[8px] font-mono font-bold bg-emerald-950/80 text-emerald-400 border border-emerald-500/30">
+            3D SHIELD
+          </div>
+        </div>
+
+        <!-- Circular Progress Meter -->
+        <div class="relative w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center">
           <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
             <!-- Background track -->
             <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.06)" stroke-width="8" fill="none" />
@@ -64,7 +73,7 @@
               stroke-dasharray="251.2" stroke-dashoffset="5.0" class="transition-all duration-700 ease-out" />
           </svg>
           <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-            <span id="score-val" class="text-sm font-bold font-mono text-white">98%</span>
+            <span id="score-val" class="text-xs sm:text-sm font-bold font-mono text-white">98%</span>
           </div>
         </div>
         <div>
@@ -102,7 +111,7 @@
   <!-- Metric Cards Grid with Mini Sparklines (from Figma) -->
   <section class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
     <!-- Card 1: Pipeline Status -->
-    <div id="metric-card-status" class="group relative overflow-hidden rounded-xl border border-white/[.07] bg-[#0c1118] p-5 transition hover:-translate-y-0.5 hover:border-white/[.12]">
+    <div id="metric-card-status" class="tilt-card group relative overflow-hidden rounded-xl border border-white/[.07] bg-[#0c1118] p-5 transition hover:-translate-y-0.5 hover:border-white/[.12]">
       <div class="flex items-start justify-between">
         <div class="text-[11px] font-medium uppercase tracking-[.12em] text-slate-500">Pipeline Status</div>
         <div id="metric-icon-box-status" class="icon-emerald grid h-8 w-8 place-items-center rounded-lg">
@@ -129,7 +138,7 @@
     </div>
 
     <!-- Card 2: Security Gates Passed -->
-    <div class="group relative overflow-hidden rounded-xl border border-white/[.07] bg-[#0c1118] p-5 transition hover:-translate-y-0.5 hover:border-white/[.12]">
+    <div id="metric-card-gates" class="tilt-card group relative overflow-hidden rounded-xl border border-white/[.07] bg-[#0c1118] p-5 transition hover:-translate-y-0.5 hover:border-white/[.12]">
       <div class="flex items-start justify-between">
         <div class="text-[11px] font-medium uppercase tracking-[.12em] text-slate-500">Security Gates</div>
         <div id="metric-icon-box-gates" class="icon-blue grid h-8 w-8 place-items-center rounded-lg">
@@ -155,7 +164,7 @@
     </div>
 
     <!-- Card 3: Open Findings -->
-    <div class="group relative overflow-hidden rounded-xl border border-white/[.07] bg-[#0c1118] p-5 transition hover:-translate-y-0.5 hover:border-white/[.12]">
+    <div id="metric-card-findings" class="tilt-card group relative overflow-hidden rounded-xl border border-white/[.07] bg-[#0c1118] p-5 transition hover:-translate-y-0.5 hover:border-white/[.12]">
       <div class="flex items-start justify-between">
         <div class="text-[11px] font-medium uppercase tracking-[.12em] text-slate-500">Open Findings</div>
         <div id="metric-icon-box-findings" class="icon-amber grid h-8 w-8 place-items-center rounded-lg">
@@ -181,7 +190,7 @@
     </div>
 
     <!-- Card 4: Total Duration -->
-    <div class="group relative overflow-hidden rounded-xl border border-white/[.07] bg-[#0c1118] p-5 transition hover:-translate-y-0.5 hover:border-white/[.12]">
+    <div id="metric-card-duration" class="tilt-card group relative overflow-hidden rounded-xl border border-white/[.07] bg-[#0c1118] p-5 transition hover:-translate-y-0.5 hover:border-white/[.12]">
       <div class="flex items-start justify-between">
         <div class="text-[11px] font-medium uppercase tracking-[.12em] text-slate-500">Pipeline Duration</div>
         <div class="icon-violet grid h-8 w-8 place-items-center rounded-lg">
@@ -235,7 +244,7 @@
     <!-- Pipeline Visual Nodes Progression -->
     <div class="mt-6 grid grid-cols-1 md:grid-cols-5 gap-3">
       <!-- Step 1: Source -->
-      <div class="p-3.5 rounded-lg border border-white/[.08] bg-white/[.02] flex flex-col justify-between">
+      <div class="isometric-node p-3.5 rounded-lg border border-white/[.08] bg-white/[.02] flex flex-col justify-between">
         <div class="flex items-center justify-between text-xs text-slate-500">
           <span>01. Source</span>
           <i class="fa-solid fa-code-commit text-emerald-400"></i>
@@ -251,7 +260,7 @@
       </div>
 
       <!-- Step 2: SAST & Code Quality -->
-      <div class="p-3.5 rounded-lg border border-white/[.08] bg-white/[.02] flex flex-col justify-between">
+      <div class="isometric-node p-3.5 rounded-lg border border-white/[.08] bg-white/[.02] flex flex-col justify-between">
         <div class="flex items-center justify-between text-xs text-slate-500">
           <span>02. SAST</span>
           <i class="fa-solid fa-shield-halved text-violet-400"></i>
@@ -267,7 +276,7 @@
       </div>
 
       <!-- Step 3: SCA & Container -->
-      <div id="pipeline-node-sca" class="p-3.5 rounded-lg border border-white/[.08] bg-white/[.02] flex flex-col justify-between transition-colors">
+      <div id="pipeline-node-sca" class="isometric-node p-3.5 rounded-lg border border-white/[.08] bg-white/[.02] flex flex-col justify-between transition-colors">
         <div class="flex items-center justify-between text-xs text-slate-500">
           <span>03. SCA & IaC</span>
           <i id="pipeline-node-sca-icon" class="fa-solid fa-cubes text-amber-400"></i>
@@ -283,7 +292,7 @@
       </div>
 
       <!-- Step 4: DAST Preview -->
-      <div class="p-3.5 rounded-lg border border-white/[.08] bg-white/[.02] flex flex-col justify-between">
+      <div class="isometric-node p-3.5 rounded-lg border border-white/[.08] bg-white/[.02] flex flex-col justify-between">
         <div class="flex items-center justify-between text-xs text-slate-500">
           <span>04. DAST</span>
           <i class="fa-solid fa-bolt text-rose-400"></i>
@@ -299,7 +308,7 @@
       </div>
 
       <!-- Step 5: Sign & Release Gate -->
-      <div id="pipeline-node-release" class="p-3.5 rounded-lg border border-emerald-400/20 bg-emerald-400/5 flex flex-col justify-between node-pulse">
+      <div id="pipeline-node-release" class="isometric-node p-3.5 rounded-lg border border-emerald-400/20 bg-emerald-400/5 flex flex-col justify-between node-pulse">
         <div class="flex items-center justify-between text-xs text-slate-500">
           <span>05. Release Gate</span>
           <i id="pipeline-node-release-icon" class="fa-solid fa-signature text-emerald-400"></i>
@@ -328,7 +337,7 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
       {% for gate in gates %}
-      <div onclick="inspectGate('{{ gate.name }}')" class="gate-card group relative cursor-pointer overflow-hidden rounded-xl border border-white/[.07] bg-[#0c1118] p-4 transition hover:-translate-y-0.5 hover:border-white/[.15] hover:bg-[#0f141d]">
+      <div onclick="inspectGate('{{ gate.name }}')" class="gate-card tilt-card group relative cursor-pointer overflow-hidden rounded-xl border border-white/[.07] bg-[#0c1118] p-4 transition hover:-translate-y-0.5 hover:border-white/[.15] hover:bg-[#0f141d]">
         <div class="flex items-start justify-between">
           <div class="flex items-center gap-3">
             <div class="grid h-8 w-8 place-items-center rounded-lg {% if 'Gitleaks' in gate.name or 'Cosign' in gate.name %}icon-emerald{% elif 'Semgrep' in gate.name %}icon-violet{% elif 'CodeQL' in gate.name %}icon-blue{% elif 'Trivy' in gate.name or 'OSV' in gate.name %}icon-amber{% elif 'ZAP' in gate.name %}icon-rose{% else %}icon-teal{% endif %}">
@@ -862,6 +871,150 @@
     }
   }
 
+  // ============================================================
+  // 3D Cyber Defense Wireframe Hologram Engine (Vanilla Canvas 60fps)
+  // ============================================================
+  let globeRotation = 0;
+  let globeSpeed = 0.012;
+  let globeState = 'healthy'; // 'healthy' | 'breached' | 'remediating'
+  let globeCanvas, globeCtx;
+
+  function initCyberGlobe() {
+    globeCanvas = document.getElementById('cyber-globe-canvas');
+    if (!globeCanvas) return;
+    globeCtx = globeCanvas.getContext('2d');
+
+    const width = globeCanvas.width;
+    const height = globeCanvas.height;
+    const radius = width * 0.38;
+    const cx = width / 2;
+    const cy = height / 2;
+
+    const rings = 6;
+    const pointsPerRing = 12;
+    const spherePoints = [];
+
+    for (let i = 1; i < rings; i++) {
+      const phi = (Math.PI * i) / rings;
+      const ringRadius = radius * Math.sin(phi);
+      const y = radius * Math.cos(phi);
+      for (let j = 0; j < pointsPerRing; j++) {
+        const theta = (2 * Math.PI * j) / pointsPerRing;
+        spherePoints.push({
+          x0: ringRadius * Math.cos(theta),
+          y0: y,
+          z0: ringRadius * Math.sin(theta)
+        });
+      }
+    }
+
+    function renderGlobe() {
+      globeCtx.clearRect(0, 0, width, height);
+      globeRotation += globeSpeed;
+
+      let strokeColor = 'rgba(52, 211, 153, 0.45)';
+      let nodeColor = '#34d399';
+      let coreColor = 'rgba(52, 211, 153, 0.15)';
+      let pillText = '3D SHIELD';
+      let pillClass = 'bg-emerald-950/80 text-emerald-400 border-emerald-500/30';
+
+      if (globeState === 'breached') {
+        strokeColor = 'rgba(244, 63, 94, 0.65)';
+        nodeColor = '#f43f5e';
+        coreColor = 'rgba(244, 63, 94, 0.25)';
+        pillText = 'BREACH ALERT';
+        pillClass = 'bg-rose-950/90 text-rose-300 border-rose-500/50';
+      } else if (globeState === 'remediating') {
+        strokeColor = 'rgba(56, 189, 248, 0.65)';
+        nodeColor = '#38bdf8';
+        coreColor = 'rgba(56, 189, 248, 0.25)';
+        pillText = 'REMEDIATING';
+        pillClass = 'bg-sky-950/90 text-sky-300 border-sky-500/50';
+      }
+
+      const pill = document.getElementById('globe-status-pill');
+      if (pill) {
+        pill.textContent = pillText;
+        pill.className = `absolute bottom-1 px-1.5 py-0.5 rounded text-[8px] font-mono font-bold border transition-colors ${pillClass}`;
+      }
+
+      // Draw faint central sphere core
+      const coreGrad = globeCtx.createRadialGradient(cx, cy, 2, cx, cy, radius * 0.85);
+      coreGrad.addColorStop(0, coreColor);
+      coreGrad.addColorStop(1, 'transparent');
+      globeCtx.fillStyle = coreGrad;
+      globeCtx.beginPath();
+      globeCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+      globeCtx.fill();
+
+      // Outer equatorial glow ring
+      globeCtx.strokeStyle = strokeColor;
+      globeCtx.lineWidth = 1;
+      globeCtx.beginPath();
+      globeCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+      globeCtx.stroke();
+
+      // Draw rotating longitude rings
+      for (let r = 0; r < 3; r++) {
+        const ringAngle = globeRotation + (r * Math.PI / 3);
+        globeCtx.beginPath();
+        const rx = radius * Math.cos(ringAngle);
+        globeCtx.ellipse(cx, cy, Math.max(1, Math.abs(rx)), radius, 0, 0, Math.PI * 2);
+        globeCtx.strokeStyle = strokeColor;
+        globeCtx.stroke();
+      }
+
+      // Project & draw points
+      const cosR = Math.cos(globeRotation);
+      const sinR = Math.sin(globeRotation);
+      const cosT = Math.cos(0.35);
+      const sinT = Math.sin(0.35);
+
+      spherePoints.forEach(pt => {
+        const x1 = pt.x0 * cosR - pt.z0 * sinR;
+        const z1 = pt.x0 * sinR + pt.z0 * cosR;
+
+        const y2 = pt.y0 * cosT - z1 * sinT;
+        const z2 = pt.y0 * sinT + z1 * cosT;
+
+        const scale = (z2 + radius * 1.5) / (radius * 2.5);
+        if (scale > 0.15) {
+          const px = cx + x1 * (scale * 0.9 + 0.1);
+          const py = cy + y2 * (scale * 0.9 + 0.1);
+          const ptRadius = Math.max(0.8, 1.8 * scale);
+
+          globeCtx.fillStyle = nodeColor;
+          globeCtx.beginPath();
+          globeCtx.arc(px, py, ptRadius, 0, Math.PI * 2);
+          globeCtx.fill();
+        }
+      });
+
+      // Rotating radar beam line
+      globeCtx.save();
+      globeCtx.translate(cx, cy);
+      globeCtx.rotate(globeRotation * 2.5);
+      const radarGrad = globeCtx.createLinearGradient(0, 0, radius, 0);
+      radarGrad.addColorStop(0, 'transparent');
+      radarGrad.addColorStop(1, strokeColor);
+      globeCtx.strokeStyle = radarGrad;
+      globeCtx.lineWidth = 1.5;
+      globeCtx.beginPath();
+      globeCtx.moveTo(0, 0);
+      globeCtx.lineTo(radius, 0);
+      globeCtx.stroke();
+      globeCtx.restore();
+
+      requestAnimationFrame(renderGlobe);
+    }
+
+    renderGlobe();
+  }
+
+  function toggleGlobeSpeed() {
+    globeSpeed = globeSpeed > 0.02 ? 0.012 : 0.045;
+  }
+
   // Circular Gauge & Simulation State
   function simulateGateFailure() {
     const breachBtn = document.getElementById('simulate-breach-btn');
@@ -893,6 +1046,9 @@
     const breachBtn = document.getElementById('simulate-breach-btn');
     const remediateBtn = document.getElementById('remediate-btn');
 
+    globeState = 'remediating';
+    globeSpeed = 0.045;
+
     // Show scanner ray animation
     const scanRay = document.getElementById('pipeline-scanner-ray');
     if (scanRay) scanRay.classList.remove('hidden');
@@ -902,6 +1058,9 @@
     appendTelemetryLog('[AUTO-REMEDIATE] Upgrading affected SCA dependency in requirements.lock...');
 
     setTimeout(() => {
+      globeState = 'healthy';
+      globeSpeed = 0.012;
+
       if (scanRay) scanRay.classList.add('hidden');
       if (remediateBtn) remediateBtn.classList.add('hidden');
       if (breachBtn) breachBtn.classList.remove('hidden');
@@ -951,6 +1110,9 @@
     const releaseStatus = document.getElementById('pipeline-node-release-status');
 
     if (isFailed) {
+      globeState = 'breached';
+      globeSpeed = 0.035;
+
       statusDot.className = 'inline-flex h-2 w-2 rounded-full bg-rose-400 shadow-[0_0_0_4px_rgba(251,113,133,.15)] animate-pulse';
       statusText.textContent = 'Update Blocked — Policy Gate Failure';
       statusText.className = 'text-rose-400';
@@ -994,6 +1156,9 @@
 
       showToast('Fail-closed gate triggered: Deployment aborted due to simulated CRITICAL vulnerability', 'rose');
     } else {
+      globeState = 'healthy';
+      globeSpeed = 0.012;
+
       statusDot.className = 'inline-flex h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_0_4px_rgba(52,211,153,.15)] animate-pulse';
       statusText.textContent = 'All systems operational';
       statusText.className = 'text-emerald-400';
@@ -1068,5 +1233,10 @@
       showToast('CI telemetry logs copied to clipboard', 'emerald');
     });
   }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    initCyberGlobe();
+    if (window.initTiltEngine) window.initTiltEngine();
+  });
 </script>
 {% endblock %}

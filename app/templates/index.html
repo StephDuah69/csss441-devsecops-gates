@@ -81,7 +81,7 @@
   {% if books and books|length > 0 %}
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     {% for book in books %}
-    <article class="group relative overflow-hidden rounded-xl border bg-[#0c1118] p-5 transition duration-200 hover:-translate-y-0.5 flex flex-col justify-between shadow-lg shadow-black/20 {% if 'Security' in book.category %}border-white/[.07] hover:border-emerald-500/50 hover:shadow-[0_0_24px_rgba(52,211,153,0.14)]{% elif 'DevOps' in book.category %}border-white/[.07] hover:border-violet-500/50 hover:shadow-[0_0_24px_rgba(167,139,250,0.14)]{% elif 'Architecture' in book.category %}border-white/[.07] hover:border-blue-500/50 hover:shadow-[0_0_24px_rgba(96,165,250,0.14)]{% else %}border-white/[.07] hover:border-amber-500/50 hover:shadow-[0_0_24px_rgba(251,191,36,0.14)]{% endif %}">
+    <article class="tilt-card book-card group relative overflow-hidden rounded-xl border bg-[#0c1118] p-5 transition duration-200 hover:-translate-y-0.5 flex flex-col justify-between shadow-lg shadow-black/20 {% if 'Security' in book.category %}border-white/[.07] hover:border-emerald-500/50 hover:shadow-[0_0_24px_rgba(52,211,153,0.14)]{% elif 'DevOps' in book.category %}border-white/[.07] hover:border-violet-500/50 hover:shadow-[0_0_24px_rgba(167,139,250,0.14)]{% elif 'Architecture' in book.category %}border-white/[.07] hover:border-blue-500/50 hover:shadow-[0_0_24px_rgba(96,165,250,0.14)]{% else %}border-white/[.07] hover:border-amber-500/50 hover:shadow-[0_0_24px_rgba(251,191,36,0.14)]{% endif %}">
       <!-- Neon Top Accent Glow Line -->
       <div class="absolute top-0 inset-x-0 h-[2px] opacity-0 group-hover:opacity-100 transition duration-300 {% if 'Security' in book.category %}bg-gradient-to-r from-transparent via-emerald-400 to-transparent{% elif 'DevOps' in book.category %}bg-gradient-to-r from-transparent via-violet-400 to-transparent{% elif 'Architecture' in book.category %}bg-gradient-to-r from-transparent via-blue-400 to-transparent{% else %}bg-gradient-to-r from-transparent via-amber-400 to-transparent{% endif %}"></div>
 
@@ -216,10 +216,40 @@
 
     <!-- Drawer Body (Scrollable) -->
     <div class="p-6 space-y-6 overflow-y-auto flex-1 font-sans">
-      <!-- Category & Neon Status Banner -->
-      <div id="drawer-hero-banner" class="rounded-xl border border-white/[.08] bg-[#121822] p-4 relative overflow-hidden">
+      <!-- 3D Hardcover Book Showcase & Category Status Banner -->
+      <div id="drawer-hero-banner" class="rounded-2xl border border-white/[.08] bg-[#0c1118] p-5 relative overflow-hidden flex flex-col items-center">
         <div id="drawer-hero-accent" class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-500"></div>
-        <div class="flex items-center justify-between mb-3">
+
+        <!-- 3D Realistic Hardcover Book Container -->
+        <div class="perspective-book my-2 py-2 flex justify-center items-center">
+          <div id="drawer-3d-book" class="book-3d group cursor-pointer" title="Interactive 3D Hardcover Book — Hover to inspect spine, depth and cover">
+            <!-- Front Cover -->
+            <div id="book-front-cover" class="book-cover-front bg-gradient-to-br from-[#0e2a22] to-[#081511] border border-emerald-500/40 p-3.5 flex flex-col justify-between">
+              <div class="book-cover-spine-edge"></div>
+              <div>
+                <span id="book-3d-cat" class="text-[8px] font-mono uppercase tracking-widest text-emerald-300 bg-black/60 px-1.5 py-0.5 rounded border border-emerald-400/30">SECURITY</span>
+                <h4 id="book-3d-title" class="text-xs font-bold text-white mt-2.5 leading-snug line-clamp-3">Software Security Engineering</h4>
+              </div>
+              <div class="pt-2 border-t border-white/10">
+                <p id="book-3d-author" class="text-[9px] text-slate-300 font-mono truncate">Author</p>
+                <div class="flex items-center justify-between text-[8px] font-mono text-emerald-400/80 mt-1">
+                  <span id="book-3d-isbn">ISBN 978...</span>
+                  <i class="fa-solid fa-shield-halved text-[9px]"></i>
+                </div>
+              </div>
+            </div>
+            <!-- Book Spine -->
+            <div id="book-spine-cover" class="book-spine bg-gradient-to-b from-[#0e2a22] to-[#081511] border-l border-emerald-500/30">
+              <span id="book-3d-spine-text" class="text-[8px] text-emerald-300/90 font-mono font-bold tracking-widest truncate">SECURITY</span>
+            </div>
+            <!-- Book Pages (Edges) -->
+            <div class="book-pages-right"></div>
+            <div class="book-pages-top"></div>
+            <div class="book-pages-bottom"></div>
+          </div>
+        </div>
+
+        <div class="w-full mt-3 pt-3 border-t border-white/[.06] flex items-center justify-between">
           <span id="drawer-category-badge" class="rounded px-2.5 py-1 text-[11px] font-mono border bg-emerald-400/10 text-emerald-300 border-emerald-400/20">
             Security
           </span>
@@ -227,8 +257,8 @@
             <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span> In Stock
           </span>
         </div>
-        <h2 id="drawer-full-title" class="text-lg font-bold text-white leading-tight">Software Security Engineering</h2>
-        <p id="drawer-author" class="text-xs text-slate-400 mt-1 flex items-center gap-1.5">
+        <h2 id="drawer-full-title" class="text-base font-bold text-white leading-tight mt-2 text-center">Software Security Engineering</h2>
+        <p id="drawer-author" class="text-xs text-slate-400 mt-1 flex items-center gap-1.5 justify-center">
           <i class="fa-solid fa-user-pen text-slate-500"></i>
           <span>Author Name</span>
         </p>
@@ -548,6 +578,37 @@
       catBadge.className = 'rounded px-2.5 py-1 text-[11px] font-mono border bg-emerald-400/10 text-emerald-300 border-emerald-400/20';
     }
 
+    // 3D Realistic Hardcover Book updates
+    const book3dTitle = document.getElementById('book-3d-title');
+    const book3dAuthor = document.getElementById('book-3d-author');
+    const book3dCat = document.getElementById('book-3d-cat');
+    const book3dIsbn = document.getElementById('book-3d-isbn');
+    const book3dSpine = document.getElementById('book-3d-spine-text');
+    const frontCover = document.getElementById('book-front-cover');
+    const spineCover = document.getElementById('book-spine-cover');
+
+    if (book3dTitle) book3dTitle.textContent = book.title;
+    if (book3dAuthor) book3dAuthor.textContent = book.author;
+    if (book3dCat) book3dCat.textContent = (book.category || 'Security').toUpperCase();
+    if (book3dIsbn) book3dIsbn.textContent = book.isbn ? 'ISBN ' + book.isbn.slice(-6) : 'VERIFIED';
+    if (book3dSpine) book3dSpine.textContent = (book.title || 'SECURITY CATALOG').slice(0, 16).toUpperCase();
+
+    if (frontCover && spineCover) {
+      if (book.category && book.category.includes('DevOps')) {
+        frontCover.className = 'book-cover-front bg-gradient-to-br from-[#1c1233] to-[#0c0818] border border-violet-500/40 p-3.5 flex flex-col justify-between';
+        spineCover.className = 'book-spine bg-gradient-to-b from-[#1c1233] to-[#0c0818] border-l border-violet-500/30';
+        if (book3dCat) book3dCat.className = 'text-[8px] font-mono uppercase tracking-widest text-violet-300 bg-black/60 px-1.5 py-0.5 rounded border border-violet-400/30';
+      } else if (book.category && book.category.includes('Architecture')) {
+        frontCover.className = 'book-cover-front bg-gradient-to-br from-[#0c1f38] to-[#050e1a] border border-blue-500/40 p-3.5 flex flex-col justify-between';
+        spineCover.className = 'book-spine bg-gradient-to-b from-[#0c1f38] to-[#050e1a] border-l border-blue-500/30';
+        if (book3dCat) book3dCat.className = 'text-[8px] font-mono uppercase tracking-widest text-blue-300 bg-black/60 px-1.5 py-0.5 rounded border border-blue-400/30';
+      } else {
+        frontCover.className = 'book-cover-front bg-gradient-to-br from-[#0e2a22] to-[#081511] border border-emerald-500/40 p-3.5 flex flex-col justify-between';
+        spineCover.className = 'book-spine bg-gradient-to-b from-[#0e2a22] to-[#081511] border-l border-emerald-500/30';
+        if (book3dCat) book3dCat.className = 'text-[8px] font-mono uppercase tracking-widest text-emerald-300 bg-black/60 px-1.5 py-0.5 rounded border border-emerald-400/30';
+      }
+    }
+
     // Open drawer
     const backdrop = document.getElementById('book-drawer-backdrop');
     const panel = document.getElementById('book-drawer-panel');
@@ -832,6 +893,9 @@
       resultEl.innerHTML = `<div class="text-rose-400">Error: ${err.message}</div>`;
     }
   }
-  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    if (window.initTiltEngine) window.initTiltEngine();
+  });
 </script>
 {% endblock %}
