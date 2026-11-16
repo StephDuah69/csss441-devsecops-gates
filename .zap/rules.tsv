@@ -1,7 +1,4 @@
-# OWASP ZAP Baseline Scan Policy Configuration
-# Format: <rule-id>\t<threshold>\t<comment>
-# Thresholds: IGNORE | WARN | FAIL
-# ----------------------------------------------------------------------------
+#rule_id	threshold	description
 10020	WARN	X-Frame-Options Header (API JSON endpoints)
 10021	FAIL	X-Content-Type-Options Header Missing (Strict MIME sniffing prevention)
 10038	WARN	Content Security Policy (CSP) Header Not Set
