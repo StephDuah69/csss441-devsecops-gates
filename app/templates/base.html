@@ -130,48 +130,59 @@
     }
 
     /* ============================================================
-       White Theme Option (Clean Light / Executive White Mode)
+       White Theme Option (High-Contrast Executive Light Mode)
        ============================================================ */
     html.theme-white body {
       background-color: #f8fafc !important;
-      color: #1e293b !important;
+      color: #0f172a !important;
     }
     html.theme-white .figma-bg-glow {
-      background: radial-gradient(circle at 68% -12%, rgba(203, 213, 225, 0.45), transparent 50%) !important;
+      background: radial-gradient(circle at 68% -12%, rgba(203, 213, 225, 0.4), transparent 50%) !important;
     }
     html.theme-white .cyber-grid {
       background-image: radial-gradient(rgba(15, 23, 42, 0.08) 1px, transparent 1px) !important;
-      opacity: 0.65 !important;
+      opacity: 0.55 !important;
     }
-    /* Surface Containers & Cards */
+
+    /* Core Surface Panels & Hex Containers */
     html.theme-white aside,
     html.theme-white header,
     html.theme-white footer,
     html.theme-white .bg-\[\#080b10\],
-    html.theme-white .bg-\[\#0c1118\],
-    html.theme-white .bg-\[\#0b0f15\],
-    html.theme-white .bg-\[\#0d121a\],
     html.theme-white .bg-\[\#090d13\],
+    html.theme-white .bg-\[\#090d14\],
+    html.theme-white .bg-\[\#0b0f15\],
+    html.theme-white .bg-\[\#0b0f15\]\/95,
+    html.theme-white .bg-\[\#0b0f15\]\/85,
+    html.theme-white .bg-\[\#0b0f15\]\/60,
+    html.theme-white .bg-\[\#0c1118\],
+    html.theme-white .bg-\[\#0c1118\]\/90,
+    html.theme-white .bg-\[\#0c1118\]\/50,
+    html.theme-white .bg-\[\#0d121a\],
+    html.theme-white .bg-\[\#0e131b\],
+    html.theme-white .bg-\[\#0f141d\],
     html.theme-white .bg-\[\#10151d\],
     html.theme-white .bg-\[\#121822\] {
       background-color: #ffffff !important;
       border-color: #e2e8f0 !important;
-      color: #1e293b !important;
+      color: #0f172a !important;
     }
     html.theme-white aside {
-      background-color: #fcfdfd !important;
+      background-color: #ffffff !important;
       border-right-color: #e2e8f0 !important;
     }
     html.theme-white header {
-      background-color: rgba(255, 255, 255, 0.92) !important;
+      background-color: rgba(255, 255, 255, 0.95) !important;
       backdrop-filter: blur(12px) !important;
       border-bottom-color: #e2e8f0 !important;
     }
     html.theme-white footer {
       background-color: #f8fafc !important;
       border-top-color: #e2e8f0 !important;
+      color: #475569 !important;
     }
-    /* Card borders and shadows */
+
+    /* Structural Borders & Elevated Cards */
     html.theme-white .border-white\/\[\.05\],
     html.theme-white .border-white\/\[\.06\],
     html.theme-white .border-white\/\[\.07\],
@@ -188,61 +199,91 @@
     html.theme-white article {
       background-color: #ffffff !important;
       border-color: #e2e8f0 !important;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05) !important;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -2px rgba(0, 0, 0, 0.04) !important;
     }
     html.theme-white .isometric-node:hover {
-      box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.1), 0 0 15px rgba(16, 185, 129, 0.2) !important;
+      box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.08), 0 0 15px rgba(16, 185, 129, 0.15) !important;
     }
     html.theme-white .tilt-glare {
-      background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(0, 0, 0, 0.06) 0%, transparent 60%) !important;
+      background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(0, 0, 0, 0.04) 0%, transparent 60%) !important;
     }
-    /* Typography Overrides */
+
+    /* High-Contrast Typography Hierarchy (Eliminating low contrast text) */
     html.theme-white .text-white {
-      color: #0f172a !important;
+      color: #0f172a !important; /* Deep Slate 900 for headings/titles */
     }
     html.theme-white .text-slate-200,
     html.theme-white .text-slate-300 {
-      color: #334155 !important;
+      color: #1e293b !important; /* Slate 800 for readable body text */
     }
     html.theme-white .text-slate-400 {
-      color: #475569 !important;
+      color: #334155 !important; /* Slate 700 for secondary descriptions */
     }
     html.theme-white .text-slate-500 {
-      color: #64748b !important;
+      color: #475569 !important; /* Slate 600 for metadata & sub-labels */
     }
     html.theme-white .text-slate-600 {
-      color: #94a3b8 !important;
+      color: #64748b !important; /* Slate 500 for captions & hints */
     }
-    /* Inputs, Selects, Buttons */
+
+    /* Sidebar Navigation Links */
+    html.theme-white aside a.bg-white\/\[\.07\] {
+      background-color: #f1f5f9 !important;
+      color: #0f172a !important;
+      box-shadow: inset 0 0 0 1px #cbd5e1 !important;
+      font-weight: 600 !important;
+    }
+    html.theme-white aside a:not(.bg-white\/\[\.07\]) {
+      color: #334155 !important;
+    }
+    html.theme-white aside a:not(.bg-white\/\[\.07\]):hover {
+      background-color: #f1f5f9 !important;
+      color: #0f172a !important;
+    }
+
+    /* Form Controls, Inputs, and Search Bars */
     html.theme-white input,
     html.theme-white select,
     html.theme-white textarea {
-      background-color: #f8fafc !important;
+      background-color: #ffffff !important;
       border-color: #cbd5e1 !important;
       color: #0f172a !important;
     }
     html.theme-white input::placeholder {
       color: #94a3b8 !important;
     }
+    html.theme-white input:focus,
+    html.theme-white select:focus {
+      border-color: #059669 !important;
+      box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.15) !important;
+    }
     html.theme-white .bg-white\/\[\.025\],
     html.theme-white .bg-white\/\[\.035\],
+    html.theme-white .bg-white\/\[\.04\],
     html.theme-white .bg-white\/\[\.05\],
     html.theme-white .bg-white\/\[\.06\],
-    html.theme-white .bg-white\/\[\.07\] {
+    html.theme-white .bg-white\/\[\.07\],
+    html.theme-white .bg-white\/\[\.08\] {
       background-color: #f1f5f9 !important;
       border-color: #e2e8f0 !important;
+      color: #1e293b !important;
     }
     html.theme-white .hover\:bg-white\/\[\.035\]:hover,
     html.theme-white .hover\:bg-white\/\[\.05\]:hover,
-    html.theme-white .hover\:bg-white\/\[\.08\]:hover {
+    html.theme-white .hover\:bg-white\/\[\.08\]:hover,
+    html.theme-white .hover\:bg-white\/\[\.15\]:hover {
       background-color: #e2e8f0 !important;
       color: #0f172a !important;
     }
-    /* Modals & Backdrop */
+
+    /* Modals & Backdrop Blur */
     html.theme-white .fixed.inset-0.bg-black\/70,
+    html.theme-white .fixed.inset-0.bg-black\/75,
     html.theme-white .fixed.inset-0.bg-black\/80 {
-      background-color: rgba(15, 23, 42, 0.45) !important;
+      background-color: rgba(15, 23, 42, 0.5) !important;
+      backdrop-filter: blur(8px) !important;
     }
+    html.theme-white .command-in,
     html.theme-white #book-drawer-panel,
     html.theme-white #gate-drawer-panel,
     html.theme-white #cwe-sandbox-modal > div,
@@ -253,59 +294,280 @@
     html.theme-white #command-palette-modal > div {
       background-color: #ffffff !important;
       border-color: #cbd5e1 !important;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+      box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.25) !important;
+      color: #0f172a !important;
     }
-    /* Badges & Pills in White Mode */
-    html.theme-white .bg-emerald-400\/10 {
-      background-color: rgba(16, 185, 129, 0.12) !important;
+
+    /* Modal Footers & Close Buttons */
+    html.theme-white #team-modal .border-t,
+    html.theme-white #shortcuts-modal .border-t,
+    html.theme-white #headers-modal .border-t,
+    html.theme-white #telemetry-modal .border-t,
+    html.theme-white #team-modal .border-b,
+    html.theme-white #shortcuts-modal .border-b,
+    html.theme-white #headers-modal .border-b,
+    html.theme-white #telemetry-modal .border-b {
+      border-color: #e2e8f0 !important;
+    }
+    html.theme-white #team-modal .border-t.bg-\[\#090d14\],
+    html.theme-white #headers-modal .border-t.bg-\[\#090d14\],
+    html.theme-white #telemetry-modal .border-t.bg-\[\#090d14\],
+    html.theme-white #shortcuts-modal > div > div:last-child {
+      background-color: #f8fafc !important;
+      border-color: #e2e8f0 !important;
+      color: #475569 !important;
+    }
+    html.theme-white #team-modal button,
+    html.theme-white #shortcuts-modal button,
+    html.theme-white #headers-modal button,
+    html.theme-white #telemetry-modal button {
+      background-color: #f1f5f9 !important;
+      border: 1px solid #cbd5e1 !important;
+      color: #0f172a !important;
+      font-weight: 600 !important;
+    }
+    html.theme-white #team-modal button:hover,
+    html.theme-white #shortcuts-modal button:hover,
+    html.theme-white #headers-modal button:hover,
+    html.theme-white #telemetry-modal button:hover {
+      background-color: #e2e8f0 !important;
+      color: #0f172a !important;
+    }
+
+    /* ============================================================
+       Engineering Team Ownership Modal (High-Contrast Card Overrides)
+       ============================================================ */
+    html.theme-white #team-modal .bg-\[\#090d14\] {
+      background-color: #f8fafc !important;
+      border-color: #e2e8f0 !important;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04) !important;
+    }
+    html.theme-white #team-modal .bg-\[\#090d14\]:hover {
+      background-color: #f1f5f9 !important;
+      border-color: #cbd5e1 !important;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08) !important;
+    }
+    html.theme-white #team-modal a.text-white {
+      color: #0f172a !important;
+      font-weight: 700 !important;
+    }
+    html.theme-white #team-modal a.text-white:hover {
       color: #047857 !important;
+    }
+    html.theme-white #team-modal .border-t.border-white\/\[\.05\] {
+      border-color: #e2e8f0 !important;
+    }
+    html.theme-white #team-modal .text-slate-400 {
+      color: #334155 !important;
+      font-weight: 500 !important;
+    }
+    html.theme-white #team-modal strong.text-slate-200 {
+      color: #0f172a !important;
+      font-weight: 700 !important;
+    }
+    html.theme-white #team-modal .text-slate-500 {
+      color: #64748b !important;
+    }
+
+    /* Defensive Headers & Telemetry Modal Cards */
+    html.theme-white #headers-modal .bg-\[\#080b10\],
+    html.theme-white #telemetry-modal .bg-\[\#080b10\] {
+      background-color: #f8fafc !important;
+      border-color: #e2e8f0 !important;
+    }
+    html.theme-white #headers-modal .text-slate-400,
+    html.theme-white #telemetry-modal .text-slate-400 {
+      color: #334155 !important;
+    }
+    html.theme-white #headers-modal .text-slate-500,
+    html.theme-white #telemetry-modal .text-slate-500 {
+      color: #64748b !important;
+    }
+    html.theme-white #telemetry-modal .bg-emerald-950\/10 {
+      background-color: #ecfdf5 !important;
+      border-color: #a7f3d0 !important;
+    }
+    html.theme-white #telemetry-modal .bg-black\/40 {
+      background-color: #f1f5f9 !important;
+      border-color: #e2e8f0 !important;
+    }
+
+    /* Command Palette */
+    html.theme-white #palette-search {
+      color: #0f172a !important;
+    }
+    html.theme-white #palette-search::placeholder {
+      color: #94a3b8 !important;
+    }
+    html.theme-white .palette-item {
+      color: #0f172a !important;
+    }
+    html.theme-white .palette-item:hover {
+      background-color: #f1f5f9 !important;
+    }
+    html.theme-white .palette-item .text-slate-200 {
+      color: #0f172a !important;
+      font-weight: 600 !important;
+    }
+    html.theme-white .palette-item .text-slate-400,
+    html.theme-white .palette-item .text-slate-500 {
+      color: #475569 !important;
+    }
+
+    /* Drawers (Gate & Book Detail Drawers) */
+    html.theme-white #book-drawer-panel > div:first-child,
+    html.theme-white #book-drawer-panel > div:last-child,
+    html.theme-white #gate-drawer-panel > div:first-child,
+    html.theme-white #gate-drawer-panel > div:last-child {
+      background-color: #f8fafc !important;
+      border-color: #e2e8f0 !important;
+    }
+    html.theme-white #book-drawer-panel .bg-\[\#080b10\],
+    html.theme-white #book-drawer-panel .bg-\[\#0c1118\],
+    html.theme-white #gate-drawer-panel .bg-\[\#080b10\],
+    html.theme-white #gate-drawer-panel .bg-\[\#0c1118\] {
+      background-color: #f8fafc !important;
+      border-color: #e2e8f0 !important;
+    }
+    html.theme-white #drawer-hero-banner {
+      background-color: #f8fafc !important;
+      border-color: #e2e8f0 !important;
+    }
+
+    /* WCAG AA Compliant Role Badges & Jewel-Tone Typography */
+    html.theme-white .bg-emerald-400\/10,
+    html.theme-white .bg-emerald-500\/10,
+    html.theme-white .bg-emerald-500\/20 {
+      background-color: #ecfdf5 !important;
+      border-color: #a7f3d0 !important;
+      color: #047857 !important; /* Deep emerald for 6:1 contrast */
+      font-weight: 600 !important;
     }
     html.theme-white .text-emerald-400,
     html.theme-white .text-emerald-300 {
-      color: #059669 !important;
+      color: #047857 !important; /* Hannah Larbi: Team Lead */
+      font-weight: 600 !important;
     }
-    html.theme-white .bg-blue-400\/10 {
-      background-color: rgba(59, 130, 246, 0.12) !important;
-      color: #1d4ed8 !important;
+    html.theme-white .bg-blue-400\/10,
+    html.theme-white .bg-blue-500\/10 {
+      background-color: #eff6ff !important;
+      border-color: #bfdbfe !important;
+      color: #1d4ed8 !important; /* Deep blue */
+      font-weight: 600 !important;
     }
     html.theme-white .text-blue-400,
     html.theme-white .text-blue-300 {
-      color: #2563eb !important;
+      color: #1d4ed8 !important; /* Stephen Duah: Source Security */
+      font-weight: 600 !important;
     }
-    html.theme-white .bg-rose-500\/10,
-    html.theme-white .bg-rose-500\/20 {
-      background-color: rgba(244, 63, 94, 0.12) !important;
-      color: #be123c !important;
-    }
-    html.theme-white .text-rose-400,
-    html.theme-white .text-rose-300 {
-      color: #e11d48 !important;
-    }
-    html.theme-white .bg-amber-400\/10 {
-      background-color: rgba(245, 158, 11, 0.12) !important;
-      color: #b45309 !important;
-    }
-    html.theme-white .text-amber-400,
-    html.theme-white .text-amber-300 {
-      color: #d97706 !important;
-    }
-    html.theme-white .bg-violet-400\/10 {
-      background-color: rgba(139, 92, 246, 0.12) !important;
-      color: #6d28d9 !important;
+    html.theme-white .bg-violet-400\/10,
+    html.theme-white .bg-violet-500\/10 {
+      background-color: #f5f3ff !important;
+      border-color: #ddd6fe !important;
+      color: #6d28d9 !important; /* Deep purple */
+      font-weight: 600 !important;
     }
     html.theme-white .text-violet-400,
     html.theme-white .text-violet-300 {
-      color: #7c3aed !important;
+      color: #6d28d9 !important; /* Othniel Saka: AppSec */
+      font-weight: 600 !important;
     }
-    /* 3D Elements on White Theme */
-    html.theme-white .bg-black\/40,
-    html.theme-white .bg-black\/60 {
-      background-color: #f1f5f9 !important;
+    html.theme-white .text-cyan-400,
+    html.theme-white .text-cyan-300 {
+      color: #0e7490 !important; /* Jesu Quaijah: Static Analysis */
+      font-weight: 600 !important;
+    }
+    html.theme-white .text-teal-400,
+    html.theme-white .text-teal-300 {
+      color: #0f766e !important;
+      font-weight: 600 !important;
+    }
+    html.theme-white .bg-amber-400\/10,
+    html.theme-white .bg-amber-500\/10 {
+      background-color: #fffbeb !important;
+      border-color: #fde68a !important;
+      color: #9a3412 !important; /* Deep bronze/amber-800 for high contrast */
+      font-weight: 600 !important;
+    }
+    html.theme-white .text-amber-400,
+    html.theme-white .text-amber-300 {
+      color: #b45309 !important; /* Fred Nkrumah: Container & SCA */
+      font-weight: 600 !important;
+    }
+    html.theme-white .bg-rose-500\/10,
+    html.theme-white .bg-rose-500\/20,
+    html.theme-white .bg-rose-400\/10 {
+      background-color: #fff1f2 !important;
+      border-color: #fecdd3 !important;
+      color: #be123c !important; /* Deep crimson */
+      font-weight: 600 !important;
+    }
+    html.theme-white .text-rose-400,
+    html.theme-white .text-rose-300 {
+      color: #be123c !important; /* Benjamin Ofori: DAST Operations */
+      font-weight: 600 !important;
+    }
+
+    /* Protected Dark Containers (Keeps code & terminals crystal clear) */
+    html.theme-white #telemetry-console-body {
+      background-color: #0b0f17 !important;
+      color: #e2e8f0 !important;
+      border: 1px solid #cbd5e1 !important;
+    }
+    html.theme-white #telemetry-console-body .text-slate-300 { color: #cbd5e1 !important; }
+    html.theme-white #telemetry-console-body .text-slate-500 { color: #94a3b8 !important; }
+    html.theme-white #telemetry-console-body .text-emerald-400 { color: #34d399 !important; }
+    html.theme-white #telemetry-console-body .text-rose-400 { color: #fb7185 !important; }
+    html.theme-white #telemetry-console-body .text-violet-400 { color: #c084fc !important; }
+    html.theme-white #telemetry-console-body .text-blue-400 { color: #60a5fa !important; }
+    html.theme-white #telemetry-console-body .text-amber-400 { color: #fbbf24 !important; }
+
+    /* Protected CWE Sandbox Result Terminals */
+    html.theme-white #sandbox-sqli-result,
+    html.theme-white #sandbox-admin-result,
+    html.theme-white #sandbox-ratelimit-result {
+      background-color: #0b0f17 !important;
+      color: #e2e8f0 !important;
       border-color: #cbd5e1 !important;
     }
-    html.theme-white .laser-ray {
-      background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.35), transparent) !important;
+    html.theme-white #sandbox-sqli-result *,
+    html.theme-white #sandbox-admin-result *,
+    html.theme-white #sandbox-ratelimit-result * {
+      color: revert;
     }
+
+    /* Protected Command Snippet in Gate Drawer */
+    html.theme-white #drawer-command {
+      background-color: #0b0f17 !important;
+      color: #34d399 !important;
+      border-color: #cbd5e1 !important;
+    }
+
+    /* Protected 3D Hardcover Book Model in Drawer */
+    html.theme-white .book-3d #book-3d-title { color: #ffffff !important; }
+    html.theme-white .book-3d #book-3d-author { color: #cbd5e1 !important; }
+    html.theme-white .book-3d #book-3d-spine-text { color: #ffffff !important; }
+    html.theme-white .book-3d #book-3d-isbn { color: #6ee7b7 !important; }
+    html.theme-white .book-3d #book-3d-cat {
+      color: #34d399 !important;
+      background-color: rgba(0, 0, 0, 0.6) !important;
+      border-color: rgba(52, 211, 153, 0.4) !important;
+    }
+
+    /* 3D Cyber Defense Globe Aperture */
+    html.theme-white .relative:has(#cyber-globe-canvas) {
+      background-color: #0b0f17 !important;
+      border-color: #cbd5e1 !important;
+    }
+
+    /* SVG Posture Meter Track & Sparklines */
+    html.theme-white svg circle:first-child {
+      stroke: #e2e8f0 !important;
+    }
+    html.theme-white section .opacity-\[\.12\] {
+      opacity: 0.3 !important;
+    }
+
     /* OpenAPI Swagger UI in White Mode */
     html.theme-white .swagger-ui .scheme-container {
       background: #ffffff !important;
@@ -325,9 +587,10 @@
     }
     html.theme-white .swagger-ui .opblock-summary-path {
       color: #0f172a !important;
+      font-weight: 700 !important;
     }
     html.theme-white .swagger-ui .opblock-summary-description {
-      color: #64748b !important;
+      color: #334155 !important;
     }
     html.theme-white .swagger-ui .opblock-body {
       background: #f8fafc !important;
