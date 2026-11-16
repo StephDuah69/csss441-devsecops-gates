@@ -957,9 +957,9 @@
         </a>
 
         <!-- Background Theme Option Toggle: Main (Dark) <-> White Option -->
-        <button id="theme-toggle-btn" onclick="toggleThemeMode()" class="flex h-9 items-center gap-2 rounded-lg border border-white/[.08] px-3 text-xs text-slate-400 hover:border-white/[.2] hover:text-white transition" title="Switch Theme: Main (Obsidian Dark) / White Mode (Press B)">
+        <button id="theme-toggle-btn" onclick="toggleThemeMode()" class="flex h-9 items-center gap-2 rounded-lg border border-white/[.08] px-3 text-xs text-slate-400 hover:border-white/[.2] hover:text-white transition" title="Switch Theme: Main (Obsidian Dark) / White Option (Press B)">
           <i class="fa-solid fa-moon text-xs text-emerald-400" id="theme-toggle-icon"></i>
-          <span id="theme-toggle-text" class="hidden sm:inline font-mono text-[11px]">Dark</span>
+          <span id="theme-toggle-text" class="hidden sm:inline font-mono text-[11px]">Main (Dark)</span>
         </button>
 
         <!-- Trigger Pipeline Run Button (Figma feature) -->
@@ -1038,8 +1038,8 @@
           <kbd class="rounded border border-white/[.1] bg-white/[.04] px-2 py-0.5 text-[10px] font-mono text-emerald-400">O</kbd>
         </div>
         <div class="flex items-center justify-between py-1.5 border-b border-white/[.04]">
-          <span class="text-slate-300">Toggle Auditor Projector Mode</span>
-          <kbd class="rounded border border-white/[.1] bg-white/[.04] px-2 py-0.5 text-[10px] font-mono text-emerald-400">A</kbd>
+          <span class="text-slate-300">Toggle Background (Main Dark ↔ White Option)</span>
+          <kbd class="rounded border border-white/[.1] bg-white/[.04] px-2 py-0.5 text-[10px] font-mono text-emerald-400">B</kbd>
         </div>
         <div class="flex items-center justify-between py-1.5 border-b border-white/[.04]">
           <span class="text-slate-300">Jump to Book Catalog</span>
@@ -1803,12 +1803,21 @@
     function syncThemeUI(isWhite) {
       const icon = document.getElementById('theme-toggle-icon');
       const text = document.getElementById('theme-toggle-text');
+      const btn = document.getElementById('theme-toggle-btn');
       if (isWhite) {
         if (icon) icon.className = 'fa-solid fa-sun text-amber-500 text-xs';
-        if (text) text.textContent = 'White';
+        if (text) text.textContent = 'White Option';
+        if (btn) {
+          btn.title = 'Switch to Main Theme: Cyber Obsidian Dark (Press B)';
+          btn.setAttribute('aria-label', 'Switch to Main Theme: Cyber Obsidian Dark');
+        }
       } else {
         if (icon) icon.className = 'fa-solid fa-moon text-emerald-400 text-xs';
-        if (text) text.textContent = 'Dark';
+        if (text) text.textContent = 'Main (Dark)';
+        if (btn) {
+          btn.title = 'Switch to White Background Option (Press B)';
+          btn.setAttribute('aria-label', 'Switch to White Background Option');
+        }
       }
     }
 
@@ -1816,7 +1825,7 @@
       const isWhite = document.documentElement.classList.toggle('theme-white');
       syncThemeUI(isWhite);
       if (isWhite) {
-        showToast('White Background Theme Enabled', 'amber');
+        showToast('White Background Option Enabled', 'amber');
         try { localStorage.setItem('aegis_theme_mode', 'white'); } catch(e) {}
       } else {
         showToast('Main Obsidian Dark Theme Restored', 'emerald');
@@ -1826,9 +1835,17 @@
     window.toggleThemeMode = toggleThemeMode;
     window.toggleAuditorMode = toggleThemeMode; // Alias for backward compatibility
 
+    // Ensure Cyber Obsidian Dark is the flagship Main Theme by default
     try {
-      if (localStorage.getItem('aegis_theme_mode') === 'white' || localStorage.getItem('aegis_auditor_mode') === 'true') {
+      localStorage.removeItem('aegis_auditor_mode');
+      if (localStorage.getItem('aegis_main_theme_v2') !== 'set') {
+        localStorage.setItem('aegis_main_theme_v2', 'set');
+        localStorage.setItem('aegis_theme_mode', 'main');
+        document.documentElement.classList.remove('theme-white');
+      } else if (localStorage.getItem('aegis_theme_mode') === 'white') {
         document.documentElement.classList.add('theme-white');
+      } else {
+        document.documentElement.classList.remove('theme-white');
       }
     } catch(e) {}
 
