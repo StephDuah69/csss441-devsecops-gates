@@ -39,12 +39,19 @@ def test_ui_catalog_dashboard_renders():
 
 
 def test_ui_security_dashboard_renders():
-    """Verify GET /security renders the interactive DevSecOps dashboard."""
+    """Verify GET /security renders the interactive DevSecOps dashboard and advanced features."""
     response = client.get("/security")
     assert response.status_code == 200
     assert "text/html" in response.headers["Content-Type"]
     assert "DevSecOps Security Pipeline" in response.text
     assert "Vulnerability Posture" in response.text
+    # Verify the 6 flagship aesthetic & operational features
+    assert "energy-bus-line" in response.text  # Feature 1: Animated Energy Pulse Line
+    assert "demo-tour-hud" in response.text  # Feature 2: 60s Interactive Demo Tour
+    assert "cyber-audio-btn" in response.text  # Feature 3: Cyber Audio Synthesizer FX
+    assert "attack-path-modal" in response.text  # Feature 4: Attack Path & Blast Radius Modal
+    assert "compliance-radar-canvas" in response.text  # Feature 5: CISO Compliance Radar Chart
+    assert "telemetry-hud-modal" in response.text  # Feature 6: Fullscreen Cyber SOC HUD Terminal
 
 
 # ---------------------------------------------------------------------------

@@ -306,6 +306,7 @@
       background-color: rgba(15, 23, 42, 0.5) !important;
       backdrop-filter: blur(8px) !important;
     }
+    /* Modal Overlay Surfaces in White Theme */
     html.theme-white .command-in,
     html.theme-white #book-drawer-panel,
     html.theme-white #gate-drawer-panel,
@@ -314,6 +315,8 @@
     html.theme-white #team-modal > div,
     html.theme-white #shortcuts-modal > div,
     html.theme-white #headers-modal > div,
+    html.theme-white #attack-path-modal > div,
+    html.theme-white #telemetry-hud-modal > div,
     html.theme-white #command-palette-modal > div {
       background-color: #ffffff !important;
       border-color: #cbd5e1 !important;
@@ -321,55 +324,115 @@
       color: #0f172a !important;
     }
 
+    /* Modal Cards & Subcontainers in White Theme */
+    html.theme-white #team-modal [class*="bg-[#"],
+    html.theme-white #shortcuts-modal [class*="bg-[#"],
+    html.theme-white #headers-modal [class*="bg-[#"],
+    html.theme-white #telemetry-modal [class*="bg-[#"],
+    html.theme-white #attack-path-modal [class*="bg-[#"]:not(pre),
+    html.theme-white #telemetry-hud-modal [class*="bg-[#"]:not(#hud-terminal-body) {
+      background-color: #f8fafc !important;
+      border-color: #e2e8f0 !important;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04) !important;
+      color: #0f172a !important;
+    }
+
+    html.theme-white #team-modal [class*="bg-[#"]:hover,
+    html.theme-white #attack-path-modal [class*="bg-[#"]:hover {
+      background-color: #f1f5f9 !important;
+      border-color: #cbd5e1 !important;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08) !important;
+    }
+
     /* Modal Footers & Close Buttons */
     html.theme-white #team-modal .border-t,
     html.theme-white #shortcuts-modal .border-t,
     html.theme-white #headers-modal .border-t,
     html.theme-white #telemetry-modal .border-t,
+    html.theme-white #attack-path-modal .border-t,
+    html.theme-white #telemetry-hud-modal .border-t,
     html.theme-white #team-modal .border-b,
     html.theme-white #shortcuts-modal .border-b,
     html.theme-white #headers-modal .border-b,
-    html.theme-white #telemetry-modal .border-b {
+    html.theme-white #telemetry-modal .border-b,
+    html.theme-white #attack-path-modal .border-b,
+    html.theme-white #telemetry-hud-modal .border-b {
       border-color: #e2e8f0 !important;
     }
-    html.theme-white #team-modal .border-t.bg-\[\#090d14\],
-    html.theme-white #headers-modal .border-t.bg-\[\#090d14\],
-    html.theme-white #telemetry-modal .border-t.bg-\[\#090d14\],
+
+    html.theme-white #team-modal [class*="border-t"][class*="bg-[#"],
+    html.theme-white #headers-modal [class*="border-t"][class*="bg-[#"],
+    html.theme-white #telemetry-modal [class*="border-t"][class*="bg-[#"],
+    html.theme-white #attack-path-modal [class*="border-t"][class*="bg-[#"],
+    html.theme-white #telemetry-hud-modal [class*="border-t"][class*="bg-[#"],
     html.theme-white #shortcuts-modal > div > div:last-child {
       background-color: #f8fafc !important;
       border-color: #e2e8f0 !important;
       color: #475569 !important;
     }
+
     html.theme-white #team-modal button,
     html.theme-white #shortcuts-modal button,
     html.theme-white #headers-modal button,
-    html.theme-white #telemetry-modal button {
+    html.theme-white #telemetry-modal button,
+    html.theme-white #attack-path-modal button:not(#attack-path-severity-badge),
+    html.theme-white #telemetry-hud-modal button {
       background-color: #f1f5f9 !important;
       border: 1px solid #cbd5e1 !important;
       color: #0f172a !important;
       font-weight: 600 !important;
     }
+
     html.theme-white #team-modal button:hover,
     html.theme-white #shortcuts-modal button:hover,
     html.theme-white #headers-modal button:hover,
-    html.theme-white #telemetry-modal button:hover {
+    html.theme-white #telemetry-modal button:hover,
+    html.theme-white #attack-path-modal button:hover,
+    html.theme-white #telemetry-hud-modal button:hover {
       background-color: #e2e8f0 !important;
       color: #0f172a !important;
+    }
+
+    /* Attack Path & Telemetry Terminals retain high-contrast readability */
+    html.theme-white #attack-path-modal pre,
+    html.theme-white #telemetry-hud-modal #hud-terminal-body {
+      background-color: #0b0f17 !important;
+      color: #f1f5f9 !important;
+      border-color: #334155 !important;
+    }
+
+    /* Demo Tour HUD in White Theme */
+    html.theme-white #demo-tour-hud {
+      background-color: #ffffff !important;
+      border-color: #10b981 !important;
+      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.25) !important;
+    }
+    html.theme-white #demo-tour-hud h4,
+    html.theme-white #demo-tour-hud .text-white {
+      color: #0f172a !important;
+    }
+    html.theme-white #demo-tour-hud p,
+    html.theme-white #demo-tour-hud .text-slate-300 {
+      color: #334155 !important;
+    }
+    html.theme-white #demo-tour-hud .text-slate-400 {
+      color: #475569 !important;
+    }
+
+    /* Interactive Tour Focus Pulse Ring */
+    @keyframes tourPulseHalo {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7); }
+      50% { box-shadow: 0 0 0 12px rgba(52, 211, 153, 0); }
+    }
+    .tour-highlight {
+      animation: tourPulseHalo 2s infinite ease-in-out;
+      position: relative;
+      z-index: 20;
     }
 
     /* ============================================================
        Engineering Team Ownership Modal (High-Contrast Card Overrides)
        ============================================================ */
-    html.theme-white #team-modal .bg-\[\#090d14\] {
-      background-color: #f8fafc !important;
-      border-color: #e2e8f0 !important;
-      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04) !important;
-    }
-    html.theme-white #team-modal .bg-\[\#090d14\]:hover {
-      background-color: #f1f5f9 !important;
-      border-color: #cbd5e1 !important;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08) !important;
-    }
     html.theme-white #team-modal a.text-white {
       color: #0f172a !important;
       font-weight: 700 !important;
@@ -979,6 +1042,18 @@
           <span>Docs</span>
         </a>
 
+        <!-- Cyber Audio Synthesizer FX Toggle (Feature #3) -->
+        <button id="cyber-audio-btn" onclick="toggleCyberAudio()" class="flex h-9 items-center gap-1.5 rounded-lg border border-white/[.08] px-2.5 text-xs text-slate-400 hover:border-emerald-400/40 hover:text-emerald-400 transition" title="Cyber Audio FX: ON / OFF (Press M)" aria-label="Toggle Cyber Audio Synthesizer FX">
+          <i class="fa-solid fa-volume-high text-xs text-emerald-400" id="cyber-audio-icon"></i>
+          <span class="hidden md:inline font-mono text-[11px]" id="cyber-audio-text">Audio FX</span>
+        </button>
+
+        <!-- Interactive 60-Second Demo Tour Button (Feature #2) -->
+        <button id="demo-tour-btn" onclick="startDemoTour()" class="flex h-9 items-center gap-1.5 rounded-lg border border-emerald-400/30 bg-emerald-400/10 px-2.5 text-xs font-medium text-emerald-300 hover:bg-emerald-400/20 hover:text-white transition shadow-[0_0_12px_rgba(52,211,153,.15)] active:scale-95" title="Launch Interactive 60s Platform Tour (Press D)" aria-label="Launch Interactive Platform Tour">
+          <i class="fa-solid fa-route text-xs text-emerald-400"></i>
+          <span class="hidden md:inline font-mono text-[11px]">Tour</span>
+        </button>
+
         <!-- Background Theme Option Toggle: Main (Dark) <-> White Option -->
         <button id="theme-toggle-btn" onclick="toggleThemeMode()" class="flex h-9 items-center gap-2 rounded-lg border border-white/[.08] px-3 text-xs text-slate-400 hover:border-white/[.2] hover:text-white transition" title="Switch Theme: Main (Obsidian Dark) / White Option (Press B)">
           <i class="fa-solid fa-moon text-xs text-emerald-400" id="theme-toggle-icon"></i>
@@ -1063,6 +1138,22 @@
         <div class="flex items-center justify-between py-1.5 border-b border-white/[.04]">
           <span class="text-slate-300">Toggle Background (Main Dark ↔ White Option)</span>
           <kbd class="rounded border border-white/[.1] bg-white/[.04] px-2 py-0.5 text-[10px] font-mono text-emerald-400">B</kbd>
+        </div>
+        <div class="flex items-center justify-between py-1.5 border-b border-white/[.04]">
+          <span class="text-slate-300">Launch Interactive 60s Demo Tour</span>
+          <kbd class="rounded border border-white/[.1] bg-white/[.04] px-2 py-0.5 text-[10px] font-mono text-emerald-400">D</kbd>
+        </div>
+        <div class="flex items-center justify-between py-1.5 border-b border-white/[.04]">
+          <span class="text-slate-300">Toggle Cyber Audio FX (Mute / Unmute)</span>
+          <kbd class="rounded border border-white/[.1] bg-white/[.04] px-2 py-0.5 text-[10px] font-mono text-emerald-400">M</kbd>
+        </div>
+        <div class="flex items-center justify-between py-1.5 border-b border-white/[.04]">
+          <span class="text-slate-300">Fullscreen SOC Cyber Telemetry HUD</span>
+          <kbd class="rounded border border-white/[.1] bg-white/[.04] px-2 py-0.5 text-[10px] font-mono text-emerald-400">F</kbd>
+        </div>
+        <div class="flex items-center justify-between py-1.5 border-b border-white/[.04]">
+          <span class="text-slate-300">Attack Path & Blast Radius Simulator</span>
+          <kbd class="rounded border border-white/[.1] bg-white/[.04] px-2 py-0.5 text-[10px] font-mono text-emerald-400">X</kbd>
         </div>
         <div class="flex items-center justify-between py-1.5 border-b border-white/[.04]">
           <span class="text-slate-300">Jump to Book Catalog</span>
@@ -1606,6 +1697,294 @@
     </div>
   </div>
 
+  <!-- Interactive Demo Tour Floating HUD Bar (Feature #2) -->
+  <div id="demo-tour-hud" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-2xl rounded-2xl border border-emerald-400/40 bg-[#0c1118]/95 p-4 shadow-[0_20px_60px_rgba(0,0,0,0.9)] backdrop-blur-xl hidden transition-all duration-300">
+    <div class="flex items-center justify-between gap-3 border-b border-white/[.08] pb-3">
+      <div class="flex items-center gap-2">
+        <span class="relative flex h-2.5 w-2.5">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400"></span>
+        </span>
+        <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 font-mono">Platform Guided Tour</span>
+        <span id="tour-step-badge" class="rounded bg-emerald-400/10 px-2 py-0.5 text-[10px] font-mono text-emerald-300 border border-emerald-400/20">Fail-Closed Assurance</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span id="tour-step-counter" class="text-xs font-mono text-slate-400">Step 1 of 5</span>
+        <button onclick="stopDemoTour()" class="text-slate-400 hover:text-white p-1 rounded transition" title="Exit Tour (ESC)">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="w-full bg-white/[.06] h-1.5 rounded-full overflow-hidden my-3">
+      <div id="tour-progress-bar" class="h-full bg-gradient-to-r from-emerald-400 to-teal-400 transition-all duration-500" style="width: 20%"></div>
+    </div>
+
+    <!-- Step Narration Content -->
+    <div class="space-y-1 mb-3">
+      <h4 id="tour-step-title" class="text-sm font-semibold text-white">1/5: DevSecOps Security Pipeline</h4>
+      <p id="tour-step-desc" class="text-xs text-slate-300 leading-relaxed">
+        8 automated verification gates inspect every commit and container build, enforcing zero-compromise supply chain security before deployment.
+      </p>
+    </div>
+
+    <!-- Tour Navigation Controls -->
+    <div class="flex items-center justify-between pt-2 border-t border-white/[.06] text-xs">
+      <div class="flex items-center gap-2">
+        <button onclick="prevTourStep()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/[.1] bg-white/[.04] text-slate-300 hover:text-white hover:bg-white/[.08] transition">
+          <i class="fa-solid fa-chevron-left text-[10px]"></i> Prev
+        </button>
+        <button onclick="nextTourStep()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-400/30 bg-emerald-400/10 text-emerald-300 hover:bg-emerald-400/20 hover:text-white transition font-medium">
+          Next <i class="fa-solid fa-chevron-right text-[10px]"></i>
+        </button>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="toggleTourPlay()" id="tour-play-btn" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-white/[.1] bg-white/[.04] text-slate-300 hover:text-white transition font-mono text-[11px]" title="Auto-advance (12s per step / 60s total)">
+          <i class="fa-solid fa-pause text-xs" id="tour-play-icon"></i>
+          <span>Auto</span>
+        </button>
+        <button onclick="stopDemoTour()" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition">
+          Exit Tour
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Attack Path & Blast Radius Modal (Feature #4) -->
+  <div id="attack-path-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/85 px-4 backdrop-blur-md hidden" onclick="handleAttackPathBackdropClick(event)">
+    <div class="command-in w-full max-w-4xl overflow-hidden rounded-2xl border border-white/[.12] bg-[#0c1118] shadow-[0_30px_100px_rgba(0,0,0,.9)] flex flex-col max-h-[90vh]">
+      <!-- Header -->
+      <div class="flex items-center justify-between p-6 border-b border-white/[.08]">
+        <div class="flex items-center gap-3">
+          <div class="grid h-10 w-10 place-items-center rounded-xl border border-rose-400/20 bg-rose-400/10 text-rose-400">
+            <i class="fa-solid fa-network-wired text-lg"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-lg font-bold text-white tracking-tight">Attack Path & Blast Radius Simulator</h2>
+              <span id="attack-path-severity-badge" class="rounded bg-rose-400/10 px-2 py-0.5 text-[10px] font-mono text-rose-300 border border-rose-400/20 uppercase font-semibold">Critical Threat</span>
+            </div>
+            <div class="text-xs text-slate-400 font-mono">MITRE ATT&CK Kill Chain &bull; Fail-Closed DevSecOps Verification</div>
+          </div>
+        </div>
+        <button onclick="closeAttackPathModal()" class="text-slate-400 hover:text-white p-2" aria-label="Close attack path modal">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Vulnerability Select Tabs -->
+      <div class="flex border-b border-white/[.08] bg-[#080b10] px-6 text-xs font-mono overflow-x-auto">
+        <button onclick="selectAttackPath('sqli')" id="ap-tab-sqli" class="py-3 px-4 border-b-2 border-emerald-400 text-emerald-400 font-semibold flex items-center gap-2">
+          <i class="fa-solid fa-bug"></i> CWE-89: SQLite Injection
+        </button>
+        <button onclick="selectAttackPath('osv')" id="ap-tab-osv" class="py-3 px-4 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2">
+          <i class="fa-solid fa-cube"></i> GHSA-8hc4: Transitive SCA
+        </button>
+        <button onclick="selectAttackPath('cis')" id="ap-tab-cis" class="py-3 px-4 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2">
+          <i class="fa-solid fa-shield-halved"></i> CIS-DI-0001: Root Escape
+        </button>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="p-6 overflow-y-auto space-y-6">
+        <!-- Interactive Kill Chain Flowchart -->
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">1. Multi-Stage Kill Chain Progression</h3>
+            <span class="text-[11px] text-emerald-400 font-mono flex items-center gap-1">
+              <i class="fa-solid fa-shield-check"></i> Intercepted by Shift-Left CI Gate
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-5 gap-2.5 text-xs">
+            <!-- Node 1: Vector -->
+            <div class="p-3 rounded-xl border border-white/[.08] bg-[#080b10] flex flex-col justify-between">
+              <span class="text-[10px] text-slate-500 font-mono uppercase">Phase 1: Ingress</span>
+              <div class="mt-2 font-semibold text-white" id="ap-step1-title">Tainted HTTP Input</div>
+              <div class="text-[11px] text-slate-400 mt-1" id="ap-step1-desc">Attacker submits malicious payload in search query</div>
+              <div class="mt-3 pt-2 border-t border-white/[.05] text-[10px] font-mono text-rose-400">Threat Injected</div>
+            </div>
+
+            <!-- Node 2: Weakness -->
+            <div class="p-3 rounded-xl border border-white/[.08] bg-[#080b10] flex flex-col justify-between">
+              <span class="text-[10px] text-slate-500 font-mono uppercase">Phase 2: Exploit</span>
+              <div class="mt-2 font-semibold text-white" id="ap-step2-title">Dynamic SQL Concat</div>
+              <div class="text-[11px] text-slate-400 mt-1" id="ap-step2-desc">Raw string formatting bypasses parameterization</div>
+              <div class="mt-3 pt-2 border-t border-white/[.05] text-[10px] font-mono text-amber-400">CWE Weakness</div>
+            </div>
+
+            <!-- Node 3: Blast Radius -->
+            <div class="p-3 rounded-xl border border-rose-500/30 bg-rose-500/5 flex flex-col justify-between">
+              <span class="text-[10px] text-rose-400 font-mono uppercase">Phase 3: Impact</span>
+              <div class="mt-2 font-semibold text-rose-300" id="ap-step3-title">Customer DB Exfiltration</div>
+              <div class="text-[11px] text-slate-300 mt-1" id="ap-step3-desc">Direct extraction of sensitive schema records</div>
+              <div class="mt-3 pt-2 border-t border-rose-500/20 text-[10px] font-mono text-rose-400">High Blast Radius</div>
+            </div>
+
+            <!-- Node 4: Detection Gate -->
+            <div class="p-3 rounded-xl border border-violet-500/30 bg-violet-500/5 flex flex-col justify-between">
+              <span class="text-[10px] text-violet-400 font-mono uppercase">Phase 4: Inspection</span>
+              <div class="mt-2 font-semibold text-violet-300" id="ap-step4-title">Semgrep AST Rule</div>
+              <div class="text-[11px] text-slate-300 mt-1" id="ap-step4-desc">python-sqlite-param-injection taint tracking</div>
+              <div class="mt-3 pt-2 border-t border-violet-500/20 text-[10px] font-mono text-violet-400">AST Analysis</div>
+            </div>
+
+            <!-- Node 5: Gate Blocking -->
+            <div class="p-3 rounded-xl border border-emerald-500/30 bg-emerald-500/5 flex flex-col justify-between">
+              <span class="text-[10px] text-emerald-400 font-mono uppercase">Phase 5: Mitigation</span>
+              <div class="mt-2 font-semibold text-emerald-300" id="ap-step5-title">Fail-Closed Block</div>
+              <div class="text-[11px] text-slate-300 mt-1" id="ap-step5-desc">PR pipeline halts: exit code 1, zero release</div>
+              <div class="mt-3 pt-2 border-t border-emerald-500/20 text-[10px] font-mono text-emerald-400">Attestation Denied</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Blast Radius Matrix & Impact Scope -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="p-4 rounded-xl border border-white/[.08] bg-[#080b10]">
+            <div class="text-[11px] text-slate-400 font-mono uppercase">Confidentiality Impact</div>
+            <div class="text-xl font-bold text-rose-400 mt-1" id="ap-impact-conf">CRITICAL (Total)</div>
+            <p class="text-xs text-slate-400 mt-1" id="ap-impact-conf-desc">Direct extraction of entire SQLite table catalogs without authentication.</p>
+          </div>
+          <div class="p-4 rounded-xl border border-white/[.08] bg-[#080b10]">
+            <div class="text-[11px] text-slate-400 font-mono uppercase">Integrity Impact</div>
+            <div class="text-xl font-bold text-amber-400 mt-1" id="ap-impact-integ">MODERATE</div>
+            <p class="text-xs text-slate-400 mt-1" id="ap-impact-integ-desc">Subquery injection can alter or truncate stateful records.</p>
+          </div>
+          <div class="p-4 rounded-xl border border-white/[.08] bg-[#080b10]">
+            <div class="text-[11px] text-slate-400 font-mono uppercase">Remediation SLA</div>
+            <div class="text-xl font-bold text-emerald-400 mt-1" id="ap-impact-sla">&lt; 15 Minutes</div>
+            <p class="text-xs text-slate-400 mt-1">Pre-commit and pull request gate enforce automated fix verification.</p>
+          </div>
+        </div>
+
+        <!-- Code Diff & Remediation -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">2. Automated Remediation Code Diff</h3>
+            <button onclick="copyRemediationDiff()" class="text-[11px] text-emerald-400 hover:text-emerald-300 font-mono flex items-center gap-1 transition">
+              <i class="fa-solid fa-copy"></i> Copy Remediation
+            </button>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 font-mono text-[11px]">
+            <!-- Vulnerable Pattern -->
+            <div class="rounded-xl border border-rose-500/20 bg-[#06080c] p-4 text-slate-300">
+              <div class="text-rose-400 font-semibold mb-2 flex items-center gap-1.5">
+                <i class="fa-solid fa-triangle-exclamation"></i> Vulnerable Pattern (Fails Gate)
+              </div>
+              <pre class="overflow-x-auto text-rose-200/90 leading-relaxed" id="ap-code-vuln"># Unparameterized string query
+query = f"SELECT * FROM books WHERE title LIKE '%{user_input}%'"
+cursor.execute(query)</pre>
+            </div>
+            <!-- Hardened Pattern -->
+            <div class="rounded-xl border border-emerald-500/20 bg-[#06080c] p-4 text-slate-300">
+              <div class="text-emerald-400 font-semibold mb-2 flex items-center gap-1.5">
+                <i class="fa-solid fa-shield-check"></i> Hardened Pattern (Passes Gate)
+              </div>
+              <pre class="overflow-x-auto text-emerald-300/90 leading-relaxed" id="ap-code-fixed"># Parameterized query with bound variable
+query = "SELECT * FROM books WHERE title LIKE ?"
+cursor.execute(query, (f"%{user_input}%",))</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 border-t border-white/[.08] bg-[#090d14] flex justify-between items-center text-xs text-slate-500">
+        <span>Verified against <strong class="text-slate-400 font-mono">rules/semgrep/python-security.yml</strong></span>
+        <button onclick="closeAttackPathModal()" class="px-4 py-1.5 bg-white/[.08] hover:bg-white/[.15] text-slate-300 font-medium rounded-lg transition">
+          Close Simulator
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fullscreen Cyber SOC HUD Terminal Modal (Feature #6) -->
+  <div id="telemetry-hud-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/95 px-4 backdrop-blur-xl hidden" onclick="handleHudBackdropClick(event)">
+    <div class="command-in w-full max-w-6xl h-[92vh] overflow-hidden rounded-2xl border border-emerald-400/30 bg-[#070b10] shadow-[0_0_80px_rgba(16,185,129,0.2)] flex flex-col">
+      <!-- HUD Header Bar -->
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 border-b border-emerald-400/20 bg-[#090f17] gap-3">
+        <div class="flex items-center gap-3">
+          <div class="grid h-9 w-9 place-items-center rounded-lg border border-emerald-400/30 bg-emerald-400/10 text-emerald-400">
+            <i class="fa-solid fa-terminal text-sm"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-base font-bold text-white tracking-tight font-mono">AEGIS SOC CYBER TELEMETRY HUD</h2>
+              <span class="rounded bg-emerald-400/10 px-2 py-0.5 text-[10px] font-mono text-emerald-300 border border-emerald-400/20 flex items-center gap-1.5">
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span> LIVE STREAM
+              </span>
+            </div>
+            <div class="text-[11px] text-slate-400 font-mono">CI/CD Pipeline Telemetry &bull; GitHub Actions &bull; DefectDojo Aggregator</div>
+          </div>
+        </div>
+
+        <!-- Controls in Header -->
+        <div class="flex items-center gap-2">
+          <button onclick="injectHudLogBurst()" class="px-2.5 py-1.5 rounded-lg border border-emerald-400/30 bg-emerald-400/10 hover:bg-emerald-400/20 text-emerald-300 font-mono text-xs transition flex items-center gap-1.5" title="Generate real-time telemetry burst">
+            <i class="fa-solid fa-bolt text-[11px]"></i> Burst Log
+          </button>
+          <button onclick="copyHudLogs()" class="px-2.5 py-1.5 rounded-lg border border-white/[.1] bg-white/[.04] hover:bg-white/[.08] text-slate-300 font-mono text-xs transition flex items-center gap-1.5">
+            <i class="fa-solid fa-copy text-[11px]"></i> Copy
+          </button>
+          <button onclick="downloadHudLogs()" class="px-2.5 py-1.5 rounded-lg border border-white/[.1] bg-white/[.04] hover:bg-white/[.08] text-slate-300 font-mono text-xs transition flex items-center gap-1.5">
+            <i class="fa-solid fa-download text-[11px]"></i> Export
+          </button>
+          <button onclick="closeTelemetryHud()" class="text-slate-400 hover:text-white p-2" aria-label="Close HUD">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter Controls Bar -->
+      <div class="flex flex-wrap items-center justify-between p-3 border-b border-white/[.06] bg-[#05080c] gap-2 text-xs font-mono">
+        <div class="flex flex-wrap items-center gap-1.5" id="hud-filter-container">
+          <button onclick="filterHudCategory('ALL')" class="hud-filter-btn px-2 py-1 rounded bg-emerald-400/20 text-emerald-300 border border-emerald-400/30 font-semibold" data-cat="ALL">ALL</button>
+          <button onclick="filterHudCategory('GITLEAKS')" class="hud-filter-btn px-2 py-1 rounded bg-white/[.03] text-slate-400 hover:text-white border border-white/[.06]" data-cat="GITLEAKS">GITLEAKS</button>
+          <button onclick="filterHudCategory('SEMGREP')" class="hud-filter-btn px-2 py-1 rounded bg-white/[.03] text-slate-400 hover:text-white border border-white/[.06]" data-cat="SEMGREP">SEMGREP</button>
+          <button onclick="filterHudCategory('CODEQL')" class="hud-filter-btn px-2 py-1 rounded bg-white/[.03] text-slate-400 hover:text-white border border-white/[.06]" data-cat="CODEQL">CODEQL</button>
+          <button onclick="filterHudCategory('TRIVY')" class="hud-filter-btn px-2 py-1 rounded bg-white/[.03] text-slate-400 hover:text-white border border-white/[.06]" data-cat="TRIVY">TRIVY</button>
+          <button onclick="filterHudCategory('ZAP')" class="hud-filter-btn px-2 py-1 rounded bg-white/[.03] text-slate-400 hover:text-white border border-white/[.06]" data-cat="ZAP">ZAP</button>
+          <button onclick="filterHudCategory('COSIGN')" class="hud-filter-btn px-2 py-1 rounded bg-white/[.03] text-slate-400 hover:text-white border border-white/[.06]" data-cat="COSIGN">COSIGN</button>
+          <button onclick="filterHudCategory('BLOCKED')" class="hud-filter-btn px-2 py-1 rounded bg-rose-400/10 text-rose-300 hover:bg-rose-400/20 border border-rose-400/20" data-cat="BLOCKED">ERRORS/BLOCK</button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input type="text" id="hud-search-input" placeholder="Search logs (grep)..." onkeyup="searchHudLogs(this.value)" class="h-8 px-2.5 rounded bg-black/50 border border-white/[.1] text-xs text-slate-200 outline-none placeholder:text-slate-600 focus:border-emerald-400/50 w-48 sm:w-64 font-mono">
+          <button onclick="toggleHudAutoScroll()" id="hud-autoscroll-btn" class="px-2 py-1 rounded bg-emerald-400/10 text-emerald-400 border border-emerald-400/20 text-[11px] font-mono" title="Toggle Auto-Scroll">
+            Auto-Scroll: ON
+          </button>
+        </div>
+      </div>
+
+      <!-- Main HUD Terminal Output Area -->
+      <div id="hud-terminal-body" class="flex-1 p-5 overflow-y-auto font-mono text-xs leading-relaxed space-y-1 bg-[#040608] text-slate-300 select-text">
+        <div class="text-slate-500" data-cat="ALL">[08:14:00] [CI/INIT]    &rarr; Workflow 'security-pipeline.yml' triggered on refs/heads/main</div>
+        <div class="text-slate-300" data-cat="GITLEAKS">[08:14:02] <span class="text-emerald-400">[GITLEAKS]</span>   &rarr; 4,218 commits scanned against 158 rules. 0 verified secrets. <span class="text-emerald-400 font-semibold">PASS</span></div>
+        <div class="text-slate-300" data-cat="SEMGREP">[08:14:10] <span class="text-violet-400">[SEMGREP]</span>    &rarr; 5 custom AST rules evaluated. 2 suppressed, 0 blocking. <span class="text-emerald-400 font-semibold">PASS</span></div>
+        <div class="text-slate-300" data-cat="CODEQL">[08:14:28] <span class="text-blue-400">[CODEQL]</span>     &rarr; Python security-extended suite. 18 queries completed. <span class="text-emerald-400 font-semibold">PASS</span></div>
+        <div class="text-slate-300" data-cat="TRIVY">[08:14:42] <span class="text-amber-400">[TRIVY+OSV]</span>  &rarr; 247 packages scanned. 3 non-blocking CVEs, 0 criticals. <span class="text-emerald-400 font-semibold">PASS</span></div>
+        <div class="text-slate-300" data-cat="TRIVY">[08:15:01] <span class="text-teal-400">[CHECKOV]</span>    &rarr; Container hardening verified (user:10001, drop ALL). <span class="text-emerald-400 font-semibold">PASS</span></div>
+        <div class="text-slate-300" data-cat="ZAP">[08:15:24] <span class="text-rose-400">[OWASP-ZAP]</span>  &rarr; Ephemeral preview crawled. 38 routes tested, 0 high alerts. <span class="text-emerald-400 font-semibold">PASS</span></div>
+        <div class="text-slate-300" data-cat="COSIGN">[08:15:35] <span class="text-emerald-400">[COSIGN]</span>     &rarr; Container digest sha256:42q8... signed with Rekor transparency log. <span class="text-emerald-400 font-semibold">PASS</span></div>
+        <div class="text-emerald-400" data-cat="ALL">[08:15:38] [RELEASE]    &rarr; verify_release.sh: Build provenance and signatures verified. RELEASE SUCCESS.</div>
+      </div>
+
+      <!-- HUD Footer Metrics Bar -->
+      <div class="flex items-center justify-between p-3 border-t border-emerald-400/20 bg-[#070b10] text-[11px] font-mono text-slate-400">
+        <div class="flex items-center gap-4">
+          <span>STATUS: <strong class="text-emerald-400">NOMINAL</strong></span>
+          <span>INGESTION: <strong class="text-slate-200">12 ms</strong></span>
+          <span>VERIFIED GATES: <strong class="text-emerald-400">8 / 8</strong></span>
+        </div>
+        <div>
+          <span>Press <kbd class="px-1.5 py-0.5 rounded bg-white/[.08] text-emerald-400 border border-white/[.1]">ESC</kbd> or <kbd class="px-1.5 py-0.5 rounded bg-white/[.08] text-emerald-400 border border-white/[.1]">F</kbd> to exit HUD</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Notification System (from Figma) -->
   <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
@@ -1667,6 +2046,9 @@
         closeTeamModal();
         closeHeadersModal();
         closeTelemetryModal();
+        closeAttackPathModal();
+        closeTelemetryHud();
+        stopDemoTour();
         if (typeof closeBookDrawer === 'function') closeBookDrawer();
         return;
       }
@@ -1686,6 +2068,18 @@
             simToggle.checked = !simToggle.checked;
             toggleGateSimulation(simToggle.checked);
           }
+        } else if (e.key === 'd' || e.key === 'D') {
+          e.preventDefault();
+          startDemoTour();
+        } else if (e.key === 'm' || e.key === 'M') {
+          e.preventDefault();
+          toggleCyberAudio();
+        } else if (e.key === 'f' || e.key === 'F') {
+          e.preventDefault();
+          toggleTelemetryHud();
+        } else if (e.key === 'x' || e.key === 'X') {
+          e.preventDefault();
+          toggleAttackPathModal();
         } else if (e.key === 't' || e.key === 'T') {
           e.preventDefault();
           toggleTeamModal();
@@ -1863,11 +2257,13 @@
         document.documentElement.style.backgroundColor = '';
       }
       syncThemeUI(isWhite);
+      if (typeof drawComplianceRadar === 'function') drawComplianceRadar();
     }
 
     function toggleThemeMode() {
       const isWhite = !document.documentElement.classList.contains('theme-white');
       applyThemeToDOM(isWhite);
+      if (typeof playThemeClick === 'function') playThemeClick();
       if (isWhite) {
         showToast('White Background Option Enabled', 'amber');
         try { localStorage.setItem('aegis_theme_mode', 'white'); } catch(e) {}
@@ -2061,6 +2457,643 @@
         showToast('Scanner command copied to clipboard', 'emerald');
       });
     }
+
+    /* ============================================================
+       Feature #3: Cyber Audio Synthesizer (Web Audio API, 0 Assets)
+       ============================================================ */
+    let audioCtx = null;
+    let cyberAudioEnabled = true;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          audioCtx = new AudioContextClass();
+        }
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function toggleCyberAudio() {
+      initAudio();
+      cyberAudioEnabled = !cyberAudioEnabled;
+      try { localStorage.setItem('aegis_audio_fx', cyberAudioEnabled ? '1' : '0'); } catch(e) {}
+      updateAudioUI();
+      if (cyberAudioEnabled) {
+        playCyberBeep(880, 0.08, 'sine');
+        showToast('Cyber Audio FX: Enabled', 'emerald');
+      } else {
+        showToast('Cyber Audio FX: Muted', 'amber');
+      }
+    }
+    window.toggleCyberAudio = toggleCyberAudio;
+
+    function updateAudioUI() {
+      const icon = document.getElementById('cyber-audio-icon');
+      const btn = document.getElementById('cyber-audio-btn');
+      if (icon && btn) {
+        if (cyberAudioEnabled) {
+          icon.className = 'fa-solid fa-volume-high text-xs text-emerald-400';
+          btn.classList.add('border-emerald-400/40', 'text-emerald-400');
+          btn.classList.remove('text-slate-500');
+          btn.title = 'Cyber Audio FX: ON (Press M to mute)';
+        } else {
+          icon.className = 'fa-solid fa-volume-xmark text-xs text-slate-500';
+          btn.classList.remove('border-emerald-400/40', 'text-emerald-400');
+          btn.classList.add('text-slate-500');
+          btn.title = 'Cyber Audio FX: MUTED (Press M to unmute)';
+        }
+      }
+    }
+
+    function playCyberBeep(freq = 920, duration = 0.04, type = 'sine') {
+      if (!cyberAudioEnabled) return;
+      try {
+        initAudio();
+        if (!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(freq * 1.5, audioCtx.currentTime + duration);
+        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch(e) {}
+    }
+    window.playCyberBeep = playCyberBeep;
+
+    function playThreatAlarm() {
+      if (!cyberAudioEnabled) return;
+      try {
+        initAudio();
+        if (!audioCtx) return;
+        const now = audioCtx.currentTime;
+        for (let i = 0; i < 2; i++) {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sawtooth';
+          const startT = now + i * 0.22;
+          osc.frequency.setValueAtTime(440, startT);
+          osc.frequency.linearRampToValueAtTime(220, startT + 0.18);
+          gain.gain.setValueAtTime(0.08, startT);
+          gain.gain.linearRampToValueAtTime(0.001, startT + 0.18);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(startT);
+          osc.stop(startT + 0.19);
+        }
+      } catch(e) {}
+    }
+    window.playThreatAlarm = playThreatAlarm;
+
+    function playRemediateChime() {
+      if (!cyberAudioEnabled) return;
+      try {
+        initAudio();
+        if (!audioCtx) return;
+        const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6 (Major Arpeggio)
+        const now = audioCtx.currentTime;
+        notes.forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          const t = now + idx * 0.08;
+          osc.frequency.setValueAtTime(freq, t);
+          gain.gain.setValueAtTime(0.06, t);
+          gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.35);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(t);
+          osc.stop(t + 0.36);
+        });
+      } catch(e) {}
+    }
+    window.playRemediateChime = playRemediateChime;
+
+    function playScanPulse() {
+      if (!cyberAudioEnabled) return;
+      try {
+        initAudio();
+        if (!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        const now = audioCtx.currentTime;
+        osc.frequency.setValueAtTime(320, now);
+        osc.frequency.exponentialRampToValueAtTime(1400, now + 0.25);
+        gain.gain.setValueAtTime(0.04, now);
+        gain.gain.linearRampToValueAtTime(0.0001, now + 0.25);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.26);
+      } catch(e) {}
+    }
+    window.playScanPulse = playScanPulse;
+
+    function playThemeClick() {
+      if (!cyberAudioEnabled) return;
+      try {
+        initAudio();
+        if (!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        const now = audioCtx.currentTime;
+        osc.frequency.setValueAtTime(580, now);
+        osc.frequency.linearRampToValueAtTime(820, now + 0.08);
+        gain.gain.setValueAtTime(0.03, now);
+        gain.gain.linearRampToValueAtTime(0.0001, now + 0.08);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.09);
+      } catch(e) {}
+    }
+    window.playThemeClick = playThemeClick;
+
+    // Check saved audio preference
+    try {
+      const savedAudio = localStorage.getItem('aegis_audio_fx');
+      if (savedAudio === '0') cyberAudioEnabled = false;
+      window.addEventListener('DOMContentLoaded', updateAudioUI);
+    } catch(e) {}
+
+    /* ============================================================
+       Feature #2: 60-Second "Interactive Demo Tour" Controller
+       ============================================================ */
+    const tourSteps = [
+      {
+        targetId: 'pipeline',
+        title: '1/5: DevSecOps Security Pipeline',
+        badge: 'Fail-Closed Assurance',
+        desc: '8 automated verification gates inspect every commit and container build, enforcing zero-compromise supply chain security before deployment.',
+        route: '/security'
+      },
+      {
+        targetId: 'metric-card-posture',
+        title: '2/5: Vulnerability Posture & Real-time Scoring',
+        badge: 'Grade A (Strict)',
+        desc: 'Live vulnerability posture index synthesizes SAST, DAST, SCA, and SBOM data into an executive security rating with automated threshold enforcement.',
+        route: '/security'
+      },
+      {
+        targetId: 'compliance-radar-card',
+        title: '3/5: CISO Executive Compliance Radar',
+        badge: 'Multi-Axis Spider Chart',
+        desc: 'Dynamic 6-axis compliance coverage across SAST AST, OWASP ZAP DAST, Trivy SCA, Gitleaks, Docker Hardening, and SLSA L3 attestation.',
+        route: '/security'
+      },
+      {
+        targetId: 'findings',
+        title: '4/5: Vulnerability Register & Blast Radius',
+        badge: 'CVE Triage & Kill Chain',
+        desc: 'Heterogeneous findings triaged by risk. Click "Blast Radius" on any finding to visualize attacker entry vectors, impacted assets, and remediated code.',
+        route: '/security'
+      },
+      {
+        targetId: 'artifacts',
+        title: '5/5: Cryptographic Provenance & SLSA L3',
+        badge: 'Sigstore Cosign & SBOM',
+        desc: 'Every container artifact is signed keylessly with Cosign and attested with CycloneDX 1.5 SBOM to prevent supply chain tampering.',
+        route: '/security'
+      }
+    ];
+
+    let currentTourStep = 0;
+    let tourTimer = null;
+    let tourIsPlaying = false;
+
+    function startDemoTour() {
+      if (window.location.pathname !== '/security') {
+        window.location.href = '/security?tour=1';
+        return;
+      }
+      playCyberBeep(700, 0.08);
+      currentTourStep = 0;
+      tourIsPlaying = true;
+      const hud = document.getElementById('demo-tour-hud');
+      if (hud) hud.classList.remove('hidden');
+      renderTourStep();
+      startTourAutoPlay();
+      showToast('60-Second Platform Tour Started', 'emerald');
+    }
+    window.startDemoTour = startDemoTour;
+
+    function stopDemoTour() {
+      playCyberBeep(450, 0.05);
+      tourIsPlaying = false;
+      if (tourTimer) clearInterval(tourTimer);
+      tourTimer = null;
+      const hud = document.getElementById('demo-tour-hud');
+      if (hud) hud.classList.add('hidden');
+      clearTourHighlights();
+    }
+    window.stopDemoTour = stopDemoTour;
+
+    function clearTourHighlights() {
+      document.querySelectorAll('.tour-highlight').forEach(el => {
+        el.classList.remove('tour-highlight', 'ring-4', 'ring-emerald-400', 'shadow-[0_0_30px_rgba(52,211,153,0.4)]');
+      });
+    }
+
+    function renderTourStep() {
+      clearTourHighlights();
+      const step = tourSteps[currentTourStep];
+      if (!step) return;
+
+      const target = document.getElementById(step.targetId);
+      if (target) {
+        target.classList.add('tour-highlight', 'ring-4', 'ring-emerald-400', 'shadow-[0_0_30px_rgba(52,211,153,0.4)]', 'transition-all');
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      const stepCounter = document.getElementById('tour-step-counter');
+      const titleEl = document.getElementById('tour-step-title');
+      const badgeEl = document.getElementById('tour-step-badge');
+      const descEl = document.getElementById('tour-step-desc');
+      const progressEl = document.getElementById('tour-progress-bar');
+
+      if (stepCounter) stepCounter.textContent = `Step ${currentTourStep + 1} of ${tourSteps.length}`;
+      if (titleEl) titleEl.textContent = step.title;
+      if (badgeEl) badgeEl.textContent = step.badge;
+      if (descEl) descEl.textContent = step.desc;
+      if (progressEl) {
+        const pct = ((currentTourStep + 1) / tourSteps.length) * 100;
+        progressEl.style.width = `${pct}%`;
+      }
+      playCyberBeep(800 + currentTourStep * 50, 0.04);
+    }
+    window.renderTourStep = renderTourStep;
+
+    function nextTourStep() {
+      currentTourStep = (currentTourStep + 1) % tourSteps.length;
+      renderTourStep();
+    }
+    window.nextTourStep = nextTourStep;
+
+    function prevTourStep() {
+      currentTourStep = (currentTourStep - 1 + tourSteps.length) % tourSteps.length;
+      renderTourStep();
+    }
+    window.prevTourStep = prevTourStep;
+
+    function toggleTourPlay() {
+      tourIsPlaying = !tourIsPlaying;
+      const icon = document.getElementById('tour-play-icon');
+      if (tourIsPlaying) {
+        if (icon) icon.className = 'fa-solid fa-pause text-xs';
+        startTourAutoPlay();
+      } else {
+        if (icon) icon.className = 'fa-solid fa-play text-xs';
+        if (tourTimer) clearInterval(tourTimer);
+        tourTimer = null;
+      }
+    }
+    window.toggleTourPlay = toggleTourPlay;
+
+    function startTourAutoPlay() {
+      if (tourTimer) clearInterval(tourTimer);
+      tourTimer = setInterval(() => {
+        if (tourIsPlaying) {
+          if (currentTourStep < tourSteps.length - 1) {
+            nextTourStep();
+          } else {
+            stopDemoTour();
+            showToast('60s Interactive Platform Tour Completed!', 'emerald');
+            playRemediateChime();
+          }
+        }
+      }, 12000); // 12 seconds per step = 60s total for 5 steps
+    }
+
+    // Auto-launch tour if redirected with ?tour=1
+    if (window.location.search.includes('tour=1')) {
+      window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(startDemoTour, 600);
+      });
+    }
+
+    /* ============================================================
+       Feature #4: Interactive Attack Path & Blast Radius Controller
+       ============================================================ */
+    const attackPathData = {
+      sqli: {
+        title: 'CWE-89: SQLite Query Parameter Injection',
+        badge: 'Critical Threat',
+        badgeClass: 'rounded bg-rose-400/10 px-2 py-0.5 text-[10px] font-mono text-rose-300 border border-rose-400/20 uppercase font-semibold',
+        step1Title: 'Tainted HTTP Ingress',
+        step1Desc: 'Attacker injects raw SQL payload via GET /api/v1/books?search=...',
+        step2Title: 'Dynamic SQL String Formatting',
+        step2Desc: 'Python f-string evaluates user input directly inside database cursor',
+        step3Title: 'Customer DB Exfiltration',
+        step3Desc: 'Attacker queries sqlite_master to dump table schemas and credentials',
+        step4Title: 'Semgrep AST & CodeQL Taint',
+        step4Desc: 'Custom AST pattern python-sqlite-param-injection tags tainted sink',
+        step5Title: 'Fail-Closed Gate Block',
+        step5Desc: 'CI Gate #2 halts workflow before container build (Exit 1)',
+        confImpact: 'CRITICAL (Total)',
+        confDesc: 'Direct extraction of entire SQLite table catalogs without authentication.',
+        integImpact: 'MODERATE',
+        integDesc: 'Subquery injection can alter or truncate stateful records.',
+        sla: '< 15 Minutes',
+        vulnCode: '# Vulnerable: unparameterized string formatting\nquery = f"SELECT * FROM books WHERE title LIKE \'%{user_input}%\'"\ncursor.execute(query)',
+        fixedCode: '# Hardened: parameterized query with bound parameters\nquery = "SELECT * FROM books WHERE title LIKE ?"\ncursor.execute(query, (f"%{user_input}%",))'
+      },
+      osv: {
+        title: 'GHSA-8hc4-vh64-cxmj: Transitive Dependency Vulnerability',
+        badge: 'Medium Risk',
+        badgeClass: 'rounded bg-amber-400/10 px-2 py-0.5 text-[10px] font-mono text-amber-300 border border-amber-400/20 uppercase font-semibold',
+        step1Title: 'Supply Chain Ingestion',
+        step1Desc: 'Transitive development package imported via package-lock.json',
+        step2Title: 'Unpinned Sub-Dependency',
+        step2Desc: 'Deep nested dependency pulls deprecated cryptographic helper',
+        step3Title: 'Build Tool Isolation',
+        step3Desc: 'Component isolated to dev environment; excluded from production container',
+        step4Title: 'OSV-Scanner & Trivy SCA',
+        step4Desc: 'Correlated against Google Open Source Vulnerabilities database',
+        step5Title: 'Policy Evaluation: Pass',
+        step5Desc: 'Allowed by policy as dev-only scoped vulnerability; flagged for sprint upgrade',
+        confImpact: 'LOW (Dev Scoped)',
+        confDesc: 'Exploitation restricted to local developer workstation dev server.',
+        integImpact: 'LOW',
+        integDesc: 'Production runtime code is isolated and unaffected.',
+        sla: '< 72 Hours',
+        vulnCode: '// Vulnerable package dependency\n"minimatch": "3.0.4"\n// Transitive ReDoS vulnerability',
+        fixedCode: '// Hardened: pinned modern release\n"minimatch": ">=3.1.2"\n// Mitigated via package resolution'
+      },
+      cis: {
+        title: 'CIS-DI-0001: Container Root User Privilege Escalation',
+        badge: 'Policy Violation',
+        badgeClass: 'rounded bg-blue-400/10 px-2 py-0.5 text-[10px] font-mono text-blue-300 border border-blue-400/20 uppercase font-semibold',
+        step1Title: 'Container Ingress',
+        step1Desc: 'Container image starts with default root (UID 0) execution context',
+        step2Title: 'Linux Capability Exposure',
+        step2Desc: 'Lack of USER directive preserves host breakout capability vectors',
+        step3Title: 'Kernel Breakout Radius',
+        step3Desc: 'Attacker achieving RCE in container could access host IPC & namespaces',
+        step4Title: 'Checkov Static IaC Gate',
+        step4Desc: 'CKV_DOCKER_3 static analysis identifies missing non-root USER',
+        step5Title: 'Automated Hardening Enforced',
+        step5Desc: 'Dockerfile enforces USER appuser (UID: 10001) & drop ALL capabilities',
+        confImpact: 'HIGH (Host Threat)',
+        confDesc: 'Container escape could expose host secrets and Kubernetes worker node.',
+        integImpact: 'HIGH',
+        integDesc: 'Host filesystem modification prevented by read-only rootfs.',
+        sla: '< 30 Minutes',
+        vulnCode: '# Vulnerable Dockerfile\nFROM python:3.13-slim\n# Missing non-root USER directive\nCMD ["uvicorn", "app.main:app"]',
+        fixedCode: '# Hardened Dockerfile\nFROM python:3.13-slim\nRUN adduser --system --uid 10001 appuser\nUSER 10001\nCMD ["uvicorn", "app.main:app"]'
+      }
+    };
+
+    function openAttackPathModal(findingKey = 'sqli') {
+      playCyberBeep(850, 0.05);
+      const modal = document.getElementById('attack-path-modal');
+      if (modal) modal.classList.remove('hidden');
+      selectAttackPath(findingKey);
+    }
+    window.openAttackPathModal = openAttackPathModal;
+
+    function closeAttackPathModal() {
+      playCyberBeep(500, 0.04);
+      const modal = document.getElementById('attack-path-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+    window.closeAttackPathModal = closeAttackPathModal;
+
+    function toggleAttackPathModal() {
+      const modal = document.getElementById('attack-path-modal');
+      if (modal && modal.classList.contains('hidden')) {
+        openAttackPathModal('sqli');
+      } else {
+        closeAttackPathModal();
+      }
+    }
+    window.toggleAttackPathModal = toggleAttackPathModal;
+
+    function handleAttackPathBackdropClick(e) {
+      if (e.target.id === 'attack-path-modal') closeAttackPathModal();
+    }
+    window.handleAttackPathBackdropClick = handleAttackPathBackdropClick;
+
+    function selectAttackPath(key) {
+      const data = attackPathData[key] || attackPathData.sqli;
+      
+      // Update tab styles
+      ['sqli', 'osv', 'cis'].forEach(k => {
+        const tab = document.getElementById(`ap-tab-${k}`);
+        if (tab) {
+          if (k === key) {
+            tab.className = 'py-3 px-4 border-b-2 border-emerald-400 text-emerald-400 font-semibold flex items-center gap-2';
+          } else {
+            tab.className = 'py-3 px-4 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2';
+          }
+        }
+      });
+
+      // Update contents
+      const badge = document.getElementById('attack-path-severity-badge');
+      if (badge) {
+        badge.textContent = data.badge;
+        badge.className = data.badgeClass;
+      }
+
+      document.getElementById('ap-step1-title').textContent = data.step1Title;
+      document.getElementById('ap-step1-desc').textContent = data.step1Desc;
+      document.getElementById('ap-step2-title').textContent = data.step2Title;
+      document.getElementById('ap-step2-desc').textContent = data.step2Desc;
+      document.getElementById('ap-step3-title').textContent = data.step3Title;
+      document.getElementById('ap-step3-desc').textContent = data.step3Desc;
+      document.getElementById('ap-step4-title').textContent = data.step4Title;
+      document.getElementById('ap-step4-desc').textContent = data.step4Desc;
+      document.getElementById('ap-step5-title').textContent = data.step5Title;
+      document.getElementById('ap-step5-desc').textContent = data.step5Desc;
+
+      document.getElementById('ap-impact-conf').textContent = data.confImpact;
+      document.getElementById('ap-impact-conf-desc').textContent = data.confDesc;
+      document.getElementById('ap-impact-integ').textContent = data.integImpact;
+      document.getElementById('ap-impact-integ-desc').textContent = data.integDesc;
+      document.getElementById('ap-impact-sla').textContent = data.sla;
+
+      document.getElementById('ap-code-vuln').textContent = data.vulnCode;
+      document.getElementById('ap-code-fixed').textContent = data.fixedCode;
+      playCyberBeep(900, 0.03);
+    }
+    window.selectAttackPath = selectAttackPath;
+
+    function copyRemediationDiff() {
+      const code = document.getElementById('ap-code-fixed').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        showToast('Hardened code snippet copied to clipboard', 'emerald');
+        playCyberBeep(1200, 0.04);
+      });
+    }
+    window.copyRemediationDiff = copyRemediationDiff;
+
+    /* ============================================================
+       Feature #6: Fullscreen Cyber SOC HUD Terminal Controller
+       ============================================================ */
+    let hudAutoScroll = true;
+
+    function openTelemetryHud() {
+      playCyberBeep(750, 0.06);
+      const modal = document.getElementById('telemetry-hud-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        syncHudWithConsole();
+      }
+    }
+    window.openTelemetryHud = openTelemetryHud;
+
+    function closeTelemetryHud() {
+      playCyberBeep(520, 0.04);
+      const modal = document.getElementById('telemetry-hud-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+    window.closeTelemetryHud = closeTelemetryHud;
+
+    function toggleTelemetryHud() {
+      const modal = document.getElementById('telemetry-hud-modal');
+      if (modal && modal.classList.contains('hidden')) {
+        openTelemetryHud();
+      } else {
+        closeTelemetryHud();
+      }
+    }
+    window.toggleTelemetryHud = toggleTelemetryHud;
+
+    function handleHudBackdropClick(e) {
+      if (e.target.id === 'telemetry-hud-modal') closeTelemetryHud();
+    }
+    window.handleHudBackdropClick = handleHudBackdropClick;
+
+    function syncHudWithConsole() {
+      const consoleBody = document.getElementById('telemetry-console-body');
+      const hudBody = document.getElementById('hud-terminal-body');
+      if (!consoleBody || !hudBody) return;
+      if (hudBody.children.length < 5) {
+        hudBody.innerHTML = consoleBody.innerHTML;
+      }
+      if (hudAutoScroll) hudBody.scrollTop = hudBody.scrollHeight;
+    }
+
+    function appendHudLog(text, category = 'ALL') {
+      const hudBody = document.getElementById('hud-terminal-body');
+      if (!hudBody) return;
+      const now = new Date();
+      const timeStr = `[${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}]`;
+      const div = document.createElement('div');
+      div.dataset.cat = category;
+      if (text.includes('FAIL') || text.includes('ERROR') || text.includes('HALT')) {
+        div.className = 'text-rose-400 font-semibold';
+      } else {
+        div.className = 'text-emerald-400';
+      }
+      div.textContent = `${timeStr} [${category}]  → ${text}`;
+      hudBody.appendChild(div);
+      if (hudAutoScroll) hudBody.scrollTop = hudBody.scrollHeight;
+    }
+    window.appendHudLog = appendHudLog;
+
+    function filterHudCategory(cat) {
+      playCyberBeep(840, 0.03);
+      document.querySelectorAll('.hud-filter-btn').forEach(btn => {
+        if (btn.dataset.cat === cat) {
+          btn.className = 'hud-filter-btn px-2 py-1 rounded bg-emerald-400/20 text-emerald-300 border border-emerald-400/30 font-semibold';
+        } else {
+          btn.className = 'hud-filter-btn px-2 py-1 rounded bg-white/[.03] text-slate-400 hover:text-white border border-white/[.06]';
+        }
+      });
+
+      const lines = document.querySelectorAll('#hud-terminal-body > div');
+      lines.forEach(line => {
+        const text = line.innerText.toUpperCase();
+        if (cat === 'ALL') {
+          line.classList.remove('hidden');
+        } else if (cat === 'BLOCKED') {
+          line.classList.toggle('hidden', !text.includes('FAIL') && !text.includes('ERROR') && !text.includes('HALT') && !text.includes('BLOCK'));
+        } else {
+          line.classList.toggle('hidden', !text.includes(cat));
+        }
+      });
+    }
+    window.filterHudCategory = filterHudCategory;
+
+    function searchHudLogs(query) {
+      const q = query.toLowerCase().trim();
+      const lines = document.querySelectorAll('#hud-terminal-body > div');
+      lines.forEach(line => {
+        if (!q) {
+          line.classList.remove('hidden');
+        } else {
+          line.classList.toggle('hidden', !line.textContent.toLowerCase().includes(q));
+        }
+      });
+    }
+    window.searchHudLogs = searchHudLogs;
+
+    function toggleHudAutoScroll() {
+      hudAutoScroll = !hudAutoScroll;
+      const btn = document.getElementById('hud-autoscroll-btn');
+      if (btn) {
+        btn.textContent = `Auto-Scroll: ${hudAutoScroll ? 'ON' : 'OFF'}`;
+        btn.className = hudAutoScroll ? 'px-2 py-1 rounded bg-emerald-400/10 text-emerald-400 border border-emerald-400/20 text-[11px] font-mono' : 'px-2 py-1 rounded bg-white/[.04] text-slate-400 border border-white/[.08] text-[11px] font-mono';
+      }
+      playCyberBeep(700, 0.03);
+    }
+    window.toggleHudAutoScroll = toggleHudAutoScroll;
+
+    function injectHudLogBurst() {
+      playScanPulse();
+      const sampleEvents = [
+        '[GITLEAKS] Entropy heuristic evaluated 2,410 diff hunks. 0 credentials detected.',
+        '[SEMGREP] AST rules parsed 41 python source AST trees in 120ms.',
+        '[CODEQL] Dataflow query tracked 18 sources to 0 unprotected sinks.',
+        '[TRIVY] Container base alpine:3.20.2 verified against NVD 2024-Q3 snapshot.',
+        '[CHECKOV] Verified 14 CIS Docker Benchmark rules (100% compliant).',
+        '[OWASP-ZAP] Baseline spider discovered 42 endpoints; 0 passive vulnerabilities.',
+        '[COSIGN] Rekor Transparency log entry #8472910 attested by keyless OIDC.'
+      ];
+      sampleEvents.forEach((ev, i) => {
+        setTimeout(() => {
+          appendHudLog(ev, 'LIVE');
+          if (typeof appendTelemetryLog === 'function') appendTelemetryLog(ev);
+        }, i * 150);
+      });
+      showToast('Live telemetry burst stream injected', 'emerald');
+    }
+    window.injectHudLogBurst = injectHudLogBurst;
+
+    function copyHudLogs() {
+      const body = document.getElementById('hud-terminal-body');
+      if (!body) return;
+      navigator.clipboard.writeText(body.innerText).then(() => {
+        showToast('HUD terminal logs copied to clipboard', 'emerald');
+        playCyberBeep(1100, 0.04);
+      });
+    }
+    window.copyHudLogs = copyHudLogs;
+
+    function downloadHudLogs() {
+      const body = document.getElementById('hud-terminal-body');
+      if (!body) return;
+      const blob = new Blob([body.innerText], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `aegis-telemetry-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.log`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Telemetry log file exported', 'emerald');
+      playCyberBeep(1000, 0.04);
+    }
+    window.downloadHudLogs = downloadHudLogs;
   </script>
 
   {% block extra_scripts %}{% endblock %}
