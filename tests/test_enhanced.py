@@ -52,6 +52,11 @@ def test_ui_security_dashboard_renders():
     assert "attack-path-modal" in response.text  # Feature 4: Attack Path & Blast Radius Modal
     assert "compliance-radar-canvas" in response.text  # Feature 5: CISO Compliance Radar Chart
     assert "telemetry-hud-modal" in response.text  # Feature 6: Fullscreen Cyber SOC HUD Terminal
+    # Master Feature: Unified Cyber War Room & AST Self-Healing Suite
+    assert "war-room-btn" in response.text
+    assert "war-room-modal" in response.text
+    assert "AST HEALER" in response.text
+    assert "audit-dossier-print-area" in response.text
 
 
 # ---------------------------------------------------------------------------
