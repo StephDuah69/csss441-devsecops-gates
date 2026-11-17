@@ -1752,9 +1752,19 @@
       </div>
     </div>
 
-    <!-- Progress Bar -->
-    <div class="w-full bg-white/[.06] h-1.5 rounded-full overflow-hidden my-3">
-      <div id="tour-progress-bar" class="h-full bg-gradient-to-r from-emerald-400 to-teal-400 transition-all duration-500" style="width: 20%"></div>
+    <!-- Progress Bar & Active Step Auto-Advance Timer Bar -->
+    <div class="space-y-1.5 my-3">
+      <div class="flex items-center justify-between text-[10px] font-mono text-slate-400">
+        <span>Step Progress</span>
+        <span id="tour-timer-label" class="text-emerald-400 font-bold">Auto-advancing in 6s</span>
+      </div>
+      <div class="w-full bg-white/[.06] h-1.5 rounded-full overflow-hidden">
+        <div id="tour-progress-bar" class="h-full bg-gradient-to-r from-emerald-400 to-teal-400 transition-all duration-300" style="width: 20%"></div>
+      </div>
+      <!-- Real-time per-step countdown fill bar -->
+      <div class="w-full bg-white/[.04] h-1 rounded-full overflow-hidden">
+        <div id="tour-step-timer-bar" class="h-full bg-emerald-400 transition-none" style="width: 0%"></div>
+      </div>
     </div>
 
     <!-- Step Narration Content -->
@@ -1776,9 +1786,9 @@
         </button>
       </div>
       <div class="flex items-center gap-2">
-        <button onclick="toggleTourPlay()" id="tour-play-btn" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-white/[.1] bg-white/[.04] text-slate-300 hover:text-white transition font-mono text-[11px]" title="Auto-advance (12s per step / 60s total)">
+        <button onclick="toggleTourPlay()" id="tour-play-btn" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-emerald-400/30 bg-emerald-400/10 text-emerald-300 hover:bg-emerald-400/20 hover:text-white transition font-mono text-[11px]" title="Toggle Auto-advance">
           <i class="fa-solid fa-pause text-xs" id="tour-play-icon"></i>
-          <span>Auto</span>
+          <span id="tour-play-text">Auto: ON (6s)</span>
         </button>
         <button onclick="stopDemoTour()" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition">
           Exit Tour
@@ -3132,9 +3142,11 @@ cursor.execute(query, (f"%{user_input}%",))</pre>
       }
     ];
 
+    const TOUR_STEP_DURATION_MS = 6000; // 6 seconds per step = 30s comprehensive tour
     let currentTourStep = 0;
-    let tourTimer = null;
-    let tourIsPlaying = false;
+    let tourTimerInterval = null;
+    let tourIsPlaying = true;
+    let tourStepStartTime = 0;
 
     function startDemoTour() {
       if (window.location.pathname !== '/security') {
@@ -3147,16 +3159,17 @@ cursor.execute(query, (f"%{user_input}%",))</pre>
       const hud = document.getElementById('demo-tour-hud');
       if (hud) hud.classList.remove('hidden');
       renderTourStep();
-      startTourAutoPlay();
-      showToast('60-Second Platform Tour Started', 'emerald');
+      showToast('Platform Guided Tour Started (Auto-Advance: ON)', 'emerald');
     }
     window.startDemoTour = startDemoTour;
 
     function stopDemoTour() {
       playCyberBeep(450, 0.05);
       tourIsPlaying = false;
-      if (tourTimer) clearInterval(tourTimer);
-      tourTimer = null;
+      if (tourTimerInterval) {
+        clearInterval(tourTimerInterval);
+        tourTimerInterval = null;
+      }
       const hud = document.getElementById('demo-tour-hud');
       if (hud) hud.classList.add('hidden');
       clearTourHighlights();
@@ -3185,6 +3198,7 @@ cursor.execute(query, (f"%{user_input}%",))</pre>
       const badgeEl = document.getElementById('tour-step-badge');
       const descEl = document.getElementById('tour-step-desc');
       const progressEl = document.getElementById('tour-progress-bar');
+      const timerBar = document.getElementById('tour-step-timer-bar');
 
       if (stepCounter) stepCounter.textContent = `Step ${currentTourStep + 1} of ${tourSteps.length}`;
       if (titleEl) titleEl.textContent = step.title;
@@ -3194,7 +3208,17 @@ cursor.execute(query, (f"%{user_input}%",))</pre>
         const pct = ((currentTourStep + 1) / tourSteps.length) * 100;
         progressEl.style.width = `${pct}%`;
       }
+      if (timerBar) {
+        timerBar.style.width = '0%';
+      }
+
       playCyberBeep(800 + currentTourStep * 50, 0.04);
+      tourStepStartTime = Date.now();
+      updateTourControlsUI();
+
+      if (tourIsPlaying) {
+        startTourAutoPlay();
+      }
     }
     window.renderTourStep = renderTourStep;
 
@@ -3210,40 +3234,96 @@ cursor.execute(query, (f"%{user_input}%",))</pre>
     }
     window.prevTourStep = prevTourStep;
 
+    function updateTourControlsUI() {
+      const btn = document.getElementById('tour-play-btn');
+      const icon = document.getElementById('tour-play-icon');
+      const text = document.getElementById('tour-play-text');
+      const timerLabel = document.getElementById('tour-timer-label');
+      const timerBar = document.getElementById('tour-step-timer-bar');
+
+      if (tourIsPlaying) {
+        if (btn) {
+          btn.className = 'flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-emerald-400/40 bg-emerald-400/10 text-emerald-300 hover:bg-emerald-400/20 hover:text-white transition font-mono text-[11px] shadow-[0_0_10px_rgba(52,211,153,0.15)]';
+        }
+        if (icon) icon.className = 'fa-solid fa-pause text-xs text-emerald-400';
+        if (text) text.textContent = 'Auto: ON';
+        if (timerLabel) {
+          timerLabel.className = 'text-emerald-400 font-bold';
+        }
+        if (timerBar) {
+          timerBar.className = 'h-full bg-emerald-400 transition-all duration-100 ease-linear';
+        }
+      } else {
+        if (btn) {
+          btn.className = 'flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-white/[.12] bg-white/[.04] text-slate-300 hover:text-white hover:bg-white/[.08] transition font-mono text-[11px]';
+        }
+        if (icon) icon.className = 'fa-solid fa-play text-xs text-amber-400';
+        if (text) text.textContent = 'Resume Auto';
+        if (timerLabel) {
+          timerLabel.className = 'text-amber-400 font-semibold';
+          timerLabel.textContent = 'Paused (Manual Mode)';
+        }
+        if (timerBar) {
+          timerBar.className = 'h-full bg-amber-400/50 transition-none';
+        }
+      }
+    }
+
     function toggleTourPlay() {
       tourIsPlaying = !tourIsPlaying;
-      const icon = document.getElementById('tour-play-icon');
       if (tourIsPlaying) {
-        if (icon) icon.className = 'fa-solid fa-pause text-xs';
+        tourStepStartTime = Date.now();
+        updateTourControlsUI();
         startTourAutoPlay();
+        showToast('Auto-Advance Resumed', 'emerald');
       } else {
-        if (icon) icon.className = 'fa-solid fa-play text-xs';
-        if (tourTimer) clearInterval(tourTimer);
-        tourTimer = null;
+        if (tourTimerInterval) {
+          clearInterval(tourTimerInterval);
+          tourTimerInterval = null;
+        }
+        updateTourControlsUI();
+        showToast('Auto-Advance Paused (Manual)', 'amber');
       }
     }
     window.toggleTourPlay = toggleTourPlay;
 
     function startTourAutoPlay() {
-      if (tourTimer) clearInterval(tourTimer);
-      tourTimer = setInterval(() => {
-        if (tourIsPlaying) {
+      if (tourTimerInterval) clearInterval(tourTimerInterval);
+      tourTimerInterval = setInterval(() => {
+        if (!tourIsPlaying) return;
+        const elapsed = Date.now() - tourStepStartTime;
+        const remaining = Math.max(0, TOUR_STEP_DURATION_MS - elapsed);
+        const remainingSec = Math.max(1, Math.ceil(remaining / 1000));
+        const pct = Math.min(100, (elapsed / TOUR_STEP_DURATION_MS) * 100);
+
+        const timerBar = document.getElementById('tour-step-timer-bar');
+        if (timerBar) timerBar.style.width = `${pct}%`;
+
+        const timerLabel = document.getElementById('tour-timer-label');
+        if (timerLabel) timerLabel.textContent = `Auto-advancing in ${remainingSec}s`;
+
+        const text = document.getElementById('tour-play-text');
+        if (text) text.textContent = `Auto: ON (${remainingSec}s)`;
+
+        if (elapsed >= TOUR_STEP_DURATION_MS) {
           if (currentTourStep < tourSteps.length - 1) {
             nextTourStep();
           } else {
             stopDemoTour();
-            showToast('60s Interactive Platform Tour Completed!', 'emerald');
+            showToast('Platform Guided Tour Completed!', 'emerald');
             playRemediateChime();
           }
         }
-      }, 12000); // 12 seconds per step = 60s total for 5 steps
+      }, 100);
     }
 
     // Auto-launch tour if redirected with ?tour=1
     if (window.location.search.includes('tour=1')) {
-      window.addEventListener('DOMContentLoaded', () => {
+      if (document.readyState === 'loading') {
+        window.addEventListener('DOMContentLoaded', () => setTimeout(startDemoTour, 600));
+      } else {
         setTimeout(startDemoTour, 600);
-      });
+      }
     }
 
     /* ============================================================
